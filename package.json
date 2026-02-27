@@ -1,0 +1,46 @@
+{
+  "name": "lumis",
+  "version": "0.1.0",
+  "description": "Your AI confidant. Captures moments, finds patterns, weaves the tapestry of your life.",
+  "type": "module",
+  "bin": {
+    "lumis": "./dist/cli/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx src/cli/index.ts",
+    "moment": "tsx src/cli/index.ts moment",
+    "serve": "tsx src/mcp/index.ts",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "lint": "tsc --noEmit"
+  },
+  "keywords": [
+    "obsidian",
+    "second-brain",
+    "ai-confidant",
+    "storytelling",
+    "mcp",
+    "claude",
+    "journaling"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/allthriveai/lumis.git"
+  },
+  "homepage": "https://github.com/allthriveai/lumis#readme",
+  "author": "Allie Jones <user@example.com>",
+  "license": "MIT",
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.39.0",
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "dotenv": "^17.3.1",
+    "gray-matter": "^4.0.3"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsx": "^4.19.4",
+    "typescript": "^5.9.3",
+    "vitest": "^3.0.0"
+  }
+}
