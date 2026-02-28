@@ -8,7 +8,7 @@ Tell Lumis about your life, share research you are interested in, and learn to c
  
 #### Lumis will help you find the connections across what you've lived and what you've learned:
 
-- **Define your voice** `lumis init` will align your future moments, coaching, and video with your identity.
+- **Define your voice** `/init` walks you through setting up your vault and voice interactively in Claude
 - **Captures moments** and identifies the "5-second moment," the instant something shifted
 - **Finds connections** to your past moments, things you might not have linked on your own
 - **Saves research** from articles, books, and videos, and distills them into lessons
@@ -66,14 +66,15 @@ git clone https://github.com/allthriveai/lumis.git
 cd lumis
 npm install
 npm run build
-lumis init ~/path/to/your/vault
 ```
 
-`lumis init` creates the vault structure and scaffolds a `Voice.md` template. Fill in Voice.md first: who you are, your mission, your audience, what you believe, and how you talk. Lumis reads it at every layer to align moments, coaching, and video with your identity.
+Then run `/init` in Claude Code or Claude Desktop. It walks you through choosing your vault path, scaffolds the directory structure, and interviews you to populate Voice.md: who you are, your mission, your audience, what you believe, and how you talk. Lumis reads Voice.md at every layer to align moments, coaching, and video with your identity.
 
 ## Commands
 
 ```
+/init            Set up Lumis in your vault with interactive voice interview
+/voice           Fill in or redo your Voice.md
 /moment          Capture a moment
 /add-research    Save and categorize research
 /social-coach    Get content recommendations and generate scripts

@@ -44,6 +44,8 @@ src/
 
 Lumis has Claude Code skills in `.claude/skills/`:
 
+- **`/init`** — Interactive vault setup. Asks for vault path, scaffolds directories, writes `.lumisrc`, walks through voice interview to populate Voice.md.
+- **`/voice`** — Standalone voice interview. Fills in or redoes Voice.md through a guided conversation.
 - **`/moment`** — Captures a daily moment. Reads all existing moments, analyzes the input, finds connections, writes the note, regenerates the Pattern Map canvas, and reports back.
 - **`/add-research`** — Saves a URL/PDF/article as research. Fetches content, categorizes it, writes a full note + TL;DR companion, extracts learnings, and reports topic clusters.
 - **`/social-coach`** — Reads the vault, recommends what to post where, generates platform-specific scripts.
