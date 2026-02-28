@@ -36,6 +36,7 @@ export function loadConfig(overrides?: Partial<LumisConfig>): LumisConfig {
       dailyNoteFormat: overrides?.paths?.dailyNoteFormat ?? rcPaths?.dailyNoteFormat ?? DEFAULT_PATHS.dailyNoteFormat,
       research: overrides?.paths?.research ?? rcPaths?.research ?? DEFAULT_PATHS.research,
       researchTldr: overrides?.paths?.researchTldr ?? rcPaths?.researchTldr ?? DEFAULT_PATHS.researchTldr,
+      learnings: overrides?.paths?.learnings ?? rcPaths?.learnings ?? DEFAULT_PATHS.learnings,
       amplifyStructures: overrides?.paths?.amplifyStructures ?? rcPaths?.amplifyStructures ?? DEFAULT_PATHS.amplifyStructures,
       amplifyTriggers: overrides?.paths?.amplifyTriggers ?? rcPaths?.amplifyTriggers ?? DEFAULT_PATHS.amplifyTriggers,
       amplifyHooks: overrides?.paths?.amplifyHooks ?? rcPaths?.amplifyHooks ?? DEFAULT_PATHS.amplifyHooks,

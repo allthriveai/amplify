@@ -27,6 +27,7 @@ Most journaling tools help you write. Lumis helps you notice. The real value isn
 Lumis/
   Moments/           ← what happened
   Stories/            ← what it means
+  Learnings/          ← what you took from it
   Research/           ← things you're learning
   Amplify/            ← how you share it with the world
     Structures/       ← content frameworks

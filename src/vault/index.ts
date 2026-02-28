@@ -8,6 +8,7 @@ export {
   resolveResearchDir,
   resolveTldrDir,
   resolveResearchCategoryDir,
+  resolveLearningsDir,
   resolveAmplifyStructuresDir,
   resolveAmplifyTriggersDir,
   resolveAmplifyHooksPath,

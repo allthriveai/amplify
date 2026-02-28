@@ -43,6 +43,11 @@ export function resolveResearchCategoryDir(config: LumisConfig, category: Resear
   return join(resolveResearchDir(config), category.folder);
 }
 
+/** Resolve the learnings directory */
+export function resolveLearningsDir(config: LumisConfig): string {
+  return resolvePath(config, config.paths.learnings);
+}
+
 /** Resolve the amplify structures directory */
 export function resolveAmplifyStructuresDir(config: LumisConfig): string {
   return resolvePath(config, config.paths.amplifyStructures);

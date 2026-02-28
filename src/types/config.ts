@@ -23,6 +23,8 @@ export interface LumisConfig {
     research: string;
     /** Where TL;DR companion notes are stored. Default: "Lumis/Research/TL;DR" */
     researchTldr: string;
+    /** Where lessons learned are stored. Default: "Lumis/Learnings" */
+    learnings: string;
     /** Where content structures are stored. Default: "Lumis/Amplify/Structures" */
     amplifyStructures: string;
     /** Where persuasion triggers are stored. Default: "Lumis/Amplify/Triggers" */
@@ -45,6 +47,7 @@ export const DEFAULT_PATHS: LumisConfig["paths"] = {
   dailyNoteFormat: "YYYY-MM-DD",
   research: "Lumis/Research",
   researchTldr: "Lumis/Research/TL;DR",
+  learnings: "Lumis/Learnings",
   amplifyStructures: "Lumis/Amplify/Structures",
   amplifyTriggers: "Lumis/Amplify/Triggers",
   amplifyHooks: "Lumis/Amplify",
