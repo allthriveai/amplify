@@ -66,9 +66,10 @@ git clone https://github.com/allthriveai/lumis.git
 cd lumis
 npm install
 npm run build
+claude
 ```
 
-Then run `/init` in Claude Code or Claude Desktop. It walks you through choosing your vault path, scaffolds the directory structure, and interviews you to populate Voice.md: who you are, your mission, your audience, what you believe, and how you talk. Lumis reads Voice.md at every layer to align moments, coaching, and video with your identity.
+Then run `/init` to get started. It walks you through choosing your vault path, scaffolds the directory structure, and interviews you to populate Voice.md: who you are, your mission, your audience, what you believe, and how you talk. Lumis reads Voice.md at every layer to align moments, coaching, and video with your identity.
 
 ## Commands
 
