@@ -120,27 +120,44 @@ If the user pointed at specific content, skip the broad recommendation and focus
 For each recommended piece (or the user's specified content), generate platform-specific drafts:
 
 **LinkedIn:**
-- 3-5 sentences. One idea per post.
+- 1,300-1,900 characters. One idea per post.
 - Professional but opinionated. Write like a person with a take, not a brand.
-- Strong opening line that stops the scroll. No "I'm excited to share" or "Here's what I learned."
-- End with a question or a clear takeaway, not a call to like/share.
-- 3-5 hashtags maximum, placed at the end. No hashtag spam.
+- Hook must land in the first 210 characters (the "See more" cutoff).
+- Line breaks every 1-2 sentences (mobile-first reading).
+- End with a genuine question that invites perspective, not "Agree?" or a call to like/share.
+- 1-3 niche-relevant hashtags at the end. Never more than 3.
+- For high-potential stories: consider a PDF carousel (8-10 slides) alternative.
+- No engagement bait. No "I'm excited to share." No "Comment YES."
 
 **X (Twitter):**
-- Sharp one-liner version of the same idea. Punchy, direct, quotable.
-- If the content is technical or complex, outline a thread: tweet 1 (hook), tweets 2-4 (the insight broken into pieces), tweet 5 (takeaway or question).
-- Captions on any video content.
+- Default to text posts (text outperforms video by 30% on X).
+- Sharp, punchy, quotable. 70-100 characters for singles. Full 280 for Premium.
+- Threads: 5-7 tweets. Tweet 1 is the hook and must stand alone. Label "Thread" or "1/".
+- Link goes in the first reply, never the main post (30-50% reach penalty).
+- Quote tweets with original commentary, never naked retweets.
+- Adapt voice: more casual, sharper, fewer words than LinkedIn.
+- Always caption video. Upload natively, never link externally.
 
 **YouTube (Shorts):**
 - Script with timed sections:
-  - **Hook** (5-10s) — grab attention, state the tension or question
-  - **Problem** (15-20s) — what's going wrong, what people get wrong, or what they don't know
-  - **Insight** (20-30s) — the answer, the reframe, the thing you learned
-  - **Takeaway** (10-15s) — what to do with this information
-  - **CTA** (5s) — follow for more, comment what you think, etc.
-- Total script should target under 60 seconds when spoken.
-- Searchable title that someone would actually type into YouTube.
-- Hook must land in the first 3 seconds.
+  - **Hook** (2-2.5s) — grab attention immediately. 50-60% of drop-offs happen in first 3 seconds.
+  - **Problem** (5-10s) — what's going wrong, what people get wrong, or what they don't know
+  - **Insight** (10-15s) — the answer, the reframe, the thing you learned
+  - **Takeaway** (5-10s) — what to do with this information
+- Optimal length: 15-30 seconds (highest completion rates). Max 3 minutes, but short wins.
+- Design the ending to loop into the beginning (loop rate is a ranking signal).
+- Burn in captions (embedded, not auto-generated). 80% watch on mute.
+- Searchable title with keyword in first 5 words.
+- Each Short should tease or connect to a long-form piece (funnel strategy).
+
+**YouTube Long-Form (5-10 min):**
+- Script with timed sections:
+  - **Cold open** (0-15s) — start mid-action or with a provocative statement. Never "Hey guys, welcome back."
+  - **Context** (15-60s) — orient the viewer, why this matters to them.
+  - **Main content** (1-6 min) — micro-loop structure, each section ends with curiosity that pulls into the next.
+  - **Recap/CTA** (final 30s) — summarize takeaways, point to the next video.
+- Open face-to-camera for trust, cut to B-roll/graphics to illustrate, return to face for emphasis.
+- Searchable title with keyword in first 5 words. Numbers increase CTR 20-30%.
 
 ### Step 5: Save Scripts
 
@@ -237,22 +254,53 @@ Apply humanizer rules to all prose in the report and in the generated scripts:
 Reference these guidelines when making recommendations:
 
 **LinkedIn:**
-- Native video outperforms link posts by a wide margin. Upload video directly, never link to YouTube.
-- Best posting times: Tuesday through Thursday, 8-10am in the audience's timezone.
-- The 9/10 rule: 9 out of 10 posts should be pure value with no mention of product or service. 1 in 10 can include a soft mention.
-- Document posts (carousels) perform well for frameworks and step-by-step content.
-- First line is everything. If it doesn't stop the scroll, nothing else matters.
+- Algorithm: interest-graph over social-graph. Dwell time is the primary signal. Depth Score (dwell time + saves + sends + comment quality) determines reach.
+- Top formats: PDF carousels (6.6% engagement), document posts (6.1%), native video (5.6%). Single-image posts now underperform text-only.
+- Native video gets 5x more engagement than link posts. Vertical (9:16) gets 58% more mobile engagement. Under 60 seconds.
+- Posting: 2-3x/week, Tuesday-Thursday, 9 AM-noon. Never twice in one day.
+- 1,300-1,900 characters per text post. Hook in first 210 characters.
+- 1-3 niche hashtags max. More than 5 triggers spam detection.
+- Reply to every comment within 2 hours (extends post lifespan).
+- LinkedIn detects and downranks AI-generated text (45% engagement penalty). Personal voice matters.
+- Engagement pods detected with 97% accuracy. Engagement bait suppressed.
+- LinkedIn Live: 7x reactions, 24x comments vs regular posts. Consider for community building.
+- Company page organic reach down 60-66%. Personal profiles are where the reach lives.
 
 **X (Twitter):**
-- Punchy and direct. Cut every word that doesn't earn its place.
-- Threads work well for technical breakdowns. Tweet 1 is the hook, everything flows from there.
-- Always add captions to video. Most people scroll with sound off.
-- Adapt from LinkedIn, don't copy-paste. The voice is different: more casual, sharper, fewer words.
-- Quote tweets with a take outperform plain retweets.
+- Algorithm: reply-from-author is weighted +75 (150x a like). Conversation depth dominates. Average engagement rate: 0.12%.
+- Text outperforms video by 30% (the only major platform where this is true). Text is the backbone.
+- Threads: 3-5x more engagement than singles. 5-7 tweets per thread. Hook in tweet 1.
+- Premium is essential: 4x in-network visibility, 30-40% higher reply priority. Free accounts see near-zero link post engagement.
+- External links: 30-50% reach penalty. Put links in the first reply.
+- Post 3-5x/day, spaced 2-3 hours apart. Tuesday-Wednesday 9 AM-2 PM is peak.
+- 70-100 characters for highest engagement on singles.
+- Video: upload natively, vertical (9:16), under 45 seconds, always caption.
+- Grok AI now powers ranking (replaced heuristics Oct 2025). Algorithm optimizes for "unregretted user-seconds."
+- Spend 70% of X time replying to others (growth engine), 30% creating content.
+- Communities: posts now visible to everyone on the platform (Feb 2026 change). Worth creating for niche topics.
+- TweepCred hidden score based on account age, follower ratio, engagement quality.
 
-**YouTube (Shorts):**
-- Under 60 seconds. Tighter is better.
-- Searchable titles that match what people actually type (not clever wordplay).
-- Hook must land in the first 3 seconds or viewers swipe away.
-- Face-to-camera with captions performs best.
-- Post consistently. Algorithm rewards frequency.
+**YouTube Shorts:**
+- Separate algorithm from long-form (fully decoupled late 2025). Safe to experiment.
+- 74% of Shorts views come from non-subscribers. Best subscriber acquisition tool.
+- Hook must land in 2-2.5 seconds. 50-60% of drop-offs happen in first 3 seconds. Target: above 70% intro retention.
+- Optimal length: 15-30 seconds. Max is now 3 minutes, but short performs better unless retention is exceptional.
+- Captions: embedded/burned-in, not auto-generated. 40% engagement boost. 80% watch on mute.
+- Retention target: 80-90% completion for top performers. Below 50% = algorithm treats as skippable.
+- Face-to-camera to open (trust), then mix with B-roll/graphics (28% higher retention with 3+ visual changes).
+- Post 3-7 Shorts/week. Each gets a 48-hour freshness boost.
+- Searchable titles: keyword in first 5 words, under 60 characters. Numbers increase CTR 20-30%.
+- Custom vertical thumbnails (1080x1920). Avoid text at bottom/right edge (UI overlay).
+- Design endings to loop into beginnings (loop rate is a ranking signal).
+- Each Short should funnel viewers to long-form content on the same channel.
+- No TikTok watermarks (suppression signal).
+- AI disclosure required for AI voice clones, deepfake face swaps, synthetic performances. Not required for AI-assisted scripting/editing.
+
+**YouTube Long-Form:**
+- 1-2 videos/week. 5-10 minutes for educational/thought leadership.
+- Algorithm now prioritizes satisfaction over raw watch time. Shorter videos that satisfy outperform longer videos that get abandoned.
+- CTR + retention together matter. High CTR with low retention = clickbait penalty.
+- Thumbnails: expressive faces increase CTR 20-30%. High-contrast colors. A/B test with YouTube's tool.
+- Chapters (timestamps from 0:00, keyword-rich titles, minimum 3, each 10+ seconds) help SEO and viewer navigation.
+- Open face-to-camera, cut to visuals, return for emphasis. 3+ camera angle changes = 28% higher retention.
+- Shorts are the discovery funnel. Long-form is where you build loyalty and monetize.
