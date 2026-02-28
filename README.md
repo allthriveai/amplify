@@ -1,6 +1,6 @@
 # Lumis
 
-Your AI confidant. Lumis helps you capture the small moments from your day, find the hidden patterns between them, and turn those patterns into stories worth sharing.
+Your AI confidant. Lumis helps you capture the small moments from your day, synthesize research into lessons, and correlate your moments and learnings into stories worth sharing.
 
 You tell Lumis what happened. It:
 
