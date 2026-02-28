@@ -1,8 +1,8 @@
 # Lumis
 
-Lumis pays attention to your life so you can too. It remembers the moments you'd otherwise forget, notices the patterns you can't see yet, and helps you turn them into stories worth sharing.
+Your AI confidant. Lumis helps you capture the small moments from your day, find the hidden patterns between them, and turn those patterns into stories worth sharing.
 
-Tell Lumis what happened today. It will:
+You tell Lumis what happened. It:
 
 - **Identifies the "5-second moment"** in your story, the instant something shifted
 - **Finds connections** to your past moments, things you might not have linked on your own
