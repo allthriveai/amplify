@@ -18,10 +18,10 @@ Lumis is a CLI tool and MCP server that lives in an Obsidian vault. It helps cap
 
 ```
 src/
-  types/          ← TypeScript interfaces (moment, canvas, config, research, amplify)
+  types/          ← TypeScript interfaces (moment, canvas, config, research, amplify, signal, memory)
   vault/          ← Read/write Obsidian markdown files with gray-matter frontmatter
   cli/            ← CLI commands (moment, init, import-sparks)
-  mcp/            ← MCP server (skeleton)
+  mcp/            ← MCP server (stdio transport, 11 tools)
   ai/             ← Claude API integration for moment analysis
   canvas/         ← Obsidian canvas file generation
   pipeline/       ← Moment capture pipeline
@@ -29,30 +29,6 @@ src/
   studio/         ← Video production (HeyGen, ElevenLabs, Remotion clients)
   config.ts       ← Loads .lumisrc config with fallbacks to env vars
   index.ts        ← Public API re-exports
-```
-
-## The vault
-
-Lumis writes to an Obsidian vault configured in `.lumisrc`. The vault is NOT this repo. The vault path is resolved from:
-1. `.lumisrc` in cwd
-2. `VAULT_PATH` env var
-3. Known fallback: `~/Sites/your-vault`
-
-Vault structure (all paths configurable in `.lumisrc`):
-```
-Lumis/
-  Moments/           ← daily moment notes
-  Stories/            ← developed stories
-  Learnings/          ← insights extracted from research
-  Research/           ← full research notes
-    TL;DR/            ← companion summaries
-    AI & Agents/      ← categorized by topic
-  Amplify/            ← content creation tools
-    Structures/       ← content frameworks
-    Triggers/         ← persuasion patterns
-    Hooks.md          ← scroll-stopping openers
-    Prompts.md        ← content idea generators
-  Pattern Map.canvas  ← visual connections between moments
 ```
 
 ## Conventions
@@ -64,10 +40,6 @@ Lumis/
 - Config changes go in three places: `types/config.ts` (interface + DEFAULT_PATHS), `config.ts` (loadConfig merge), `.lumisrc.example`
 - CLI commands live in `src/cli/commands/` and register in `src/cli/index.ts`
 
-## IP separation
-
-Code goes in this repo. Content goes in the vault. No purchased content, no personal moment data, no vault files in git. The `.gitignore` blocks `.lumisrc`, `.env`, PDFs, and the `creator-blueprint/` directory.
-
 ## Skills
 
 Lumis has Claude Code skills in `.claude/skills/`:
@@ -75,6 +47,7 @@ Lumis has Claude Code skills in `.claude/skills/`:
 - **`/moment`** — Captures a daily moment. Reads all existing moments, analyzes the input, finds connections, writes the note, regenerates the Pattern Map canvas, and reports back.
 - **`/add-research`** — Saves a URL/PDF/article as research. Fetches content, categorizes it, writes a full note + TL;DR companion, extracts learnings, and reports topic clusters.
 - **`/social-coach`** — Reads the vault, recommends what to post where, generates platform-specific scripts.
+- **`/story-craft`** — Develops storytelling skill from captured moments. Practice mode or full story development.
 - **`/produce`** — Takes a script and produces a branded video: HeyGen avatar + Remotion rendering.
 
 All skills read `.lumisrc` for vault paths and write directly to the Obsidian vault.
@@ -88,24 +61,6 @@ When writing prose for the vault (moments, research notes, learnings), follow th
 - Vary sentence length. Be specific. Have opinions.
 - Preserve the user's voice in moments. The humanizer is for Lumis's writing, not theirs.
 
-## Studio
-
-Lumis includes a video production pipeline powered by HeyGen (avatar video), ElevenLabs (voice), and Remotion (branded rendering).
-
-- **Remotion config** lives at repo root: `remotion.config.ts`
-- **Compositions** in `src/studio/compositions/` (excluded from tsc, bundled by Remotion)
-- **API clients** in `src/studio/` (heygen.ts, elevenlabs.ts, render.ts)
-- **Studio config** is optional in `.lumisrc` under `studio` key, or via env vars (HEYGEN_API_KEY, etc.)
-- **Public assets**: `public/raw/` (HeyGen downloads), `public/captions/` (SRT files)
-
-Vault additions:
-```
-Lumis/
-  Scripts/              ← platform-specific content drafts
-  Studio/
-    Outputs/            ← finished branded videos
-```
-
 ## Commands
 
 ```bash
@@ -116,7 +71,17 @@ npm test             # Run vitest
 lumis init [path]    # Scaffold vault structure
 lumis moment         # Capture a moment
 lumis import-sparks  # Import content from sparks.json manifest
-lumis studio list        # List scripts and status
-lumis studio render      # Render script to branded video
-lumis studio preview     # Open Remotion preview
+lumis studio list    # List scripts and status
+lumis studio render  # Render script to branded video
+lumis studio preview # Open Remotion preview
 ```
+
+## Docs
+
+Detailed documentation for each subsystem:
+
+- **[Vault](docs/vault.md)** — vault structure, Voice.md, IP separation
+- **[Signals](docs/signals.md)** — event log connecting pipeline stages, signal types, social coach integration
+- **[Memory](docs/memory.md)** — session history, preferences, boundaries
+- **[MCP Server](docs/mcp.md)** — all tools, Claude Desktop config, tool details
+- **[Studio](docs/studio.md)** — video production pipeline, API setup, Remotion

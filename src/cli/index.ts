@@ -37,6 +37,13 @@ async function main() {
       await studioCommand(args[0], args.slice(1));
       break;
     }
+    case "story-craft": {
+      const { storyCraftCommand } = await import("./commands/story-craft.js");
+      const mode = args[0] === "develop" ? "develop" : "practice";
+      const subArgs = args[0] === "develop" || args[0] === "practice" ? args.slice(1) : args;
+      await storyCraftCommand(mode, subArgs);
+      break;
+    }
     default:
       console.log(`lumis — your AI confidant
 
@@ -46,6 +53,8 @@ Commands:
   lumis init [path]                  Set up Lumis in a vault
   lumis import-sparks --from <path>  Import sparks from manifest
   lumis studio <cmd>                 Video production (list, render, preview)
+  lumis story-craft                  Practice storytelling (pick a moment, one exercise)
+  lumis story-craft develop [term]   Develop a moment into a full story
 
 Options:
   --help    Show this help`);

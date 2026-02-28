@@ -25,6 +25,7 @@ paths.scripts        → scripts folder relative to vault root (default: "Lumis/
 paths.studioOutputs  → video output folder relative to vault root (default: "Lumis/Studio/Output")
 paths.strategyDocs   → strategy docs folder relative to vault root (default: "2 - Areas/All Thrive")
 paths.amplify        → amplify folder relative to vault root (default: "Lumis/Amplify")
+paths.voice          → voice/identity file (default: "Lumis/Voice.md")
 studio.heygenApiKey  → HeyGen API key (or HEYGEN_API_KEY env var)
 studio.heygenAvatarId → HeyGen avatar ID (or HEYGEN_AVATAR_ID env var)
 studio.elevenlabsApiKey → ElevenLabs API key (or ELEVENLABS_API_KEY env var)
@@ -32,6 +33,10 @@ studio.elevenlabsVoiceId → ElevenLabs voice ID (or ELEVENLABS_VOICE_ID env var
 ```
 
 All paths resolve relative to `vaultPath`.
+
+### Step 0b: Read Voice
+
+Read `{vaultPath}/{paths.voice}` (default: `Lumis/Voice.md`) if it exists. This file defines who the user is, their mission, audience, beliefs, and voice. Use it to inform script generation (Step 1 when creating a new script) and to shape the lower third, outro CTA, and any on-screen text to match the user's identity. If the file doesn't exist, proceed without it.
 
 ### Step 1: Find or Create Script
 
@@ -165,5 +170,13 @@ Posting order:
 Apply humanizer rules to all prose in the report:
 - No AI vocabulary (delve, landscape, crucial, leverage, robust, innovative)
 - No filler phrases or significance inflation
-- No em dash overuse — use commas, colons, or periods
+- No em dash overuse. Use commas, colons, or periods.
 - Be direct. Say what happened and what to do next.
+
+### Step 7b: Log to Session Memory
+
+Append an entry to today's session log at `{vaultPath}/{paths.memory}/sessions/YYYY-MM-DD.md`:
+
+```
+- **HH:MM** — video_produced: Rendered "[title]" for [platform list], output: [output path]
+```

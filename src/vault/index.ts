@@ -1,5 +1,5 @@
-export { readMoments, readMoment, readResearchNotes } from "./reader.js";
-export { writeMoment, writeCanvas, writeResearchNote, writeTldrNote } from "./writer.js";
+export { readMoments, readMoment, readResearchNotes, readStories, readStory } from "./reader.js";
+export { writeMoment, writeCanvas, writeResearchNote, writeTldrNote, writeStory, appendPracticeLog } from "./writer.js";
 export { parseFrontmatter, serializeFrontmatter } from "./frontmatter.js";
 export {
   resolvePath,
@@ -16,6 +16,14 @@ export {
   resolveScriptsDir,
   resolveStudioOutputsDir,
   resolveStrategyDocsDir,
+  resolveVoicePath,
+  resolveSignalsDir,
+  resolveSignalsPath,
+  resolveMemoryDir,
+  resolveSessionPath,
+  resolvePreferencesPath,
+  resolveStoriesDir,
+  resolvePracticeLogPath,
 } from "./paths.js";
 
 // Re-export readCanvas for convenience
@@ -24,3 +32,10 @@ export { readCanvas } from "./reader.js";
 // Amplify reader/writer
 export { readStructures, readTriggers, readHooks, readPrompts } from "./amplify-reader.js";
 export { writeStructure, writeTrigger, writeHooksCollection, writePromptsCollection } from "./amplify-writer.js";
+
+// Signals
+export { readSignals, readRecentSignals, emitSignal, signalId, summarizeSignals } from "./signals.js";
+export type { SignalSummary } from "./signals.js";
+
+// Memory
+export { formatSessionTime, appendSessionEntry, readSession, readRecentSessions, readPreferences, addPreference } from "./memory.js";

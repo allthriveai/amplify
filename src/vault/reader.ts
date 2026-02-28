@@ -3,8 +3,9 @@ import { join } from "node:path";
 import type { LumisConfig } from "../types/config.js";
 import type { Moment, MomentFrontmatter } from "../types/moment.js";
 import type { ResearchNote, ResearchFrontmatter } from "../types/research.js";
+import type { Story, StoryFrontmatter, StoryElements } from "../types/story.js";
 import type { CanvasFile } from "../types/canvas.js";
-import { resolveMomentsDir, resolveCanvasPath, resolveResearchDir, resolveResearchCategoryDir } from "./paths.js";
+import { resolveMomentsDir, resolveCanvasPath, resolveResearchDir, resolveResearchCategoryDir, resolveStoriesDir } from "./paths.js";
 import { parseFrontmatter } from "./frontmatter.js";
 
 /** Read all moment files from the configured moments directory */
@@ -90,6 +91,94 @@ function readResearchNotesFromDir(
         content,
       };
     });
+}
+
+/** Read all story files from the configured stories directory */
+export function readStories(config: LumisConfig): Story[] {
+  const dir = resolveStoriesDir(config);
+  if (!existsSync(dir)) return [];
+
+  return readdirSync(dir)
+    .filter((f) => f.endsWith(".md") && f !== "README.md" && f !== "Practice Log.md")
+    .map((filename) => readStory(config, filename))
+    .filter((s): s is Story => s !== null);
+}
+
+/** Read a single story file by filename */
+export function readStory(config: LumisConfig, filename: string): Story | null {
+  const dir = resolveStoriesDir(config);
+  const filepath = join(dir, filename);
+
+  if (!existsSync(filepath)) return null;
+
+  const raw = readFileSync(filepath, "utf-8");
+  const { frontmatter, content } = parseFrontmatter<StoryFrontmatter>(raw);
+
+  const elements: StoryElements = {};
+
+  // Extract Transformation section
+  const transMatch = content.match(/## Transformation\n+([\s\S]*?)(?=\n## |$)/);
+  if (transMatch) {
+    const section = transMatch[1];
+    const beforeMatch = section.match(/\*\*Before\*\*:\s*(.*)/);
+    const afterMatch = section.match(/\*\*After\*\*:\s*(.*)/);
+    const changeMatch = section.match(/\*\*The change\*\*:\s*(.*)/);
+    elements.transformation = {
+      before: beforeMatch?.[1]?.trim() ?? "",
+      after: afterMatch?.[1]?.trim() ?? "",
+      change: changeMatch?.[1]?.trim() ?? "",
+    };
+  }
+
+  // Extract 5-Second Moment section
+  const fiveSecMatch = content.match(/## The 5-Second Moment\n+([\s\S]*?)(?=\n## |$)/);
+  if (fiveSecMatch) {
+    elements.fiveSecondMoment = fiveSecMatch[1].trim();
+  }
+
+  // Extract The Question section
+  const questionMatch = content.match(/## The Question\n+([\s\S]*?)(?=\n## |$)/);
+  if (questionMatch) {
+    elements.theQuestion = questionMatch[1].trim();
+  }
+
+  // Extract Opening Scene section
+  const sceneMatch = content.match(/## Opening Scene\n+([\s\S]*?)(?=\n## |$)/);
+  if (sceneMatch) {
+    elements.openingScene = sceneMatch[1].trim();
+  }
+
+  // Extract The Stakes section
+  const stakesMatch = content.match(/## The Stakes\n+([\s\S]*?)(?=\n## |$)/);
+  if (stakesMatch) {
+    elements.theStakes = stakesMatch[1].trim();
+  }
+
+  // Extract The Turns section
+  const turnsMatch = content.match(/## The Turns\n+([\s\S]*?)(?=\n## |$)/);
+  if (turnsMatch) {
+    const turnLines = turnsMatch[1]
+      .split("\n")
+      .filter((l) => l.startsWith("- "))
+      .map((l) => l.replace(/^- /, "").trim());
+    if (turnLines.length > 0) {
+      elements.theTurns = turnLines;
+    }
+  }
+
+  // Extract The Story section
+  const storyMatch = content.match(/## The Story\n+([\s\S]*?)(?=\n## |$)/);
+  if (storyMatch) {
+    elements.theStory = storyMatch[1].trim();
+  }
+
+  return {
+    filename,
+    path: join(config.paths.stories, filename),
+    frontmatter,
+    content,
+    elements,
+  };
 }
 
 /** Read the pattern map canvas file */

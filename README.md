@@ -138,6 +138,7 @@ Lumis/
   Amplify/            ← hooks, structures, triggers, prompts
   Studio/
     Outputs/          ← finished branded videos
+  Voice.md            ← who you are and what you're building toward
   Pattern Map.canvas  ← how moments connect
 ```
 
@@ -150,6 +151,8 @@ npm install
 npm run build
 lumis init ~/path/to/your/vault
 ```
+
+`lumis init` creates the vault structure and scaffolds a `Voice.md` template. Fill in Voice.md first: who you are, your mission, your audience, what you believe, and how you talk. Lumis reads it at every layer to align moments, coaching, and video with your identity.
 
 ### Studio setup (optional)
 

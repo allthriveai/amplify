@@ -221,6 +221,44 @@ If a cluster reaches 4+ for the first time with this addition, highlight it:
 
 This report runs every time `/add-research` is used, not just when new clusters form, so the user always sees what's building up. If no clusters exist yet, say so briefly and move on.
 
+### Step 7d: Emit Signals + Session Memory
+
+After creating learnings and checking clusters, emit signals and log to session memory:
+
+**For each learning extracted**, emit a `learning_extracted` signal to `{vaultPath}/{paths.signals}/signals.json`:
+```json
+{
+  "id": "sig-[timestamp]-[random6hex]",
+  "type": "learning_extracted",
+  "timestamp": "[ISO timestamp]",
+  "data": {
+    "filename": "[learning filename]",
+    "pillar": "[pillar]",
+    "topicTags": ["tag1", "tag2"],
+    "sourceResearch": "[research note filename]"
+  }
+}
+```
+
+**If a cluster reaches 4+ learnings** for the first time with this addition, emit a `cluster_formed` signal:
+```json
+{
+  "id": "sig-[timestamp]-[random6hex]",
+  "type": "cluster_formed",
+  "timestamp": "[ISO timestamp]",
+  "data": {
+    "topicTag": "[tag]",
+    "learningCount": [N],
+    "learningFilenames": ["learning1.md", "learning2.md"]
+  }
+}
+```
+
+**Log to session memory** at `{vaultPath}/{paths.memory}/sessions/YYYY-MM-DD.md`:
+```
+- **HH:MM** — research_added: Saved "[title]" to [category], extracted [N] learnings
+```
+
 ### Step 7: Confirm to the User
 
 Report:

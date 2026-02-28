@@ -15,7 +15,10 @@
     "amplifyPrompts": "Lumis/Amplify",
     "scripts": "Lumis/Scripts",
     "studioOutputs": "Lumis/Studio/Outputs",
-    "strategyDocs": "2 - Areas/All Thrive"
+    "strategyDocs": "2 - Areas/All Thrive",
+    "voice": "Lumis/Voice.md",
+    "signals": "Lumis/Signals",
+    "memory": "Lumis/Memory"
   },
   "researchCategories": [
     {

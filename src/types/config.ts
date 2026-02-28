@@ -40,6 +40,12 @@ export interface LumisConfig {
     studioOutputs: string;
     /** Where strategy docs live. Default: "2 - Areas/All Thrive" */
     strategyDocs: string;
+    /** Your voice/identity file. Default: "Lumis/Voice.md" */
+    voice: string;
+    /** Where signals are stored. Default: "Lumis/Signals" */
+    signals: string;
+    /** Where memory (sessions + preferences) lives. Default: "Lumis/Memory" */
+    memory: string;
   };
 
   /** Categories for auto-classifying research notes */
@@ -65,6 +71,9 @@ export const DEFAULT_PATHS: LumisConfig["paths"] = {
   scripts: "Lumis/Scripts",
   studioOutputs: "Lumis/Studio/Outputs",
   strategyDocs: "2 - Areas/All Thrive",
+  voice: "Lumis/Voice.md",
+  signals: "Lumis/Signals",
+  memory: "Lumis/Memory",
 };
 
 export const DEFAULT_RESEARCH_CATEGORIES: ResearchCategory[] = [

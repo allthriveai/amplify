@@ -9,6 +9,24 @@ export async function momentCommand(rawInput: string): Promise<void> {
   }
 
   const config = loadConfig();
-  // TODO: Call captureMoment and print summary
-  console.log("Moment capture not yet implemented.");
+
+  if (!config.anthropicApiKey) {
+    console.error("No Anthropic API key configured. Set ANTHROPIC_API_KEY or add it to .lumisrc.");
+    process.exit(1);
+  }
+
+  console.log("Capturing moment...");
+  const { moment, analysis } = await captureMoment(rawInput, config);
+
+  console.log(`\nMoment captured: ${analysis.title}`);
+  console.log(`5-second moment: ${analysis.fiveSecondMoment}`);
+  console.log(`Themes: ${analysis.themes.join(", ")}`);
+  console.log(`Story potential: ${analysis.storyPotential}`);
+  if (analysis.connections.length > 0) {
+    console.log(`Connections: ${analysis.connections.length}`);
+    for (const c of analysis.connections) {
+      console.log(`  - ${c.momentPath} — ${c.reason}`);
+    }
+  }
+  console.log(`\nSaved to: ${moment.path}`);
 }

@@ -27,9 +27,34 @@ paths.learnings      → learnings folder relative to vault root (default: "Lumi
 paths.scripts        → scripts folder relative to vault root (default: "Lumis/Scripts")
 paths.strategyDocs   → strategy docs folder relative to vault root (default: "2 - Areas/All Thrive")
 paths.amplify        → amplify folder relative to vault root (default: "Lumis/Amplify")
+paths.voice          → voice/identity file (default: "Lumis/Voice.md")
 ```
 
 All paths resolve relative to `vaultPath`.
+
+### Step 0b: Read Voice
+
+Read `{vaultPath}/{paths.voice}` if it exists. This file defines who the user is, their mission, audience, beliefs, and voice. Everything you recommend and write must align with this identity. If the file doesn't exist, proceed without it but note in your report that a Voice file would improve recommendations.
+
+### Step 0c: Read Signals + Memory
+
+Read `{vaultPath}/{paths.signals}/signals.json` if it exists. Parse the signals array and extract:
+
+- **Rejected recommendations** (`recommendation_rejected` signals from last 30 days): topics/pillars the user doesn't want to see again
+- **Already-scripted content** (`script_drafted` signals): source content that's already been turned into scripts
+- **Posted content** (`content_posted` signals): what's been posted and to which platforms
+- **Top engagement** (`engagement_updated` signals): which content performed well
+- **Clusters** (`cluster_formed` signals): topic clusters with enough learnings to recommend
+
+Also read `{vaultPath}/{paths.memory}/preferences.md` if it exists. This file contains the user's stated preferences for content style, coaching focus, and topics to avoid. Apply these preferences when making recommendations.
+
+Use this signal context to:
+1. Skip moments that already have `script_drafted` signals (already scripted)
+2. Avoid topics or pillars with `recommendation_rejected` signals in the last 30 days
+3. Don't recommend content already posted to the same platform (`content_posted`)
+4. Highlight when `moment_captured` and `learning_extracted` signals converge on the same theme
+5. Boost themes with strong `engagement_updated` signals
+6. Recommend content from `cluster_formed` topics
 
 ### Step 1: Read Strategy Context
 
@@ -53,6 +78,12 @@ Scan the vault for postable content:
 - `story-potential` is `high`
 - `story-status` is `captured` or `developing`
 - Extract: title, date, themes, moment-type, 5-second moment, story potential
+
+**Stories** — read all files in `{vaultPath}/{paths.stories}/` (excluding README.md and Practice Log.md). Stories are developed moments with structured storytelling elements. Extract:
+- Title, source moment, craft-status (drafting/workshopped/told), themes
+- Stories with `craft-status: drafting` or `workshopped` are strong candidates: the storytelling work is already done
+- A story with a complete "The Story" section is ready for content adaptation
+- Prioritize stories over raw moments when both cover the same theme
 
 **Learnings** — read all files in `{vaultPath}/{paths.learnings}/` (excluding README.md). Extract:
 - Title, pillar, topic tags, the core insight (first paragraph after heading)
@@ -146,6 +177,30 @@ Rules for saving:
 
 If generating drafts for multiple platforms from the same source, create one script file per platform so each can be tracked and updated independently.
 
+### Step 5b: Emit Signals + Session Memory
+
+After saving scripts, emit signals and log to session memory:
+
+**For each script saved**, emit a `script_drafted` signal to `{vaultPath}/{paths.signals}/signals.json`:
+```json
+{
+  "id": "sig-[timestamp]-[random6hex]",
+  "type": "script_drafted",
+  "timestamp": "[ISO timestamp]",
+  "data": {
+    "filename": "[script filename]",
+    "platform": ["linkedin", "x"],
+    "pillar": "[pillar]",
+    "sourceContent": "[[Lumis/Moments/source-filename]]"
+  }
+}
+```
+
+**Log to session memory** at `{vaultPath}/{paths.memory}/sessions/YYYY-MM-DD.md`:
+```
+- **HH:MM** — coaching_done: Created [N] scripts for [platform list] (pillars: [pillar list])
+```
+
 ### Step 6: Report
 
 Give a concise summary of what was generated:
@@ -164,6 +219,11 @@ Give a concise summary of what was generated:
 
 If pillar imbalances exist, note them:
 > "You're heavy on [pillar] and light on [pillar]. Next time, look for content that fits [underrepresented pillar]."
+
+**Story craft nudge:** Check `{vaultPath}/{paths.stories}/Practice Log.md` for the date of the last practice entry. If it's been 7+ days (or the file doesn't exist), include a one-line nudge at the end of the report:
+> "It's been [N] days since your last story craft practice. A quick `/story-craft` session turns raw moments into stronger content."
+
+Don't nag. One line, end of report, only when it's been a week or more.
 
 Apply humanizer rules to all prose in the report and in the generated scripts:
 - No AI vocabulary (delve, landscape, crucial, leverage, robust, innovative)

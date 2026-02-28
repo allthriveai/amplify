@@ -20,10 +20,10 @@ Find the `.lumisrc` config file to resolve the vault path and moments directory.
 Read the config and extract:
 
 ```
-vaultPath           → absolute path to the Obsidian vault
-paths.moments       → moments folder relative to vault root (default: "Lumis/Moments")
-paths.canvas        → Pattern Map canvas path relative to vault root (default: "Lumis/Pattern Map.canvas")
-paths.dailyNotes    → daily notes folder relative to vault root (default: "Daily Notes")
+vaultPath             → absolute path to the Obsidian vault
+paths.moments         → moments folder relative to vault root (default: "Lumis/Moments")
+paths.canvas          → Pattern Map canvas path relative to vault root (default: "Lumis/Pattern Map.canvas")
+paths.dailyNotes      → daily notes folder relative to vault root (default: "Daily Notes")
 paths.dailyNoteFormat → date format for daily note filenames (default: "YYYY-MM-DD")
 ```
 
@@ -238,3 +238,36 @@ If this is one of the user's first few moments, add encouragement about the prac
 **Learning connections**: This moment connects to [N] learnings about [topic tag(s)] ([pillar name] pillar). Your lived experience is backing up what you're reading.
 ```
 List the connected learnings by title with a one-line note on how the moment and learning relate. This is a content signal: when personal experience and professional insight align, there's a post or video in the intersection.
+
+### Step 8b: Log to Session Memory
+
+Append an entry to today's session log at `{vaultPath}/{paths.memory}/sessions/YYYY-MM-DD.md`:
+
+```
+- **HH:MM** — moment_captured: Captured "[title]" ([storyPotential] potential, themes: [theme list])
+```
+
+If the file doesn't exist, create it with a `# Session: YYYY-MM-DD` header first.
+
+### Step 8c: Emit Signal
+
+Write a `moment_captured` signal to `{vaultPath}/{paths.signals}/signals.json`:
+
+```json
+{
+  "id": "sig-[timestamp]-[random6hex]",
+  "type": "moment_captured",
+  "timestamp": "[ISO timestamp]",
+  "data": {
+    "filename": "[moment filename]",
+    "themes": ["[theme1]", "[theme2]"],
+    "storyPotential": "[high/medium/low]",
+    "momentType": "[type]",
+    "fiveSecondMoment": "[the 5-second moment text]"
+  }
+}
+```
+
+If `signals.json` doesn't exist, create it with `{"version": 1, "signals": []}`. Prune signals older than 90 days on every write.
+
+Note: If using the programmatic pipeline (`captureMoment()` function), Steps 8b and 8c are handled automatically by the pipeline code. Only perform these steps manually when using the skill directly (reading/writing files without the pipeline).

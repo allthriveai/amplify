@@ -82,3 +82,38 @@ export function resolveStudioOutputsDir(config: LumisConfig): string {
 export function resolveStrategyDocsDir(config: LumisConfig): string {
   return resolvePath(config, config.paths.strategyDocs);
 }
+
+/** Resolve the voice/identity file */
+export function resolveVoicePath(config: LumisConfig): string {
+  return resolvePath(config, config.paths.voice);
+}
+
+/** Resolve the signals directory */
+export function resolveSignalsDir(config: LumisConfig): string {
+  return resolvePath(config, config.paths.signals);
+}
+
+/** Resolve the signals.json file path */
+export function resolveSignalsPath(config: LumisConfig): string {
+  return join(resolvePath(config, config.paths.signals), "signals.json");
+}
+
+/** Resolve the memory directory */
+export function resolveMemoryDir(config: LumisConfig): string {
+  return resolvePath(config, config.paths.memory);
+}
+
+/** Resolve a session log file path for a given date */
+export function resolveSessionPath(config: LumisConfig, date: string): string {
+  return join(resolvePath(config, config.paths.memory), "sessions", `${date}.md`);
+}
+
+/** Resolve the preferences file path */
+export function resolvePreferencesPath(config: LumisConfig): string {
+  return join(resolvePath(config, config.paths.memory), "preferences.md");
+}
+
+/** Resolve the practice log file path */
+export function resolvePracticeLogPath(config: LumisConfig): string {
+  return join(resolvePath(config, config.paths.stories), "Practice Log.md");
+}
