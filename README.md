@@ -2,7 +2,7 @@
 
 Your AI confidant. Lumis helps you capture the small moments from your day, synthesize research into lessons, and correlate your moments and learnings into stories worth sharing.
 
-You tell Lumis what happened. It:
+You tell Lumis what happened. Lumis:
 
 - **Identifies the "5-second moment"** in your story, the instant something shifted
 - **Finds connections** to your past moments, things you might not have linked on your own
@@ -10,7 +10,7 @@ You tell Lumis what happened. It:
 - **Builds a Pattern Map** in Obsidian that visualizes how your moments relate over time
 - **Amplifies your stories** into content using hooks, structures, triggers, and prompts
 
-It lives in your [Obsidian](https://obsidian.md) vault. Everything stays local. Your data never leaves your machine.
+Lumis lives in your [Obsidian](https://obsidian.md) vault. Everything stays local. Your data never leaves your machine.
 
 ## The pipeline
 
@@ -28,7 +28,7 @@ Most journaling tools help you write. Lumis helps you notice. The real value isn
 Lumis/
   Moments/           ← what happened
   Stories/            ← what it means
-  Learnings/          ← what you took from it
+  Learnings/          ← what you can take from it
   Research/           ← things you're learning
   Amplify/            ← how you share it with the world
     Structures/       ← content frameworks
