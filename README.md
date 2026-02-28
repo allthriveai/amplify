@@ -1,8 +1,8 @@
 # Lumis
 
-Lumis is your AI-powered life coach, second brain orchestrator, and storytelling engine. It helps you capture the small moments from your day, find the hidden patterns between them, and turn those patterns into stories worth sharing.
+Lumis pays attention to your life so you can too. It remembers the moments you'd otherwise forget, notices the patterns you can't see yet, and helps you turn them into stories worth sharing.
 
-Inspired by the daily practice of noticing what matters, Lumis takes it further. You describe what happened, and Lumis:
+Tell Lumis what happened today. It will:
 
 - **Identifies the "5-second moment"** in your story, the instant something shifted
 - **Finds connections** to your past moments, things you might not have linked on your own
