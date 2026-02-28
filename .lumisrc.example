@@ -12,7 +12,10 @@
     "amplifyStructures": "Lumis/Amplify/Structures",
     "amplifyTriggers": "Lumis/Amplify/Triggers",
     "amplifyHooks": "Lumis/Amplify",
-    "amplifyPrompts": "Lumis/Amplify"
+    "amplifyPrompts": "Lumis/Amplify",
+    "scripts": "Lumis/Scripts",
+    "studioOutputs": "Lumis/Studio/Outputs",
+    "strategyDocs": "2 - Areas/All Thrive"
   },
   "researchCategories": [
     {
@@ -40,5 +43,11 @@
       "folder": "Courses & Learning",
       "keywords": ["course", "tutorial", "workshop", "training", "certification"]
     }
-  ]
+  ],
+  "studio": {
+    "heygenApiKey": "",
+    "heygenAvatarId": "",
+    "elevenlabsApiKey": "",
+    "elevenlabsVoiceId": ""
+  }
 }

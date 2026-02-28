@@ -22,6 +22,8 @@ export async function initCommand(targetPath?: string): Promise<void> {
     DEFAULT_PATHS.learnings,
     DEFAULT_PATHS.amplifyStructures,
     DEFAULT_PATHS.amplifyTriggers,
+    DEFAULT_PATHS.scripts,
+    DEFAULT_PATHS.studioOutputs,
   ];
 
   // Add research category subfolders
@@ -58,6 +60,9 @@ export async function initCommand(targetPath?: string): Promise<void> {
         amplifyTriggers: DEFAULT_PATHS.amplifyTriggers,
         amplifyHooks: DEFAULT_PATHS.amplifyHooks,
         amplifyPrompts: DEFAULT_PATHS.amplifyPrompts,
+        scripts: DEFAULT_PATHS.scripts,
+        studioOutputs: DEFAULT_PATHS.studioOutputs,
+        strategyDocs: DEFAULT_PATHS.strategyDocs,
       },
       researchCategories: DEFAULT_RESEARCH_CATEGORIES,
     };
@@ -79,4 +84,6 @@ export async function initCommand(targetPath?: string): Promise<void> {
   console.log(`    Triggers:   ${DEFAULT_PATHS.amplifyTriggers}`);
   console.log(`    Hooks:      ${DEFAULT_PATHS.amplifyHooks}/Hooks.md`);
   console.log(`    Prompts:    ${DEFAULT_PATHS.amplifyPrompts}/Prompts.md`);
+  console.log(`  Scripts: ${DEFAULT_PATHS.scripts}`);
+  console.log(`  Studio:  ${DEFAULT_PATHS.studioOutputs}`);
 }

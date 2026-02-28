@@ -34,11 +34,17 @@
   "dependencies": {
     "@anthropic-ai/sdk": "^0.39.0",
     "@modelcontextprotocol/sdk": "^1.0.0",
+    "@remotion/cli": "4.0.430",
     "dotenv": "^17.3.1",
-    "gray-matter": "^4.0.3"
+    "gray-matter": "^4.0.3",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "remotion": "4.0.430"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
     "tsx": "^4.19.4",
     "typescript": "^5.9.3",
     "vitest": "^3.0.0"

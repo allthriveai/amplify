@@ -8,3 +8,11 @@ dist/
 # Source PDFs (purchased content belongs in the vault, not the repo)
 creator-blueprint/
 *.pdf
+
+# Studio outputs and media files
+public/raw/
+out/
+*.mp4
+*.mp3
+*.wav
+*.srt

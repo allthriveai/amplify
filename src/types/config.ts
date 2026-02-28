@@ -1,4 +1,5 @@
 import type { ResearchCategory } from "./research.js";
+import type { StudioConfig } from "./studio.js";
 
 export interface LumisConfig {
   /** Absolute path to the Obsidian vault root */
@@ -33,10 +34,19 @@ export interface LumisConfig {
     amplifyHooks: string;
     /** Where the prompts file lives. Default: "Lumis/Amplify" */
     amplifyPrompts: string;
+    /** Where platform scripts are stored. Default: "Lumis/Scripts" */
+    scripts: string;
+    /** Where finished studio outputs go. Default: "Lumis/Studio/Outputs" */
+    studioOutputs: string;
+    /** Where strategy docs live. Default: "2 - Areas/All Thrive" */
+    strategyDocs: string;
   };
 
   /** Categories for auto-classifying research notes */
   researchCategories: ResearchCategory[];
+
+  /** Optional studio config for video production (HeyGen, ElevenLabs) */
+  studio?: StudioConfig;
 }
 
 export const DEFAULT_PATHS: LumisConfig["paths"] = {
@@ -52,6 +62,9 @@ export const DEFAULT_PATHS: LumisConfig["paths"] = {
   amplifyTriggers: "Lumis/Amplify/Triggers",
   amplifyHooks: "Lumis/Amplify",
   amplifyPrompts: "Lumis/Amplify",
+  scripts: "Lumis/Scripts",
+  studioOutputs: "Lumis/Studio/Outputs",
+  strategyDocs: "2 - Areas/All Thrive",
 };
 
 export const DEFAULT_RESEARCH_CATEGORIES: ResearchCategory[] = [

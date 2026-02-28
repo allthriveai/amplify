@@ -67,3 +67,18 @@ export function resolveAmplifyHooksPath(config: LumisConfig): string {
 export function resolveAmplifyPromptsPath(config: LumisConfig): string {
   return resolvePath(config, join(config.paths.amplifyPrompts, "Prompts.md"));
 }
+
+/** Resolve the scripts directory */
+export function resolveScriptsDir(config: LumisConfig): string {
+  return resolvePath(config, config.paths.scripts);
+}
+
+/** Resolve the studio outputs directory */
+export function resolveStudioOutputsDir(config: LumisConfig): string {
+  return resolvePath(config, config.paths.studioOutputs);
+}
+
+/** Resolve the strategy docs directory */
+export function resolveStrategyDocsDir(config: LumisConfig): string {
+  return resolvePath(config, config.paths.strategyDocs);
+}

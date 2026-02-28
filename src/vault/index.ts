@@ -13,6 +13,9 @@ export {
   resolveAmplifyTriggersDir,
   resolveAmplifyHooksPath,
   resolveAmplifyPromptsPath,
+  resolveScriptsDir,
+  resolveStudioOutputsDir,
+  resolveStrategyDocsDir,
 } from "./paths.js";
 
 // Re-export readCanvas for convenience

@@ -23,6 +23,14 @@ export { DEFAULT_PATHS, DEFAULT_RESEARCH_CATEGORIES } from "./types/config.js";
 export { THEME_COLORS } from "./types/canvas.js";
 
 export type {
+  Platform,
+  ScriptStatus,
+  ScriptFrontmatter,
+  Script,
+  StudioConfig,
+} from "./types/studio.js";
+
+export type {
   ResearchResourceType,
   ResearchFrontmatter,
   TldrFrontmatter,
@@ -71,3 +79,20 @@ export { generatePatternMap } from "./canvas/index.js";
 export { captureMoment } from "./pipeline/capture.js";
 export { buildAmplifyContext, serializeAmplifyContext } from "./amplify/index.js";
 export type { AmplifyContext } from "./amplify/index.js";
+
+// Studio
+export {
+  createHeyGenClient,
+  createElevenLabsClient,
+  renderVideo,
+  previewVideo,
+  produceVideo,
+} from "./studio/index.js";
+export type { HeyGenClient } from "./studio/index.js";
+export type { ElevenLabsClient } from "./studio/index.js";
+export type { RenderProps } from "./studio/index.js";
+export {
+  resolveScriptsDir,
+  resolveStudioOutputsDir,
+  resolveStrategyDocsDir,
+} from "./vault/index.js";

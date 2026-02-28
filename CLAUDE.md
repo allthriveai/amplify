@@ -26,6 +26,7 @@ src/
   canvas/         ← Obsidian canvas file generation
   pipeline/       ← Moment capture pipeline
   amplify/        ← Content amplification context builder
+  studio/         ← Video production (HeyGen, ElevenLabs, Remotion clients)
   config.ts       ← Loads .lumisrc config with fallbacks to env vars
   index.ts        ← Public API re-exports
 ```
@@ -69,12 +70,14 @@ Code goes in this repo. Content goes in the vault. No purchased content, no pers
 
 ## Skills
 
-Lumis has two Claude Code skills in `.claude/skills/`:
+Lumis has Claude Code skills in `.claude/skills/`:
 
 - **`/moment`** — Captures a daily moment. Reads all existing moments, analyzes the input, finds connections, writes the note, regenerates the Pattern Map canvas, and reports back.
 - **`/add-research`** — Saves a URL/PDF/article as research. Fetches content, categorizes it, writes a full note + TL;DR companion, extracts learnings, and reports topic clusters.
+- **`/social-coach`** — Reads the vault, recommends what to post where, generates platform-specific scripts.
+- **`/produce`** — Takes a script and produces a branded video: HeyGen avatar + Remotion rendering.
 
-Both skills read `.lumisrc` for vault paths and write directly to the Obsidian vault.
+All skills read `.lumisrc` for vault paths and write directly to the Obsidian vault.
 
 ## Writing style
 
@@ -84,6 +87,24 @@ When writing prose for the vault (moments, research notes, learnings), follow th
 - No em dash overuse. Use commas, colons, or periods.
 - Vary sentence length. Be specific. Have opinions.
 - Preserve the user's voice in moments. The humanizer is for Lumis's writing, not theirs.
+
+## Studio
+
+Lumis includes a video production pipeline powered by HeyGen (avatar video), ElevenLabs (voice), and Remotion (branded rendering).
+
+- **Remotion config** lives at repo root: `remotion.config.ts`
+- **Compositions** in `src/studio/compositions/` (excluded from tsc, bundled by Remotion)
+- **API clients** in `src/studio/` (heygen.ts, elevenlabs.ts, render.ts)
+- **Studio config** is optional in `.lumisrc` under `studio` key, or via env vars (HEYGEN_API_KEY, etc.)
+- **Public assets**: `public/raw/` (HeyGen downloads), `public/captions/` (SRT files)
+
+Vault additions:
+```
+Lumis/
+  Scripts/              ← platform-specific content drafts
+  Studio/
+    Outputs/            ← finished branded videos
+```
 
 ## Commands
 
@@ -95,4 +116,7 @@ npm test             # Run vitest
 lumis init [path]    # Scaffold vault structure
 lumis moment         # Capture a moment
 lumis import-sparks  # Import content from sparks.json manifest
+lumis studio list        # List scripts and status
+lumis studio render      # Render script to branded video
+lumis studio preview     # Open Remotion preview
 ```

@@ -32,6 +32,11 @@ async function main() {
       await importSparksCommand(fromPath);
       break;
     }
+    case "studio": {
+      const { studioCommand } = await import("./commands/studio.js");
+      await studioCommand(args[0], args.slice(1));
+      break;
+    }
     default:
       console.log(`lumis — your AI confidant
 
@@ -40,6 +45,7 @@ Commands:
   lumis patterns                     Regenerate the Pattern Map
   lumis init [path]                  Set up Lumis in a vault
   lumis import-sparks --from <path>  Import sparks from manifest
+  lumis studio <cmd>                 Video production (list, render, preview)
 
 Options:
   --help    Show this help`);
