@@ -1,5 +1,10 @@
 node_modules/
 dist/
 .env
+.lumisrc
 *.tsbuildinfo
 .DS_Store
+
+# Source PDFs (purchased content belongs in the vault, not the repo)
+creator-blueprint/
+*.pdf

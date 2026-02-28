@@ -21,13 +21,25 @@ async function main() {
       await initCommand(args[0]);
       break;
     }
+    case "import-sparks": {
+      const fromIndex = args.indexOf("--from");
+      const fromPath = fromIndex !== -1 ? args[fromIndex + 1] : null;
+      if (!fromPath) {
+        console.error("Usage: lumis import-sparks --from <path>");
+        process.exit(1);
+      }
+      const { importSparksCommand } = await import("./commands/import-sparks.js");
+      await importSparksCommand(fromPath);
+      break;
+    }
     default:
       console.log(`lumis — your AI confidant
 
 Commands:
-  lumis moment "..."    Capture a moment
-  lumis patterns        Regenerate the Pattern Map
-  lumis init [path]     Set up Lumis in a vault
+  lumis moment "..."                 Capture a moment
+  lumis patterns                     Regenerate the Pattern Map
+  lumis init [path]                  Set up Lumis in a vault
+  lumis import-sparks --from <path>  Import sparks from manifest
 
 Options:
   --help    Show this help`);

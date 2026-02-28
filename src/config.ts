@@ -1,7 +1,7 @@
 import { readFileSync, existsSync } from "node:fs";
 import { resolve, join } from "node:path";
 import { config as loadDotenv } from "dotenv";
-import { LumisConfig, DEFAULT_PATHS } from "./types/config.js";
+import { LumisConfig, DEFAULT_PATHS, DEFAULT_RESEARCH_CATEGORIES } from "./types/config.js";
 
 /**
  * Load Lumis configuration from (in priority order):
@@ -12,17 +12,18 @@ import { LumisConfig, DEFAULT_PATHS } from "./types/config.js";
 export function loadConfig(overrides?: Partial<LumisConfig>): LumisConfig {
   loadDotenv();
 
+  const rc = readLumisrc();
+  const rcPaths = rc?.paths;
+
   const vaultPath = overrides?.vaultPath
-    ?? readLumisrc()?.vaultPath
+    ?? rc?.vaultPath
     ?? process.env.VAULT_PATH
     ?? "";
 
   const anthropicApiKey = overrides?.anthropicApiKey
-    ?? readLumisrc()?.anthropicApiKey
+    ?? rc?.anthropicApiKey
     ?? process.env.ANTHROPIC_API_KEY
     ?? "";
-
-  const rcPaths = readLumisrc()?.paths;
 
   return {
     vaultPath: resolve(vaultPath.replace(/^~/, process.env.HOME ?? "")),
@@ -33,7 +34,14 @@ export function loadConfig(overrides?: Partial<LumisConfig>): LumisConfig {
       canvas: overrides?.paths?.canvas ?? rcPaths?.canvas ?? DEFAULT_PATHS.canvas,
       dailyNotes: overrides?.paths?.dailyNotes ?? rcPaths?.dailyNotes ?? DEFAULT_PATHS.dailyNotes,
       dailyNoteFormat: overrides?.paths?.dailyNoteFormat ?? rcPaths?.dailyNoteFormat ?? DEFAULT_PATHS.dailyNoteFormat,
+      research: overrides?.paths?.research ?? rcPaths?.research ?? DEFAULT_PATHS.research,
+      researchTldr: overrides?.paths?.researchTldr ?? rcPaths?.researchTldr ?? DEFAULT_PATHS.researchTldr,
+      amplifyStructures: overrides?.paths?.amplifyStructures ?? rcPaths?.amplifyStructures ?? DEFAULT_PATHS.amplifyStructures,
+      amplifyTriggers: overrides?.paths?.amplifyTriggers ?? rcPaths?.amplifyTriggers ?? DEFAULT_PATHS.amplifyTriggers,
+      amplifyHooks: overrides?.paths?.amplifyHooks ?? rcPaths?.amplifyHooks ?? DEFAULT_PATHS.amplifyHooks,
+      amplifyPrompts: overrides?.paths?.amplifyPrompts ?? rcPaths?.amplifyPrompts ?? DEFAULT_PATHS.amplifyPrompts,
     },
+    researchCategories: overrides?.researchCategories ?? rc?.researchCategories ?? DEFAULT_RESEARCH_CATEGORIES,
   };
 }
 

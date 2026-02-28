@@ -1,5 +1,6 @@
 import { join } from "node:path";
-import { LumisConfig } from "../types/config.js";
+import type { LumisConfig } from "../types/config.js";
+import type { ResearchCategory } from "../types/research.js";
 
 /** Resolve an absolute path within the vault */
 export function resolvePath(config: LumisConfig, relativePath: string): string {
@@ -25,4 +26,39 @@ export function resolveCanvasPath(config: LumisConfig): string {
 export function resolveDailyNotePath(config: LumisConfig, date: string): string {
   // TODO: Use dailyNoteFormat to build the filename
   return resolvePath(config, join(config.paths.dailyNotes, `${date}.md`));
+}
+
+/** Resolve the research root directory */
+export function resolveResearchDir(config: LumisConfig): string {
+  return resolvePath(config, config.paths.research);
+}
+
+/** Resolve the TL;DR companion notes directory */
+export function resolveTldrDir(config: LumisConfig): string {
+  return resolvePath(config, config.paths.researchTldr);
+}
+
+/** Resolve a specific research category subfolder */
+export function resolveResearchCategoryDir(config: LumisConfig, category: ResearchCategory): string {
+  return join(resolveResearchDir(config), category.folder);
+}
+
+/** Resolve the amplify structures directory */
+export function resolveAmplifyStructuresDir(config: LumisConfig): string {
+  return resolvePath(config, config.paths.amplifyStructures);
+}
+
+/** Resolve the amplify triggers directory */
+export function resolveAmplifyTriggersDir(config: LumisConfig): string {
+  return resolvePath(config, config.paths.amplifyTriggers);
+}
+
+/** Resolve the hooks file path */
+export function resolveAmplifyHooksPath(config: LumisConfig): string {
+  return resolvePath(config, join(config.paths.amplifyHooks, "Hooks.md"));
+}
+
+/** Resolve the prompts file path */
+export function resolveAmplifyPromptsPath(config: LumisConfig): string {
+  return resolvePath(config, join(config.paths.amplifyPrompts, "Prompts.md"));
 }

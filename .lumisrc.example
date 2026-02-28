@@ -1,0 +1,44 @@
+{
+  "vaultPath": "~/path/to/your/obsidian-vault",
+  "paths": {
+    "moments": "Lumis/Moments",
+    "stories": "Lumis/Stories",
+    "canvas": "Lumis/Pattern Map.canvas",
+    "dailyNotes": "Daily Notes",
+    "dailyNoteFormat": "YYYY-MM-DD",
+    "research": "Lumis/Research",
+    "researchTldr": "Lumis/Research/TL;DR",
+    "learnings": "Lumis/Learnings",
+    "amplifyStructures": "Lumis/Amplify/Structures",
+    "amplifyTriggers": "Lumis/Amplify/Triggers",
+    "amplifyHooks": "Lumis/Amplify",
+    "amplifyPrompts": "Lumis/Amplify"
+  },
+  "researchCategories": [
+    {
+      "name": "AI & Agents",
+      "folder": "AI & Agents",
+      "keywords": ["ai", "agent", "llm", "mcp", "ml", "machine learning", "prompt engineering", "rag"]
+    },
+    {
+      "name": "Tools & Software",
+      "folder": "Tools & Software",
+      "keywords": ["tool", "software", "platform", "framework", "library", "sdk", "api"]
+    },
+    {
+      "name": "Books",
+      "folder": "Books",
+      "keywords": ["book", "book summary", "book review"]
+    },
+    {
+      "name": "Articles",
+      "folder": "Articles",
+      "keywords": ["article", "blog", "opinion", "essay", "newsletter"]
+    },
+    {
+      "name": "Courses & Learning",
+      "folder": "Courses & Learning",
+      "keywords": ["course", "tutorial", "workshop", "training", "certification"]
+    }
+  ]
+}

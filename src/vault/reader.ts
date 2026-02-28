@@ -1,9 +1,10 @@
 import { readFileSync, readdirSync, existsSync } from "node:fs";
 import { join } from "node:path";
 import type { LumisConfig } from "../types/config.js";
-import type { Moment } from "../types/moment.js";
+import type { Moment, MomentFrontmatter } from "../types/moment.js";
+import type { ResearchNote, ResearchFrontmatter } from "../types/research.js";
 import type { CanvasFile } from "../types/canvas.js";
-import { resolveMomentsDir, resolveCanvasPath } from "./paths.js";
+import { resolveMomentsDir, resolveCanvasPath, resolveResearchDir, resolveResearchCategoryDir } from "./paths.js";
 import { parseFrontmatter } from "./frontmatter.js";
 
 /** Read all moment files from the configured moments directory */
@@ -25,7 +26,7 @@ export function readMoment(config: LumisConfig, filename: string): Moment | null
   if (!existsSync(filepath)) return null;
 
   const raw = readFileSync(filepath, "utf-8");
-  const { frontmatter, content } = parseFrontmatter(raw);
+  const { frontmatter, content } = parseFrontmatter<MomentFrontmatter>(raw);
 
   // Extract 5-second moment from ## The 5-Second Moment section
   const fiveSecMatch = content.match(
@@ -48,6 +49,47 @@ export function readMoment(config: LumisConfig, filename: string): Moment | null
     fiveSecondMoment: fiveSecMatch?.[1]?.trim(),
     connections,
   };
+}
+
+/** Read all research notes across all category folders and the research root */
+export function readResearchNotes(config: LumisConfig): ResearchNote[] {
+  const notes: ResearchNote[] = [];
+
+  // Read from research root
+  const rootDir = resolveResearchDir(config);
+  if (existsSync(rootDir)) {
+    notes.push(...readResearchNotesFromDir(rootDir, config.paths.research));
+  }
+
+  // Read from each category subfolder
+  for (const category of config.researchCategories) {
+    const categoryDir = resolveResearchCategoryDir(config, category);
+    if (existsSync(categoryDir)) {
+      const relativePath = join(config.paths.research, category.folder);
+      notes.push(...readResearchNotesFromDir(categoryDir, relativePath));
+    }
+  }
+
+  return notes;
+}
+
+function readResearchNotesFromDir(
+  dir: string,
+  relativePath: string,
+): ResearchNote[] {
+  return readdirSync(dir)
+    .filter((f) => f.endsWith(".md") && f !== "README.md")
+    .map((filename) => {
+      const filepath = join(dir, filename);
+      const raw = readFileSync(filepath, "utf-8");
+      const { frontmatter, content } = parseFrontmatter<ResearchFrontmatter>(raw);
+      return {
+        filename,
+        path: join(relativePath, filename),
+        frontmatter,
+        content,
+      };
+    });
 }
 
 /** Read the pattern map canvas file */
