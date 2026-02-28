@@ -2,10 +2,13 @@
 
 <img src="lumis.jpg" alt="Lumis" width="200" align="left">
 
-Your AI confidant. Lumis helps you capture the small moments from your day, synthesize research into lessons, and turn your real life into content worth sharing.
+### Your AI confidant. Lumis helps you capture the small moments from your day, synthesize research into lessons, and turn your real life into content worth sharing.
+   
+Tell Lumis about your life, share research you are interested in, and learn to craft your own stories.  
+ 
+#### Lumis will help you find the connections across what you've lived and what you've learned:
 
-You tell Lumis what happened. Lumis handles the rest:
-
+- **Define your voice** `lumis init` will align your future moments, coaching, and video with your identity.
 - **Captures moments** and identifies the "5-second moment," the instant something shifted
 - **Finds connections** to your past moments, things you might not have linked on your own
 - **Saves research** from articles, books, and videos, and distills them into lessons
