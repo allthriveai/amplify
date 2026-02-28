@@ -1,5 +1,9 @@
 # Lumis
 
+<p align="center">
+  <img src="lumis.jpg" alt="Lumis" width="200">
+</p>
+
 Your AI confidant. Lumis helps you capture the small moments from your day, synthesize research into lessons, and correlate your moments and learnings into stories worth sharing.
 
 You tell Lumis what happened. Lumis:
