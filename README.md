@@ -6,6 +6,7 @@ You tell Lumis what happened. It:
 
 - **Identifies the "5-second moment"** in your story, the instant something shifted
 - **Finds connections** to your past moments, things you might not have linked on your own
+- **Saves research** from articles, books, and videos, and distills them into lessons
 - **Builds a Pattern Map** in Obsidian that visualizes how your moments relate over time
 - **Amplifies your stories** into content using hooks, structures, triggers, and prompts
 
