@@ -13,54 +13,45 @@ You tell Lumis what happened. Lumis handles the rest:
 - **Coaches what to post** by reading your vault, matching content to your strategy, and drafting platform-specific scripts
 - **Produces branded video** from your scripts using AI avatars and automated rendering
 
-Lumis lives in your [Obsidian](https://obsidian.md) vault. Everything stays local.
+This repo is the engine. Your [Obsidian](https://obsidian.md) vault is where your moments, stories, and research live. They stay separate so your personal content never ends up in a code repo. Your stories remain private to you.
 
 ## How it works
 
 Lumis owns the full content flywheel. Most tools handle one step. Lumis connects all of them because a social media coach that doesn't know your moments is useless, and a video tool that doesn't know your voice is just another template.
 
 ```
-  live your life
-       │
-       ▼
-  ┌─────────┐    /moment
-  │ Capture  │───────────────── "Today I watched my daughter
-  │          │                   teach her stuffed animals to code"
-  └────┬─────┘
-       │
-       ▼
-  ┌─────────┐
-  │ Analyze  │──── 5-second moment: the look on her face
-  │          │     when the "program" worked
-  └────┬─────┘
-       │
-       ▼
-  ┌─────────┐
-  │ Connect  │──── Links to 3 past moments about
-  │          │     learning, play, and identity
-  └────┬─────┘
-       │
-       ▼
-  ┌─────────┐    Pattern Map.canvas
-  │ Pattern  │──── Visual graph in Obsidian showing
-  │  Map     │     how your moments cluster by theme
-  └────┬─────┘
-       │
-       ▼
-  ┌─────────┐    /social-coach
-  │  Coach   │──── Reads your strategy, picks the right
-  │          │     platform, writes the script
-  └────┬─────┘
-       │
-       ▼
-  ┌─────────┐    /produce
-  │ Studio   │──── HeyGen avatar + ElevenLabs voice
-  │          │     + Remotion branded render
-  └────┬─────┘
-       │
-       ▼
-  finished video
-  ready to post
+  live your life          read something          have a story to tell
+       │                       │                         │
+       ▼                       ▼                         ▼
+  ┌─────────┐           ┌─────────┐               ┌───────────┐
+  │ /moment │           │/add-    │               │/story-    │
+  │         │           │research │               │  craft    │
+  └────┬────┘           └────┬────┘               └─────┬─────┘
+       │                     │                          │
+       │  5-second moment    │  learnings extracted     │  story developed
+       │  connections found  │  topics clustered        │  craft practiced
+       │  pattern map built  │  TL;DR companion         │  told and refined
+       │                     │                          │
+       └─────────────────────┼──────────────────────────┘
+                             │
+                     ┌───────▼───────┐
+                     │    Vault      │  moments, learnings, stories,
+                     │   (Obsidian)  │  voice, strategy, patterns
+                     └───────┬───────┘
+                             │
+                     ┌───────▼───────┐  /social-coach
+                     │    Coach      │  reads your vault, picks platform,
+                     │               │  writes the script
+                     └───────┬───────┘
+                             │
+                     ┌───────▼───────┐  /produce
+                     │    Studio     │  HeyGen avatar + ElevenLabs voice
+                     │               │  + Remotion branded render
+                     └───────┬───────┘
+                             │
+                             ▼
+                      finished video
+                      ready to post
 ```
 
 Each step feeds the next. Your moments become the raw material for stories. Your strategy docs define what to post and where. The studio turns scripts into video with your avatar, your voice, and your branding. One command takes you from "something happened today" to a finished video.
