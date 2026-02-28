@@ -1,7 +1,7 @@
 {
   "name": "lumis",
   "version": "0.1.0",
-  "description": "Your AI confidant. Captures moments, finds patterns, weaves the tapestry of your life.",
+  "description": "Your AI confidant. Capture moments, find patterns, amplify your stories.",
   "type": "module",
   "bin": {
     "lumis": "./dist/cli/index.js"
