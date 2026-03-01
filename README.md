@@ -56,9 +56,8 @@ Lumis owns the full content flywheel. Most tools handle one step. Lumis connects
               │         └────────┘
               │
       ┌───────▼───────┐  /social-coach
-      │    Coach      │  reads your vault, picks platform,
-      │               │  hooks + structures from Amplify,
-      │               │  writes the script
+      │    Coach      │  turns your story into
+      │               │  platform-ready posts
       └───────┬───────┘
               │
               ▼
@@ -66,7 +65,7 @@ Lumis owns the full content flywheel. Most tools handle one step. Lumis connects
        (LinkedIn, X, YouTube)
 ```
 
-Each step feeds the next. Your moments become the raw material for stories. `/craft-content` finds the story through free writing and guided questions. `/social-coach` adapts it for platforms using your personalized Amplify toolkit (hooks, structures, persuasion patterns). Your strategy docs define what to post and where.
+Each step feeds the next. Your moments become the raw material for stories. `/craft-content` finds the story through free writing and guided questions. `/social-coach` picks the right platform, crafts a hook, and writes the script. Your strategy docs define what to post and where.
 
 ## Setup
 
