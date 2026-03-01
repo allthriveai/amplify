@@ -11,14 +11,14 @@ Tell Lumis about your life, share research you are interested in, and learn to c
 - **Define your voice** `/init` walks you through setting up your vault, voice, and personalized content toolkit
 - **Captures moments** and identifies the "5-second moment," the instant something shifted
 - **Finds connections** to your past moments, things you might not have linked on your own
-- **Saves research** from articles, books, and videos, and distills them into lessons
 - **Builds a Pattern Map** in Obsidian that visualizes how your moments relate over time
+- **Saves research** from articles, books, and videos, and distills them into lessons
+- **Captures inspiration** by researching people you admire and connecting them to your vault
+- **Challenges your thinking** through targeted critical thinking prompts with honest feedback
 - **Develops stories** through free writing and guided questions, then shapes them into clean narratives
 - **Directs video production** by turning your story into a shot-by-shot timeline, generating avatar clips, and assembling branded video
 - **Builds carousels** from stories into card-by-card LinkedIn carousel plans with copy and image direction
 - **Writes articles** from stories into full long-form blog posts ready to publish
-- **Challenges your thinking** through targeted critical thinking prompts with honest feedback
-- **Captures inspiration** by researching people you admire and connecting them to your vault
 
 This repo is the engine. Your [Obsidian](https://obsidian.md) vault is where your moments, stories, and research live. They stay separate so your personal content never ends up in a code repo. Your stories remain private to you.
 
