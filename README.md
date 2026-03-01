@@ -14,7 +14,7 @@ Tell Lumis about your life, share research you are interested in, and learn to c
 - **Saves research** from articles, books, and videos, and distills them into lessons
 - **Builds a Pattern Map** in Obsidian that visualizes how your moments relate over time
 - **Develops stories** through free writing and guided questions, then shapes them into clean narratives
-- **Coaches what to post** by reading your vault, matching content to your strategy, and drafting platform-specific scripts
+- **Directs video production** by turning your story into a shot-by-shot timeline, generating avatar clips, and assembling branded video
 - **Challenges your thinking** through targeted critical thinking prompts with honest feedback
 - **Captures inspiration** by researching people you admire and connecting them to your vault
 
@@ -22,7 +22,7 @@ This repo is the engine. Your [Obsidian](https://obsidian.md) vault is where you
 
 ## How it works
 
-Lumis owns the full content flywheel. Most tools handle one step. Lumis connects all of them because a social media coach that doesn't know your moments is useless, and a content tool that doesn't know your voice is just another template.
+Lumis owns the full content flywheel. Most tools handle one step. Lumis connects all of them because a video director that doesn't know your moments is useless, and a content tool that doesn't know your voice is just another template.
 
 ```
   live your life          read something          someone inspires you
@@ -46,26 +46,27 @@ Lumis owns the full content flywheel. Most tools handle one step. Lumis connects
                              │
               ┌──────────────┼──────────────┐
               │              │              │
-      ┌───────▼───────┐ ┌───▼────┐ ┌───────▼───────┐
-      │/craft-content │ │/craft- │ │  /challenge   │
-      │               │ │story-  │ │               │
-      │ free write    │ │telling │ │ pressure-test │
-      │ find the story│ │        │ │ your ideas    │
-      │ shape the arc │ │practice│ │ honest feedback│
-      └───────┬───────┘ │& develop│ └───────────────┘
-              │         └────────┘
+      ┌───────▼───────┐ ┌───▼──────┐ ┌─────▼─────────┐
+      │/craft-content │ │ /craft-  │ │  /challenge   │
+      │               │ │ story-   │ │               │
+      │ free write    │ │ telling  │ │ pressure-test │
+      │ find the story│ │          │ │ your ideas    │
+      │ shape the arc │ │ practice │ │ honest feedback│
+      └───────┬───────┘ │ & develop│ └───────────────┘
+              │         └──────────┘
               │
-      ┌───────▼───────┐  /social-coach
-      │    Coach      │  turns your story into
-      │               │  platform-ready posts
-      └───────┬───────┘
+      ┌───────▼─────────┐
+      │ /director-video │  shot-by-shot timeline
+      │                 │  HeyGen → Remotion →
+      │  Director Cut   │  CapCut polish
+      └───────┬─────────┘
               │
               ▼
-       platform-ready content
-       (LinkedIn, X, YouTube)
+       branded video output
+       (YouTube Shorts, Long-form)
 ```
 
-Each step feeds the next. Your moments become the raw material for stories. `/craft-content` finds the story through free writing and guided questions. `/social-coach` picks the right platform, crafts a hook, and writes the script. Your strategy docs define what to post and where.
+Each step feeds the next. Your moments become the raw material for stories. `/craft-content` finds the story through free writing and guided questions. `/director-video` turns the story into a shot-by-shot timeline, generates avatar clips via HeyGen, and assembles branded video with Remotion.
 
 ## Setup
 
@@ -78,7 +79,7 @@ claude
 /init
 ```
 
-`/init` walks you through choosing your vault path, scaffolds the directory structure, interviews you to populate Voice.md, then copies and personalizes the Amplify toolkit (8 hook types, 18 content structures, persuasion glossary) using your voice. Lumis reads Voice.md at every layer to align moments, coaching, and content with your identity.
+`/init` walks you through choosing your vault path, scaffolds the directory structure, interviews you to populate Voice.md, then copies and personalizes the Amplify toolkit (8 hook types, 18 content structures, persuasion glossary) using your voice. Lumis reads Voice.md at every layer to align moments, stories, and video with your identity.
 
 ## Commands
 
@@ -90,7 +91,7 @@ claude
 /add-inspiration    Capture a person who inspires you
 /craft-content      Free write, find the story, shape the narrative
 /craft-storytelling Practice or develop storytelling from moments
-/social-coach       Get content recommendations and platform scripts
+/director-video     Build a shot-by-shot timeline and produce video
 /challenge          Pressure-test an idea with critical thinking prompts
 ```
 
@@ -105,7 +106,7 @@ claude
 ## Tech stack
 
 - **Node.js + TypeScript** with ES modules
-- **Claude API** for moment analysis and content coaching
+- **Claude API** for moment analysis and story development
 - **gray-matter** for YAML frontmatter parsing
 - **MCP SDK** for Claude Code integration
 - **Remotion** for programmatic video rendering

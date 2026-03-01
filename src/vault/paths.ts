@@ -132,3 +132,13 @@ export function resolveThinkingDir(config: LumisConfig): string {
 export function resolveChallengeLogPath(config: LumisConfig): string {
   return join(resolvePath(config, "Lumis/Thinking"), "Challenge Log.md");
 }
+
+/** Resolve a story folder by slug: {stories}/{slug}/ */
+export function resolveStoryDir(config: LumisConfig, slug: string): string {
+  return join(resolveStoriesDir(config), slug);
+}
+
+/** Resolve a timeline file: {stories}/{slug}/timeline.md */
+export function resolveTimelinePath(config: LumisConfig, slug: string): string {
+  return join(resolveStoryDir(config, slug), "timeline.md");
+}

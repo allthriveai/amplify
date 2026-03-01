@@ -11,8 +11,9 @@ export { createHeyGenClient } from "./heygen.js";
 export type { HeyGenClient } from "./heygen.js";
 export { createElevenLabsClient } from "./elevenlabs.js";
 export type { ElevenLabsClient } from "./elevenlabs.js";
-export { renderVideo, previewVideo } from "./render.js";
-export type { RenderProps } from "./render.js";
+export { renderVideo, renderDirectorCut, previewVideo } from "./render.js";
+export type { RenderProps, DirectorCutRenderProps } from "./render.js";
+export { produceTimeline } from "./produce-timeline.js";
 
 /** How long to wait between status polls (ms) */
 const POLL_INTERVAL = 10_000;

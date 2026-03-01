@@ -1,6 +1,6 @@
 # Signals
 
-Lumis uses a structured event log (`Lumis/Signals/signals.json`) to connect pipeline stages. When a moment is captured, a learning extracted, a script drafted, or content posted, a signal is emitted. This lets downstream stages (social coach, craft content) make informed decisions without re-scanning the vault.
+Lumis uses a structured event log (`Lumis/Signals/signals.json`) to connect pipeline stages. When a moment is captured, a learning extracted, a timeline created, or a video rendered, a signal is emitted. This lets downstream stages make informed decisions without re-scanning the vault.
 
 ## Signal Types
 
@@ -8,7 +8,7 @@ Lumis uses a structured event log (`Lumis/Signals/signals.json`) to connect pipe
 |------|-----------|----------|
 | `moment_captured` | capture pipeline, /moment | filename, themes, storyPotential, momentType, fiveSecondMoment |
 | `learning_extracted` | MCP add_research, /add-research | filename, pillar, topicTags, sourceResearch |
-| `script_drafted` | /social-coach | filename, platform[], pillar, sourceContent |
+| `script_drafted` | legacy (scripts) | filename, platform[], pillar, sourceContent |
 | `recommendation_rejected` | MCP `record_signal` (user feedback) | reason, pillar, sourceContent |
 | `content_posted` | MCP `record_signal` (user feedback) | platform, url, scriptFilename, pillar |
 | `engagement_updated` | MCP `record_signal` (user feedback) | platform, url, views, likes, comments, shares |
@@ -17,22 +17,20 @@ Lumis uses a structured event log (`Lumis/Signals/signals.json`) to connect pipe
 | `story_practice` | /craft-storytelling practice | momentTitle, element |
 | `inspiration_added` | /add-inspiration | person, tags, backLinks, path |
 | `challenge_completed` | /challenge | idea, prompts, promoted, path |
+| `timeline_created` | /director-video | slug, storySource, hook, structure, platform, shotCount, targetDuration |
+| `video_rendered` | /director-video produce | slug, outputPath, platform, duration |
 
 ## Behavior
 
 - Signals auto-prune after 90 days on every write
 - `summarizeSignals()` returns a typed digest: recent moments, rejections, scripted sources, posted content, top engagement, clusters
-- Social coach reads signals to skip already-scripted content, avoid rejected topics, and boost high-engagement themes
 - User feedback signals come through the `record_signal` MCP tool
 
-## How Social Coach Uses Signals
+## How Director Video Uses Signals
 
-1. Skip moments with `script_drafted` signals (already scripted)
-2. Avoid topics/pillars with `recommendation_rejected` in last 30 days
-3. Don't re-recommend content already posted to the same platform
-4. Highlight when `moment_captured` + `learning_extracted` converge on same theme
-5. Boost themes with strong `engagement_updated` signals
-6. Recommend content from `cluster_formed` topics
+1. Emits `timeline_created` when a shot-by-shot timeline is saved
+2. Emits `video_rendered` when production completes (HeyGen + Remotion assembly)
+3. Future directors (carousel, article) can check `timeline_created` to see what stories already have video timelines
 
 ## Implementation
 

@@ -1,6 +1,6 @@
 ---
 name: craft-content
-description: Finds a story through free writing and guided questions, then shapes it into a clean narrative draft. The story is the asset. Platform adaptation, hooks, CTAs, and production happen in /social-coach. Never writes without your review.
+description: Finds a story through free writing and guided questions, then shapes it into a clean narrative draft. The story is the asset. Video timelines, hooks, and production happen in /director-video. Never writes without your review.
 ---
 
 # Craft Content

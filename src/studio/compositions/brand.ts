@@ -26,4 +26,15 @@ export const brand = {
     width: 1920,
     height: 1080,
   },
+  textCard: {
+    padding: 80,
+    statFontSize: 120,
+    statSubFontSize: 36,
+    quoteFontSize: 48,
+    contrastFontSize: 40,
+    listFontSize: 36,
+    statementFontSize: 56,
+    accentBarWidth: 6,
+    accentBarHeight: 120,
+  },
 } as const;

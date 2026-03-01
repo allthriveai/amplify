@@ -18,7 +18,7 @@ Lumis is a CLI tool and MCP server that lives in an Obsidian vault. It helps cap
 
 ```
 src/
-  types/          ← TypeScript interfaces (moment, canvas, config, research, amplify, signal, memory)
+  types/          ← TypeScript interfaces (moment, canvas, config, research, amplify, signal, memory, director)
   vault/          ← Read/write Obsidian markdown files with gray-matter frontmatter
   cli/            ← CLI commands (moment, init, import-sparks)
   mcp/            ← MCP server (stdio transport, 11 tools)
@@ -48,9 +48,9 @@ Lumis has Claude Code skills in `.claude/skills/`:
 - **`/voice`** — Standalone voice interview. Fills in or redoes Voice.md through a guided conversation.
 - **`/moment`** — Captures a daily moment. Reads all existing moments, analyzes the input, finds connections, writes the note, regenerates the Pattern Map canvas, and reports back.
 - **`/add-research`** — Saves a URL/PDF/article as research. Fetches content, categorizes it, writes a full note + TL;DR companion, extracts learnings, and reports topic clusters.
-- **`/social-coach`** — Reads the vault, recommends what to post where, generates platform-specific scripts.
 - **`/craft-storytelling`** — Develops storytelling skill from captured moments. Practice mode or full story development.
-- **`/craft-content`** — Finds a story and shapes it into content for any medium. Free write, find the 5-second moment, build the arc, write, review, optionally produce video via HeyGen.
+- **`/craft-content`** — Finds a story and shapes it into content for any medium. Free write, find the 5-second moment, build the arc, write, review.
+- **`/director-video`** — Takes a crafted story and produces a shot-by-shot video timeline. Picks hook + structure from Amplify, builds a Director Cut timeline, optionally produces avatar clips via HeyGen and assembles with Remotion.
 - **`/add-inspiration`** — Captures a person who inspires you. Researches their bio, work, and quotes on the web, then asks what you admire and what you've learned from them.
 - **`/challenge`** — Challenges an idea or belief through critical thinking prompts. Picks 2-3 prompts matched to the input, runs them one at a time, logs to Challenge Log, optionally promotes insights to the second brain.
 
@@ -85,7 +85,7 @@ lumis studio preview # Open Remotion preview
 Detailed documentation for each subsystem:
 
 - **[Vault](docs/vault.md)** — vault structure, Voice.md, IP separation
-- **[Signals](docs/signals.md)** — event log connecting pipeline stages, signal types, social coach integration
+- **[Signals](docs/signals.md)** — event log connecting pipeline stages, signal types, director integration
 - **[Memory](docs/memory.md)** — session history, preferences, boundaries
 - **[MCP Server](docs/mcp.md)** — all tools, Claude Desktop config, tool details
 - **[Studio](docs/studio.md)** — video production pipeline, API setup, Remotion

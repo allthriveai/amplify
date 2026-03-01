@@ -11,7 +11,9 @@ export type SignalType =
   | "engagement_updated"
   | "cluster_formed"
   | "story_developed"
-  | "story_practice";
+  | "story_practice"
+  | "timeline_created"
+  | "video_rendered";
 
 interface BaseSignal {
   id: string;
@@ -107,6 +109,29 @@ export interface StoryPracticeSignal extends BaseSignal {
   };
 }
 
+export interface TimelineCreatedSignal extends BaseSignal {
+  type: "timeline_created";
+  data: {
+    slug: string;
+    storySource: string;
+    hook: string;
+    structure: string;
+    platform: string;
+    shotCount: number;
+    targetDuration: number;
+  };
+}
+
+export interface VideoRenderedSignal extends BaseSignal {
+  type: "video_rendered";
+  data: {
+    slug: string;
+    outputPath: string;
+    platform: string;
+    duration: number;
+  };
+}
+
 export type Signal =
   | MomentCapturedSignal
   | LearningExtractedSignal
@@ -116,7 +141,9 @@ export type Signal =
   | EngagementUpdatedSignal
   | ClusterFormedSignal
   | StoryDevelopedSignal
-  | StoryPracticeSignal;
+  | StoryPracticeSignal
+  | TimelineCreatedSignal
+  | VideoRenderedSignal;
 
 export interface SignalsFile {
   version: 1;

@@ -2,6 +2,7 @@ import { execSync, spawn } from "node:child_process";
 import { writeFileSync, unlinkSync } from "node:fs";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
+import type { ResolvedShot } from "../types/director.js";
 
 export interface RenderProps {
   videoSrc: string;
@@ -32,6 +33,39 @@ export async function renderVideo(
     const message =
       error instanceof Error ? error.message : String(error);
     throw new Error(`Remotion render failed: ${message}`);
+  } finally {
+    try { unlinkSync(propsFile); } catch {}
+  }
+
+  return outputPath;
+}
+
+export interface DirectorCutRenderProps {
+  shots: ResolvedShot[];
+  title: string;
+}
+
+/**
+ * Render a Director Cut (multi-shot timeline) using Remotion.
+ * Writes props to a temp file then shells out to `npx remotion render`.
+ * Returns the output path on success.
+ */
+export async function renderDirectorCut(
+  props: DirectorCutRenderProps,
+  outputPath: string,
+): Promise<string> {
+  const propsFile = join(tmpdir(), `lumis-director-props-${Date.now()}.json`);
+  writeFileSync(propsFile, JSON.stringify(props), "utf-8");
+
+  try {
+    execSync(
+      `npx remotion render DirectorCut --props "${propsFile}" --output "${outputPath}"`,
+      { stdio: "inherit" },
+    );
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : String(error);
+    throw new Error(`Remotion DirectorCut render failed: ${message}`);
   } finally {
     try { unlinkSync(propsFile); } catch {}
   }

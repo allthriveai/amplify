@@ -35,6 +35,8 @@ export type {
   ClusterFormedSignal,
   StoryDevelopedSignal,
   StoryPracticeSignal,
+  TimelineCreatedSignal,
+  VideoRenderedSignal,
 } from "./types/signal.js";
 
 export type { SessionEntry } from "./types/memory.js";
@@ -73,6 +75,17 @@ export type {
   ManifestStructure,
 } from "./types/amplify.js";
 
+export type {
+  StoryBeat,
+  ShotType,
+  TextCardType,
+  TimelineStatus,
+  Shot,
+  TimelineFrontmatter,
+  Timeline,
+  ResolvedShot,
+} from "./types/director.js";
+
 // Modules
 export { loadConfig } from "./config.js";
 export { analyzeMoment, humanize } from "./ai/index.js";
@@ -93,6 +106,9 @@ export {
   readStory,
   writeStory,
   appendPracticeLog,
+  readTimeline,
+  listTimelines,
+  writeTimeline,
 } from "./vault/index.js";
 export { generatePatternMap } from "./canvas/index.js";
 export { captureMoment } from "./pipeline/capture.js";
@@ -104,12 +120,14 @@ export {
   createHeyGenClient,
   createElevenLabsClient,
   renderVideo,
+  renderDirectorCut,
   previewVideo,
   produceVideo,
+  produceTimeline,
 } from "./studio/index.js";
 export type { HeyGenClient } from "./studio/index.js";
 export type { ElevenLabsClient } from "./studio/index.js";
-export type { RenderProps } from "./studio/index.js";
+export type { RenderProps, DirectorCutRenderProps } from "./studio/index.js";
 export {
   resolveScriptsDir,
   resolveStudioOutputsDir,
@@ -122,6 +140,8 @@ export {
   resolvePreferencesPath,
   resolveStoriesDir,
   resolvePracticeLogPath,
+  resolveStoryDir,
+  resolveTimelinePath,
 } from "./vault/index.js";
 
 // Signals

@@ -26,6 +26,8 @@ export {
   resolvePeopleDir,
   resolveThinkingDir,
   resolveChallengeLogPath,
+  resolveStoryDir,
+  resolveTimelinePath,
 } from "./paths.js";
 
 // Re-export readCanvas for convenience
@@ -38,6 +40,10 @@ export { writeStructure, writeHook } from "./amplify-writer.js";
 // Signals
 export { readSignals, readRecentSignals, emitSignal, signalId, summarizeSignals } from "./signals.js";
 export type { SignalSummary } from "./signals.js";
+
+// Timeline (director)
+export { readTimeline, listTimelines } from "./timeline-reader.js";
+export { writeTimeline } from "./timeline-writer.js";
 
 // Memory
 export { formatSessionTime, appendSessionEntry, readSession, readRecentSessions, readPreferences, addPreference } from "./memory.js";

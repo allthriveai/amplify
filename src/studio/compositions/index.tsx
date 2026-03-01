@@ -3,6 +3,9 @@ import { Composition, registerRoot } from 'remotion';
 import { BrandedVideo, BrandedVideoProps } from './BrandedVideo';
 import { BrandedIntro } from './BrandedIntro';
 import { BrandedOutro } from './BrandedOutro';
+import { DirectorCut, DirectorCutProps, calculateDirectorCutMetadata } from './DirectorCut';
+import { TextCard, TextCardProps } from './TextCard';
+import { BRollPlaceholder, BRollPlaceholderProps } from './BRollPlaceholder';
 import { brand } from './brand';
 
 const RemotionRoot: React.FC = () => {
@@ -23,6 +26,48 @@ const RemotionRoot: React.FC = () => {
           videoSrc: 'https://example.com/placeholder.mp4',
           title: 'Untitled Video',
           durationInFrames: 900,
+        }}
+      />
+
+      {/* Director Cut — multi-shot timeline composition */}
+      <Composition<DirectorCutProps>
+        id="DirectorCut"
+        component={DirectorCut}
+        durationInFrames={900}
+        fps={fps}
+        width={width}
+        height={height}
+        calculateMetadata={calculateDirectorCutMetadata}
+        defaultProps={{
+          title: 'Untitled Timeline',
+          shots: [],
+        }}
+      />
+
+      {/* Text card preview */}
+      <Composition<TextCardProps>
+        id="TextCard"
+        component={TextCard}
+        durationInFrames={150}
+        fps={fps}
+        width={width}
+        height={height}
+        defaultProps={{
+          type: 'stat',
+          lines: ['67%', 'of companies have no character evaluation'],
+        }}
+      />
+
+      {/* B-roll placeholder preview */}
+      <Composition<BRollPlaceholderProps>
+        id="BRollPlaceholder"
+        component={BRollPlaceholder}
+        durationInFrames={150}
+        fps={fps}
+        width={width}
+        height={height}
+        defaultProps={{
+          direction: 'Screen recording of agent evaluation dashboard',
         }}
       />
 
