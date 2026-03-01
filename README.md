@@ -3,61 +3,70 @@
 <img src="lumis.jpg" alt="Lumis" width="200" align="left">
 
 ### Your AI confidant. Lumis helps you capture the small moments from your day, synthesize research into lessons, and turn your real life into content worth sharing.
-   
-Tell Lumis about your life, share research you are interested in, and learn to craft your own stories.  
- 
+
+Tell Lumis about your life, share research you are interested in, and learn to craft your own stories.
+
 #### Lumis will help you find the connections across what you've lived and what you've learned:
 
-- **Define your voice** `/init` walks you through setting up your vault and voice interactively in Claude
+- **Define your voice** `/init` walks you through setting up your vault, voice, and personalized content toolkit
 - **Captures moments** and identifies the "5-second moment," the instant something shifted
 - **Finds connections** to your past moments, things you might not have linked on your own
 - **Saves research** from articles, books, and videos, and distills them into lessons
 - **Builds a Pattern Map** in Obsidian that visualizes how your moments relate over time
+- **Develops stories** through free writing and guided questions, then shapes them into clean narratives
 - **Coaches what to post** by reading your vault, matching content to your strategy, and drafting platform-specific scripts
-- **Produces branded video** from your scripts using AI avatars and automated rendering
+- **Challenges your thinking** through targeted critical thinking prompts with honest feedback
+- **Captures inspiration** by researching people you admire and connecting them to your vault
 
 This repo is the engine. Your [Obsidian](https://obsidian.md) vault is where your moments, stories, and research live. They stay separate so your personal content never ends up in a code repo. Your stories remain private to you.
 
 ## How it works
 
-Lumis owns the full content flywheel. Most tools handle one step. Lumis connects all of them because a social media coach that doesn't know your moments is useless, and a video tool that doesn't know your voice is just another template.
+Lumis owns the full content flywheel. Most tools handle one step. Lumis connects all of them because a social media coach that doesn't know your moments is useless, and a content tool that doesn't know your voice is just another template.
 
 ```
-  live your life          read something          have a story to tell
+  live your life          read something          someone inspires you
        │                       │                         │
        ▼                       ▼                         ▼
   ┌─────────┐           ┌─────────┐               ┌───────────┐
-  │ /moment │           │/add-    │               │/story-    │
-  │         │           │research │               │  craft    │
+  │ /moment │           │/add-    │               │/add-      │
+  │         │           │research │               │inspiration│
   └────┬────┘           └────┬────┘               └─────┬─────┘
        │                     │                          │
-       │  5-second moment    │  learnings extracted     │  story developed
-       │  connections found  │  topics clustered        │  craft practiced
-       │  pattern map built  │  TL;DR companion         │  told and refined
+       │  5-second moment    │  learnings extracted     │  bio researched
+       │  connections found  │  topics clustered        │  vault back-links
+       │  pattern map built  │  TL;DR companion         │  found
        │                     │                          │
        └─────────────────────┼──────────────────────────┘
                              │
                      ┌───────▼───────┐
                      │    Vault      │  moments, learnings, stories,
-                     │   (Obsidian)  │  voice, strategy, patterns
+                     │   (Obsidian)  │  voice, inspiration, patterns
                      └───────┬───────┘
                              │
-                     ┌───────▼───────┐  /social-coach
-                     │    Coach      │  reads your vault, picks platform,
-                     │               │  writes the script
-                     └───────┬───────┘
-                             │
-                     ┌───────▼───────┐  /produce
-                     │    Studio     │  HeyGen avatar + ElevenLabs voice
-                     │               │  + Remotion branded render
-                     └───────┬───────┘
-                             │
-                             ▼
-                      finished video
-                      ready to post
+              ┌──────────────┼──────────────┐
+              │              │              │
+      ┌───────▼───────┐ ┌───▼────┐ ┌───────▼───────┐
+      │/craft-content │ │/craft- │ │  /challenge   │
+      │               │ │story-  │ │               │
+      │ free write    │ │telling │ │ pressure-test │
+      │ find the story│ │        │ │ your ideas    │
+      │ shape the arc │ │practice│ │ honest feedback│
+      └───────┬───────┘ │& develop│ └───────────────┘
+              │         └────────┘
+              │
+      ┌───────▼───────┐  /social-coach
+      │    Coach      │  reads your vault, picks platform,
+      │               │  hooks + structures from Amplify,
+      │               │  writes the script
+      └───────┬───────┘
+              │
+              ▼
+       platform-ready content
+       (LinkedIn, X, YouTube)
 ```
 
-Each step feeds the next. Your moments become the raw material for stories. Your strategy docs define what to post and where. The studio turns scripts into video with your avatar, your voice, and your branding. One command takes you from "something happened today" to a finished video.
+Each step feeds the next. Your moments become the raw material for stories. `/craft-content` finds the story through free writing and guided questions. `/social-coach` adapts it for platforms using your personalized Amplify toolkit (hooks, structures, persuasion patterns). Your strategy docs define what to post and where.
 
 ## Setup
 
@@ -70,23 +79,25 @@ claude
 /init
 ```
 
-`/init` walks you through choosing your vault path, scaffolds the directory structure, and interviews you to populate Voice.md: who you are, your mission, your audience, what you believe, and how you talk. Lumis reads Voice.md at every layer to align moments, coaching, and video with your identity.
+`/init` walks you through choosing your vault path, scaffolds the directory structure, interviews you to populate Voice.md, then copies and personalizes the Amplify toolkit (8 hook types, 18 content structures, persuasion glossary) using your voice. Lumis reads Voice.md at every layer to align moments, coaching, and content with your identity.
 
 ## Commands
 
 ```
-/init            Set up Lumis in your vault with interactive voice interview
-/voice           Fill in or redo your Voice.md
-/moment          Capture a moment
-/add-research    Save and categorize research
-/social-coach    Get content recommendations and generate scripts
-/story-craft     Develop storytelling skill from your moments
-/produce         Turn a script into a branded video
+/init               Set up vault, voice, and Amplify toolkit
+/voice              Fill in or redo your Voice.md
+/moment             Capture a moment
+/add-research       Save and categorize research
+/add-inspiration    Capture a person who inspires you
+/craft-content      Free write, find the story, shape the narrative
+/craft-storytelling Practice or develop storytelling from moments
+/social-coach       Get content recommendations and platform scripts
+/challenge          Pressure-test an idea with critical thinking prompts
 ```
 
 ## Docs
 
-- **[Vault structure](docs/vault.md)** — how the Obsidian vault is organized, Voice.md
+- **[Vault structure](docs/vault.md)** — how the Obsidian vault is organized, Voice.md, Amplify toolkit
 - **[Signals](docs/signals.md)** — event log connecting pipeline stages
 - **[Memory](docs/memory.md)** — session history and user preferences
 - **[MCP Server](docs/mcp.md)** — all tools and Claude Desktop config

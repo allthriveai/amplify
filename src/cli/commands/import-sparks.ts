@@ -4,9 +4,7 @@ import { loadConfig } from "../../config.js";
 import type { AmplifyManifest } from "../../types/amplify.js";
 import {
   writeStructure,
-  writeTrigger,
-  writeHooksCollection,
-  writePromptsCollection,
+  writeHook,
 } from "../../vault/amplify-writer.js";
 
 /** `lumis import-sparks --from <path>` — import sparks from a manifest */
@@ -80,61 +78,21 @@ export async function importSparksCommand(fromPath: string): Promise<void> {
   }
   console.log(`  Structures: ${manifest.structures.length}`);
 
-  // Import triggers
-  for (const t of manifest.triggers) {
-    const slug = slugify(t.name);
-    const filename = `${slug}.md`;
-
-    writeTrigger(config, filename, {
-      title: t.name,
-      type: "trigger",
-      created: today,
-      tags: ["amplify", "trigger"],
-      source: "Creator Blueprints",
-    }, t.description);
-
-    count++;
-  }
-  console.log(`  Triggers: ${manifest.triggers.length}`);
-
   // Import hooks
   if (manifest.hooks.length > 0) {
-    const hooks = manifest.hooks.map((template, i) => ({
-      index: i + 1,
-      template,
-    }));
+    for (const hookName of manifest.hooks) {
+      const slug = slugify(hookName);
+      const filename = `${slug}.md`;
 
-    writeHooksCollection(config, {
-      title: "Hooks",
-      type: "hook",
-      created: today,
-      tags: ["amplify", "hook"],
-      source: "Creator Blueprints",
-      count: hooks.length,
-    }, hooks);
+      writeHook(config, filename, {
+        title: hookName,
+        type: "amplify-hook",
+        created: today,
+      }, "");
 
-    count++;
+      count++;
+    }
     console.log(`  Hooks: ${manifest.hooks.length}`);
-  }
-
-  // Import prompts
-  if (manifest.prompts.length > 0) {
-    const prompts = manifest.prompts.map((prompt, i) => ({
-      index: i + 1,
-      prompt,
-    }));
-
-    writePromptsCollection(config, {
-      title: "Prompts",
-      type: "prompt",
-      created: today,
-      tags: ["amplify", "prompt"],
-      source: "Creator Blueprints",
-      count: prompts.length,
-    }, prompts);
-
-    count++;
-    console.log(`  Prompts: ${manifest.prompts.length}`);
   }
 
   console.log(`\nImported ${count} spark files into vault.`);
@@ -143,7 +101,7 @@ export async function importSparksCommand(fromPath: string): Promise<void> {
 function scaffoldEmptyStructure(vaultPath: string): void {
   const dirs = [
     "Lumis/Amplify/Structures",
-    "Lumis/Amplify/Triggers",
+    "Lumis/Amplify/Hooks",
   ];
 
   for (const dir of dirs) {

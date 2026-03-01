@@ -4,20 +4,13 @@ import type { LumisConfig } from "../types/config.js";
 import type {
   Structure,
   StructureFrontmatter,
-  Trigger,
-  TriggerFrontmatter,
-  HooksCollection,
-  HooksFrontmatter,
   Hook,
-  PromptsCollection,
-  PromptsFrontmatter,
-  Prompt,
+  HookFrontmatter,
 } from "../types/amplify.js";
 import {
   resolveAmplifyStructuresDir,
-  resolveAmplifyTriggersDir,
-  resolveAmplifyHooksPath,
-  resolveAmplifyPromptsPath,
+  resolveAmplifyHooksDir,
+  resolveAmplifyPersuasionPath,
 } from "./paths.js";
 import { parseFrontmatter } from "./frontmatter.js";
 
@@ -45,9 +38,9 @@ export function readStructures(config: LumisConfig): Structure[] {
     });
 }
 
-/** Read all persuasion triggers from the vault */
-export function readTriggers(config: LumisConfig): Trigger[] {
-  const dir = resolveAmplifyTriggersDir(config);
+/** Read all hook type files from the Hooks directory */
+export function readHooks(config: LumisConfig): Hook[] {
+  const dir = resolveAmplifyHooksDir(config);
   if (!existsSync(dir)) return [];
 
   return readdirSync(dir)
@@ -55,53 +48,22 @@ export function readTriggers(config: LumisConfig): Trigger[] {
     .map((filename) => {
       const filepath = join(dir, filename);
       const raw = readFileSync(filepath, "utf-8");
-      const { frontmatter, content } = parseFrontmatter<TriggerFrontmatter>(raw);
+      const { frontmatter, content } = parseFrontmatter<HookFrontmatter>(raw);
 
       return {
         filename,
-        path: join(config.paths.amplifyTriggers, filename),
+        path: join(config.paths.amplifyHooks, filename),
         frontmatter,
         content,
       };
     });
 }
 
-/** Read the hooks collection from a single file */
-export function readHooks(config: LumisConfig): HooksCollection | null {
-  const filepath = resolveAmplifyHooksPath(config);
+/** Read the persuasion glossary file */
+export function readPersuasionGlossary(config: LumisConfig): string | null {
+  const filepath = resolveAmplifyPersuasionPath(config);
   if (!existsSync(filepath)) return null;
-
-  const raw = readFileSync(filepath, "utf-8");
-  const { frontmatter, content } = parseFrontmatter<HooksFrontmatter>(raw);
-  const hooks = parseNumberedList(content).map(
-    (template, i): Hook => ({ index: i + 1, template }),
-  );
-
-  return {
-    filename: "Hooks.md",
-    path: join(config.paths.amplifyHooks, "Hooks.md"),
-    frontmatter,
-    hooks,
-  };
-}
-
-/** Read the prompts collection from a single file */
-export function readPrompts(config: LumisConfig): PromptsCollection | null {
-  const filepath = resolveAmplifyPromptsPath(config);
-  if (!existsSync(filepath)) return null;
-
-  const raw = readFileSync(filepath, "utf-8");
-  const { frontmatter, content } = parseFrontmatter<PromptsFrontmatter>(raw);
-  const prompts = parseNumberedList(content).map(
-    (prompt, i): Prompt => ({ index: i + 1, prompt }),
-  );
-
-  return {
-    filename: "Prompts.md",
-    path: join(config.paths.amplifyPrompts, "Prompts.md"),
-    frontmatter,
-    prompts,
-  };
+  return readFileSync(filepath, "utf-8");
 }
 
 /** Extract bullet points from a ## Section in markdown */
@@ -113,13 +75,5 @@ function extractSection(content: string, heading: string): string[] {
   return match[1]
     .split("\n")
     .map((line) => line.replace(/^[-*]\s+/, "").trim())
-    .filter(Boolean);
-}
-
-/** Parse a numbered list (1. item, 2. item, ...) into an array of strings */
-function parseNumberedList(content: string): string[] {
-  return content
-    .split("\n")
-    .map((line) => line.replace(/^\d+\.\s+/, "").trim())
     .filter(Boolean);
 }

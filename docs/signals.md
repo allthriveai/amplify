@@ -1,6 +1,6 @@
 # Signals
 
-Lumis uses a structured event log (`Lumis/Signals/signals.json`) to connect pipeline stages. When a moment is captured, a learning extracted, a script drafted, or content posted, a signal is emitted. This lets downstream stages (social coach, produce) make informed decisions without re-scanning the vault.
+Lumis uses a structured event log (`Lumis/Signals/signals.json`) to connect pipeline stages. When a moment is captured, a learning extracted, a script drafted, or content posted, a signal is emitted. This lets downstream stages (social coach, craft content) make informed decisions without re-scanning the vault.
 
 ## Signal Types
 
@@ -13,8 +13,10 @@ Lumis uses a structured event log (`Lumis/Signals/signals.json`) to connect pipe
 | `content_posted` | MCP `record_signal` (user feedback) | platform, url, scriptFilename, pillar |
 | `engagement_updated` | MCP `record_signal` (user feedback) | platform, url, views, likes, comments, shares |
 | `cluster_formed` | /add-research | topicTag, learningCount, learningFilenames[] |
-| `story_developed` | /story-craft develop | storyFilename, sourceMoment, craftStatus |
-| `story_practice` | /story-craft practice | momentTitle, element |
+| `story_developed` | /craft-storytelling develop | storyFilename, sourceMoment, craftStatus |
+| `story_practice` | /craft-storytelling practice | momentTitle, element |
+| `inspiration_added` | /add-inspiration | person, tags, backLinks, path |
+| `challenge_completed` | /challenge | idea, prompts, promoted, path |
 
 ## Behavior
 

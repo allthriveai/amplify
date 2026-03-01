@@ -28,12 +28,10 @@ export interface LumisConfig {
     learnings: string;
     /** Where content structures are stored. Default: "Lumis/Amplify/Structures" */
     amplifyStructures: string;
-    /** Where persuasion triggers are stored. Default: "Lumis/Amplify/Triggers" */
-    amplifyTriggers: string;
-    /** Where the hooks file lives. Default: "Lumis/Amplify" */
+    /** Where hook type files are stored. Default: "Lumis/Amplify/Hooks" */
     amplifyHooks: string;
-    /** Where the prompts file lives. Default: "Lumis/Amplify" */
-    amplifyPrompts: string;
+    /** Where the persuasion glossary lives. Default: "Lumis/Amplify" */
+    amplifyPersuasion: string;
     /** Where platform scripts are stored. Default: "Lumis/Scripts" */
     scripts: string;
     /** Where finished studio outputs go. Default: "Lumis/Studio/Outputs" */
@@ -46,6 +44,10 @@ export interface LumisConfig {
     signals: string;
     /** Where memory (sessions + preferences) lives. Default: "Lumis/Memory" */
     memory: string;
+    /** Where people/inspiration notes are stored. Default: "Lumis/People Who Inspire Me" */
+    people: string;
+    /** Where promoted challenge/thinking notes are stored. Default: "2 - Areas/Personal/Thinking" */
+    thinking: string;
   };
 
   /** Categories for auto-classifying research notes */
@@ -65,15 +67,16 @@ export const DEFAULT_PATHS: LumisConfig["paths"] = {
   researchTldr: "Lumis/Research/TL;DR",
   learnings: "Lumis/Learnings",
   amplifyStructures: "Lumis/Amplify/Structures",
-  amplifyTriggers: "Lumis/Amplify/Triggers",
-  amplifyHooks: "Lumis/Amplify",
-  amplifyPrompts: "Lumis/Amplify",
+  amplifyHooks: "Lumis/Amplify/Hooks",
+  amplifyPersuasion: "Lumis/Amplify",
   scripts: "Lumis/Scripts",
   studioOutputs: "Lumis/Studio/Outputs",
   strategyDocs: "2 - Areas/All Thrive",
   voice: "Lumis/Voice.md",
   signals: "Lumis/Signals",
   memory: "Lumis/Memory",
+  people: "2 - Areas/Personal/People Who Inspire Me",
+  thinking: "2 - Areas/Personal/Thinking",
 };
 
 export const DEFAULT_RESEARCH_CATEGORIES: ResearchCategory[] = [

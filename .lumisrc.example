@@ -10,15 +10,16 @@
     "researchTldr": "Lumis/Research/TL;DR",
     "learnings": "Lumis/Learnings",
     "amplifyStructures": "Lumis/Amplify/Structures",
-    "amplifyTriggers": "Lumis/Amplify/Triggers",
-    "amplifyHooks": "Lumis/Amplify",
-    "amplifyPrompts": "Lumis/Amplify",
+    "amplifyHooks": "Lumis/Amplify/Hooks",
+    "amplifyPersuasion": "Lumis/Amplify",
     "scripts": "Lumis/Scripts",
     "studioOutputs": "Lumis/Studio/Outputs",
     "strategyDocs": "2 - Areas/All Thrive",
     "voice": "Lumis/Voice.md",
     "signals": "Lumis/Signals",
-    "memory": "Lumis/Memory"
+    "memory": "Lumis/Memory",
+    "people": "2 - Areas/Personal/People Who Inspire Me",
+    "thinking": "2 - Areas/Personal/Thinking"
   },
   "researchCategories": [
     {
@@ -50,6 +51,7 @@
   "studio": {
     "heygenApiKey": "",
     "heygenAvatarId": "",
+    "heygenVoiceId": "",
     "elevenlabsApiKey": "",
     "elevenlabsVoiceId": ""
   }

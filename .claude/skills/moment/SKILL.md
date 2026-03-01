@@ -15,7 +15,7 @@ Find the `.lumisrc` config file to resolve the vault path and moments directory.
 
 1. `.lumisrc` in the current working directory
 2. `.lumisrc` at the path specified by `VAULT_PATH` environment variable
-3. `/Users/you/Sites/your-vault/.lumisrc` as a known fallback
+3. `.lumisrc` at the fallback vault path (if configured in CLAUDE.md or known from previous sessions)
 
 Read the config and extract:
 

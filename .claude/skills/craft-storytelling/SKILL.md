@@ -1,15 +1,15 @@
 ---
-name: story-craft
-description: Develops storytelling skill from captured moments. Two modes. Practice mode surfaces a high-potential moment and gives one focused exercise. Develop mode walks through a guided conversation to build a full story. Use when the user runs /story-craft, /story-craft practice, or /story-craft develop.
+name: craft-storytelling
+description: Develops storytelling skill from captured moments. Two modes. Practice mode surfaces a high-potential moment and gives one focused exercise. Develop mode walks through a guided conversation to build a full story. Use when the user runs /craft-storytelling, /craft-storytelling practice, or /craft-storytelling develop.
 ---
 
-# Story Craft
+# Craft Storytelling
 
 ## Overview
 
-Lumis captures moments. Story Craft develops them into stories. These are separate practices on purpose: `/moment` stays frictionless, `/story-craft` is the deliberate choice to build storytelling skill.
+Lumis captures moments. Craft Storytelling develops them into stories. These are separate practices on purpose: `/moment` stays frictionless, `/craft-storytelling` is the deliberate choice to build storytelling skill.
 
-The framework uses six elements from Matthew Dicks' Homework for Life storytelling method:
+The framework uses six elements:
 
 1. **Transformation** — who you were before, who you were after
 2. **5-Second Moment** — the precise instant of shift
@@ -20,10 +20,10 @@ The framework uses six elements from Matthew Dicks' Homework for Life storytelli
 
 ## Instructions
 
-When the user runs `/story-craft`, determine the mode from their input:
+When the user runs `/craft-storytelling`, determine the mode from their input:
 
-- `/story-craft` or `/story-craft practice` → **Practice Mode**
-- `/story-craft develop` or `/story-craft develop "search term"` or `/story-craft develop [[moment link]]` → **Develop Mode**
+- `/craft-storytelling` or `/craft-storytelling practice` → **Practice Mode**
+- `/craft-storytelling develop` or `/craft-storytelling develop "search term"` or `/craft-storytelling develop [[moment link]]` → **Develop Mode**
 
 ### Step 0: Load Configuration
 
@@ -31,7 +31,7 @@ Find the `.lumisrc` config file to resolve the vault path. Check these locations
 
 1. `.lumisrc` in the current working directory
 2. `.lumisrc` at the path specified by `VAULT_PATH` environment variable
-3. `/Users/you/Sites/your-vault/.lumisrc` as a known fallback
+3. `.lumisrc` at the fallback vault path (if configured in CLAUDE.md or known from previous sessions)
 
 Read the config and extract:
 

@@ -29,7 +29,7 @@ Entry point: `src/mcp/index.ts` (compiles to `dist/mcp/index.js`). Runs on stdio
   "mcpServers": {
     "lumis": {
       "command": "node",
-      "args": ["/Users/you/Sites/lumis/dist/mcp/index.js"]
+      "args": ["/path/to/lumis/dist/mcp/index.js"]
     }
   }
 }

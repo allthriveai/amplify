@@ -1,6 +1,6 @@
-export type AmplifyType = "structure" | "trigger" | "hook" | "prompt";
+export type AmplifyType = "structure" | "hook";
 
-// --- Structures (content frameworks) ---
+// --- Structures (content frameworks with embedded triggers) ---
 
 export interface StructureFrontmatter {
   title: string;
@@ -24,76 +24,26 @@ export interface Structure {
   actions: string[];
 }
 
-// --- Triggers (persuasion patterns) ---
+// --- Hooks (scroll-stopping openers, individual files by type) ---
 
-export interface TriggerFrontmatter {
+export interface HookFrontmatter {
   title: string;
-  type: "trigger";
+  type: "amplify-hook";
   created: string;
-  tags: string[];
-  source: string;
-}
-
-export interface Trigger {
-  filename: string;
-  path: string;
-  frontmatter: TriggerFrontmatter;
-  content: string;
-}
-
-// --- Hooks (scroll-stopping openers) ---
-
-export interface HooksFrontmatter {
-  title: string;
-  type: "hook";
-  created: string;
-  tags: string[];
-  source: string;
-  count: number;
 }
 
 export interface Hook {
-  index: number;
-  template: string;
-}
-
-export interface HooksCollection {
   filename: string;
   path: string;
-  frontmatter: HooksFrontmatter;
-  hooks: Hook[];
-}
-
-// --- Prompts (content idea generators) ---
-
-export interface PromptsFrontmatter {
-  title: string;
-  type: "prompt";
-  created: string;
-  tags: string[];
-  source: string;
-  count: number;
-}
-
-export interface Prompt {
-  index: number;
-  prompt: string;
-}
-
-export interface PromptsCollection {
-  filename: string;
-  path: string;
-  frontmatter: PromptsFrontmatter;
-  prompts: Prompt[];
+  frontmatter: HookFrontmatter;
+  content: string;
 }
 
 // --- Manifest (lives in vault, not repo) ---
 
 export interface AmplifyManifest {
   structures: ManifestStructure[];
-  triggers: ManifestTrigger[];
   hooks: string[];
-  prompts: string[];
 }
 
 export interface ManifestStructure {
@@ -104,9 +54,4 @@ export interface ManifestStructure {
   takeaways: string[];
   actions: string[];
   pdfFile?: string;
-}
-
-export interface ManifestTrigger {
-  name: string;
-  description: string;
 }

@@ -44,13 +44,15 @@ src/
 
 Lumis has Claude Code skills in `.claude/skills/`:
 
-- **`/init`** — Interactive vault setup. Asks for vault path, scaffolds directories, writes `.lumisrc`, walks through voice interview to populate Voice.md.
+- **`/init`** — Interactive vault setup. Asks for vault path, scaffolds directories, writes `.lumisrc`, walks through voice interview to populate Voice.md, then copies and personalizes the Amplify toolkit (101 hooks, 21 structures, 34 triggers, prompts).
 - **`/voice`** — Standalone voice interview. Fills in or redoes Voice.md through a guided conversation.
 - **`/moment`** — Captures a daily moment. Reads all existing moments, analyzes the input, finds connections, writes the note, regenerates the Pattern Map canvas, and reports back.
 - **`/add-research`** — Saves a URL/PDF/article as research. Fetches content, categorizes it, writes a full note + TL;DR companion, extracts learnings, and reports topic clusters.
 - **`/social-coach`** — Reads the vault, recommends what to post where, generates platform-specific scripts.
-- **`/story-craft`** — Develops storytelling skill from captured moments. Practice mode or full story development.
-- **`/produce`** — Takes a script and produces a branded video: HeyGen avatar + Remotion rendering.
+- **`/craft-storytelling`** — Develops storytelling skill from captured moments. Practice mode or full story development.
+- **`/craft-content`** — Finds a story and shapes it into content for any medium. Free write, find the 5-second moment, build the arc, write, review, optionally produce video via HeyGen.
+- **`/add-inspiration`** — Captures a person who inspires you. Researches their bio, work, and quotes on the web, then asks what you admire and what you've learned from them.
+- **`/challenge`** — Challenges an idea or belief through critical thinking prompts. Picks 2-3 prompts matched to the input, runs them one at a time, logs to Challenge Log, optionally promotes insights to the second brain.
 
 All skills read `.lumisrc` for vault paths and write directly to the Obsidian vault.
 

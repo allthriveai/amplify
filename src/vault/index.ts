@@ -10,9 +10,8 @@ export {
   resolveResearchCategoryDir,
   resolveLearningsDir,
   resolveAmplifyStructuresDir,
-  resolveAmplifyTriggersDir,
-  resolveAmplifyHooksPath,
-  resolveAmplifyPromptsPath,
+  resolveAmplifyHooksDir,
+  resolveAmplifyPersuasionPath,
   resolveScriptsDir,
   resolveStudioOutputsDir,
   resolveStrategyDocsDir,
@@ -24,14 +23,17 @@ export {
   resolvePreferencesPath,
   resolveStoriesDir,
   resolvePracticeLogPath,
+  resolvePeopleDir,
+  resolveThinkingDir,
+  resolveChallengeLogPath,
 } from "./paths.js";
 
 // Re-export readCanvas for convenience
 export { readCanvas } from "./reader.js";
 
 // Amplify reader/writer
-export { readStructures, readTriggers, readHooks, readPrompts } from "./amplify-reader.js";
-export { writeStructure, writeTrigger, writeHooksCollection, writePromptsCollection } from "./amplify-writer.js";
+export { readStructures, readHooks, readPersuasionGlossary } from "./amplify-reader.js";
+export { writeStructure, writeHook } from "./amplify-writer.js";
 
 // Signals
 export { readSignals, readRecentSignals, emitSignal, signalId, summarizeSignals } from "./signals.js";

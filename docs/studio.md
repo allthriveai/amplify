@@ -7,10 +7,12 @@ Lumis includes a video production pipeline powered by HeyGen (avatar video), Ele
 - **Remotion config** lives at repo root: `remotion.config.ts`
 - **Compositions** in `src/studio/compositions/` (excluded from tsc, bundled by Remotion)
 - **API clients** in `src/studio/` (heygen.ts, elevenlabs.ts, render.ts)
-- **Studio config** is optional in `.lumisrc` under `studio` key, or via env vars (HEYGEN_API_KEY, etc.)
+- **Studio config** is optional in `.lumisrc` under `studio` key, or via env vars
 - **Public assets**: `public/raw/` (HeyGen downloads), `public/captions/` (SRT files)
 
 ## Setup
+
+Studio is configured during `/init` (optional step) or by editing `.lumisrc` directly.
 
 Add API keys to `.lumisrc` or set environment variables:
 
@@ -19,15 +21,16 @@ Add API keys to `.lumisrc` or set environment variables:
   "studio": {
     "heygenApiKey": "your-key",
     "heygenAvatarId": "your-avatar-id",
+    "heygenVoiceId": "your-heygen-voice-id",
     "elevenlabsApiKey": "your-key",
     "elevenlabsVoiceId": "your-voice-id"
   }
 }
 ```
 
-Or: `HEYGEN_API_KEY`, `HEYGEN_AVATAR_ID`, `ELEVENLABS_API_KEY`, `ELEVENLABS_VOICE_ID`.
+Or: `HEYGEN_API_KEY`, `HEYGEN_AVATAR_ID`, `HEYGEN_VOICE_ID`, `ELEVENLABS_API_KEY`, `ELEVENLABS_VOICE_ID`.
 
-Lumis works fine without studio config. The capture, coaching, and script generation layers are fully functional on their own.
+Lumis works fine without studio config. The capture, coaching, and content creation layers are fully functional on their own.
 
 ## Commands
 

@@ -15,7 +15,7 @@ Find the `.lumisrc` config file to resolve the vault path and all content direct
 
 1. `.lumisrc` in the current working directory
 2. `.lumisrc` at the path specified by `VAULT_PATH` environment variable
-3. `/Users/you/Sites/your-vault/.lumisrc` as a known fallback
+3. `.lumisrc` at the fallback vault path (if configured in CLAUDE.md or known from previous sessions)
 
 Read the config and extract:
 
@@ -92,11 +92,10 @@ Scan the vault for postable content:
 - Avoid recommending content that's already been scripted
 - Track pillar balance across existing scripts (count scripts per pillar)
 
-**Amplify toolkit** — read from `{vaultPath}/{paths.amplify}/`:
-- `Structures/` — content frameworks and formats
-- `Triggers/` — persuasion patterns and psychological hooks
-- `Hooks.md` — scroll-stopping opening lines
-- `Prompts.md` — content idea generators
+**Amplify toolkit** — read from `{vaultPath}/Lumis/Amplify/`:
+- `Hooks/` — 8 hook types (contrarian, curiosity-gap, story-entry, credibility, empathy, shock-data, question, pattern-interrupt). Each has a principle, good/bad examples, and anti-patterns.
+- `Structures/` — 18 content structures with persuasion principles embedded
+- `Persuasion-Glossary.md` — 10 persuasion principles for reference
 
 If the user pointed at a specific piece of content (e.g., `/social-coach [[Lumis/Moments/2025-01-15 - The question I couldn't answer]]`), load that piece and focus the recommendation on it.
 
@@ -107,7 +106,7 @@ Based on the strategy context and content inventory, recommend which moments, st
 - **What to post** — the source content (moment, learning, or story)
 - **Which platform** — LinkedIn, X, YouTube, or multiple
 - **Which pillar** — building, strategy, ethics, or thriving
-- **Which hook style** — from the Hooks.md collection or a custom one
+- **Which hook type** — one of the 8 hook types (contrarian, curiosity-gap, story-entry, credibility, empathy, shock-data, question, pattern-interrupt) with a specific hook written for this content
 - **Which structure** — from the Structures/ collection
 - **Why this one** — what makes it timely, relevant, or high-potential right now
 
@@ -242,12 +241,7 @@ If pillar imbalances exist, note them:
 
 Don't nag. One line, end of report, only when it's been a week or more.
 
-Apply humanizer rules to all prose in the report and in the generated scripts:
-- No AI vocabulary (delve, landscape, crucial, leverage, robust, innovative)
-- No filler phrases or significance inflation
-- No em dash overuse — use commas, colons, or periods
-- Vary sentence length. Be specific. Have opinions.
-- Preserve the user's voice in any quoted material
+**Run a humanizer pass on all prose in the report and generated scripts.** Read the full humanizer skill at `.claude/skills/humanizer/SKILL.md` and apply every rule: AI vocabulary replacements, significance inflation cuts, superficial -ing phrase removal, filler/hedging removal, structural tells (em dashes, rule-of-three, sentence rhythm, paragraph starts, negative parallelisms), and promotional tone checks. Preserve the user's voice in any quoted material. Then read each paragraph out loud. If it sounds assembled rather than said, rewrite it.
 
 ## Baked-In Platform Knowledge
 

@@ -39,12 +39,15 @@ Lumis/Research/Books
 Lumis/Research/Articles
 Lumis/Research/Courses & Learning
 Lumis/Learnings
+Lumis/Amplify/Hooks
 Lumis/Amplify/Structures
-Lumis/Amplify/Triggers
 Lumis/Scripts
 Lumis/Studio/Outputs
 Lumis/Signals
 Lumis/Memory/sessions
+Lumis/Thinking
+2 - Areas/Personal/People Who Inspire Me
+2 - Areas/Personal/Thinking
 ```
 
 Add a `README.md` with `# {folder-name}\n` in each directory that doesn't already have one.
@@ -65,16 +68,17 @@ If `.lumisrc` doesn't already exist in the vault root, write it:
     "research": "Lumis/Research",
     "researchTldr": "Lumis/Research/TL;DR",
     "learnings": "Lumis/Learnings",
+    "amplifyHooks": "Lumis/Amplify/Hooks",
     "amplifyStructures": "Lumis/Amplify/Structures",
-    "amplifyTriggers": "Lumis/Amplify/Triggers",
-    "amplifyHooks": "Lumis/Amplify",
-    "amplifyPrompts": "Lumis/Amplify",
+    "amplifyPersuasion": "Lumis/Amplify",
     "scripts": "Lumis/Scripts",
     "studioOutputs": "Lumis/Studio/Outputs",
     "strategyDocs": "2 - Areas/All Thrive",
     "voice": "Lumis/Voice.md",
     "signals": "Lumis/Signals",
-    "memory": "Lumis/Memory"
+    "memory": "Lumis/Memory",
+    "people": "2 - Areas/Personal/People Who Inspire Me",
+    "thinking": "2 - Areas/Personal/Thinking"
   },
   "researchCategories": [
     {"name": "AI & Agents", "folder": "AI & Agents", "keywords": ["ai", "agent", "llm", "mcp", "ml", "machine learning", "prompt engineering", "rag", "embedding", "transformer", "gpt", "claude", "neural"]},
@@ -82,7 +86,14 @@ If `.lumisrc` doesn't already exist in the vault root, write it:
     {"name": "Books", "folder": "Books", "keywords": ["book", "book summary", "book review", "author", "chapter", "reading"]},
     {"name": "Articles", "folder": "Articles", "keywords": ["article", "blog", "opinion", "essay", "post", "newsletter"]},
     {"name": "Courses & Learning", "folder": "Courses & Learning", "keywords": ["course", "tutorial", "workshop", "training", "certification", "lesson", "curriculum", "mooc"]}
-  ]
+  ],
+  "studio": {
+    "heygenApiKey": "",
+    "heygenAvatarId": "",
+    "heygenVoiceId": "",
+    "elevenlabsApiKey": "",
+    "elevenlabsVoiceId": ""
+  }
 }
 ```
 
@@ -164,7 +175,94 @@ Build and write `{vaultPath}/Lumis/Voice.md`:
 
 Preserve the user's words exactly. Clean up grammar only if needed. Don't rewrite their personality. Run a humanizer pass only on any prose *you* added, not their words.
 
-### Step 7: Report
+### Step 7: Amplify Toolkit
+
+After Voice.md is written, copy the generic Amplify templates from the Lumis repo into the vault and personalize them using the user's voice.
+
+**7a. Copy templates**
+
+Copy all files from the Lumis source templates into the vault's Amplify directories:
+
+```
+Source: {lumisRepoRoot}/templates/amplify/
+Destination: {vaultPath}/Lumis/Amplify/
+
+Copy:
+- Hooks/*.md → {vaultPath}/Lumis/Amplify/Hooks/
+- Structures/*.md → {vaultPath}/Lumis/Amplify/Structures/
+- Persuasion-Glossary.md → {vaultPath}/Lumis/Amplify/Persuasion-Glossary.md
+```
+
+The `lumisRepoRoot` is the directory where Lumis source code lives (the repo containing this skill file). Resolve it from the skill's own location: `{skillDir}/../../..` which gives the Lumis project root.
+
+Use `cp` to copy each file. Don't overwrite files that already exist in the vault (use `cp -n`).
+
+**7b. Personalize with Voice.md**
+
+Read the Voice.md you just wrote. Extract these values:
+
+| Bracket | Source |
+|---------|--------|
+| `[target audience]` | "My audience" section: the people they're talking to |
+| `[desired result]` / `[achieve specific result]` | "My mission" section: what they're trying to accomplish |
+| `[niche]` | "Who I am" section: their field or domain |
+| `[old method]` / `[outdated method]` | Infer from beliefs/mission: the thing they're replacing |
+| `[negative feeling]` | Common pain point for their audience (infer from context) |
+| `[positive feeling]` | The opposite: what success feels like |
+| `[method]` | Their named framework or approach, if mentioned |
+
+Do a find-and-replace across all copied Amplify files in the vault:
+- All files in `Hooks/`
+- All files in `Structures/`
+- `Persuasion-Glossary.md`
+
+Replace every `[bracket]` placeholder with the user's real context. This is automatic, not interactive. If a Voice.md section was skipped (contains a placeholder), leave those brackets unfilled.
+
+Only replace brackets that appear in the template files. Don't modify frontmatter, headers, or structural content.
+
+**7c. Count results**
+
+Count the total number of Amplify files copied and personalized. Store this for the Report step.
+
+### Step 8: Studio Setup (optional)
+
+Ask if they want to set up video production:
+
+"Want to set up video production? This lets Lumis produce branded videos with an AI avatar from your scripts. You'll need accounts with HeyGen and ElevenLabs. Skip if you're not ready."
+
+Options:
+- Set up now
+- Skip for now
+
+If they choose to set up, walk through four values **one at a time**:
+
+**1. HeyGen API key**
+"Paste your HeyGen API key. You can find it at https://app.heygen.com/settings under API."
+
+**2. HeyGen Avatar ID**
+"Paste your HeyGen Avatar ID. In HeyGen, go to Avatars, click on your avatar, and copy the avatar_id from the URL or API settings."
+
+**3. HeyGen Voice ID**
+"Paste your HeyGen Voice ID. In HeyGen, go to Voices to find your voice. If you cloned your voice via ElevenLabs and synced it to HeyGen, it will appear there with a HeyGen-specific voice ID."
+
+If the user doesn't know their HeyGen voice ID, offer to look it up: use the HeyGen API (`GET https://api.heygen.com/v2/voices` with the API key) to list available voices and let them pick.
+
+**5. ElevenLabs API key**
+"Paste your ElevenLabs API key. Find it at https://elevenlabs.io/app/settings/api-keys."
+
+**6. ElevenLabs Voice ID**
+"Paste your ElevenLabs Voice ID. In ElevenLabs, go to Voices, click on your voice, and copy the Voice ID."
+
+For each value:
+- If the user provides a value, save it.
+- If the user says "skip", leave it empty.
+- Validate that keys look reasonable (non-empty strings, no whitespace).
+
+After collecting, update the `studio` section in the `.lumisrc` file with the provided values. If a `.lumisrc` already exists, merge the `studio` key into it without overwriting other config.
+
+If all four values were skipped, don't write the studio section.
+
+### Step 9: Report
 
 Give a summary:
 
@@ -174,8 +272,12 @@ Lumis initialized in {vaultPath}
 Directories: {count} created
 Config: .lumisrc written
 Voice: {filled}/5 sections filled
+Amplify: {count} templates installed (8 hook types, 18 structures, persuasion glossary)
+Studio: {configured|skipped}
 
 You're ready. Try /moment to capture your first moment.
 ```
 
 If any voice sections were skipped, add: "Run /voice anytime to fill in the rest."
+If voice sections were filled, add: "Amplify templates personalized with your voice."
+If studio was skipped, add: "Run /init again to set up video production later."

@@ -50,7 +50,7 @@ export async function produceVideo(
   const heygen = createHeyGenClient(
     studio.heygenApiKey,
     studio.heygenAvatarId,
-    studio.elevenlabsVoiceId,
+    studio.heygenVoiceId,
   );
 
   const taskId = await heygen.generateVideo(script.content);

@@ -24,8 +24,13 @@ export function resolveCanvasPath(config: LumisConfig): string {
 
 /** Resolve today's daily note path */
 export function resolveDailyNotePath(config: LumisConfig, date: string): string {
-  // TODO: Use dailyNoteFormat to build the filename
-  return resolvePath(config, join(config.paths.dailyNotes, `${date}.md`));
+  const format = config.paths.dailyNoteFormat || "YYYY-MM-DD";
+  const d = new Date(date);
+  const yyyy = d.getFullYear().toString();
+  const mm = String(d.getMonth() + 1).padStart(2, "0");
+  const dd = String(d.getDate()).padStart(2, "0");
+  const filename = format.replace("YYYY", yyyy).replace("MM", mm).replace("DD", dd);
+  return resolvePath(config, join(config.paths.dailyNotes, `${filename}.md`));
 }
 
 /** Resolve the research root directory */
@@ -53,19 +58,14 @@ export function resolveAmplifyStructuresDir(config: LumisConfig): string {
   return resolvePath(config, config.paths.amplifyStructures);
 }
 
-/** Resolve the amplify triggers directory */
-export function resolveAmplifyTriggersDir(config: LumisConfig): string {
-  return resolvePath(config, config.paths.amplifyTriggers);
+/** Resolve the amplify hooks directory */
+export function resolveAmplifyHooksDir(config: LumisConfig): string {
+  return resolvePath(config, config.paths.amplifyHooks);
 }
 
-/** Resolve the hooks file path */
-export function resolveAmplifyHooksPath(config: LumisConfig): string {
-  return resolvePath(config, join(config.paths.amplifyHooks, "Hooks.md"));
-}
-
-/** Resolve the prompts file path */
-export function resolveAmplifyPromptsPath(config: LumisConfig): string {
-  return resolvePath(config, join(config.paths.amplifyPrompts, "Prompts.md"));
+/** Resolve the persuasion glossary file path */
+export function resolveAmplifyPersuasionPath(config: LumisConfig): string {
+  return resolvePath(config, join(config.paths.amplifyPersuasion, "Persuasion-Glossary.md"));
 }
 
 /** Resolve the scripts directory */
@@ -116,4 +116,19 @@ export function resolvePreferencesPath(config: LumisConfig): string {
 /** Resolve the practice log file path */
 export function resolvePracticeLogPath(config: LumisConfig): string {
   return join(resolvePath(config, config.paths.stories), "Practice Log.md");
+}
+
+/** Resolve the people/inspiration directory */
+export function resolvePeopleDir(config: LumisConfig): string {
+  return resolvePath(config, config.paths.people);
+}
+
+/** Resolve the thinking directory (for promoted challenge notes) */
+export function resolveThinkingDir(config: LumisConfig): string {
+  return resolvePath(config, config.paths.thinking);
+}
+
+/** Resolve the challenge log file path */
+export function resolveChallengeLogPath(config: LumisConfig): string {
+  return join(resolvePath(config, "Lumis/Thinking"), "Challenge Log.md");
 }

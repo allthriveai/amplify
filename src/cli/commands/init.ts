@@ -31,7 +31,7 @@ export async function initCommand(targetPath?: string): Promise<void> {
     DEFAULT_PATHS.researchTldr,
     DEFAULT_PATHS.learnings,
     DEFAULT_PATHS.amplifyStructures,
-    DEFAULT_PATHS.amplifyTriggers,
+    DEFAULT_PATHS.amplifyHooks,
     DEFAULT_PATHS.scripts,
     DEFAULT_PATHS.studioOutputs,
     DEFAULT_PATHS.signals,
@@ -69,9 +69,8 @@ export async function initCommand(targetPath?: string): Promise<void> {
         researchTldr: DEFAULT_PATHS.researchTldr,
         learnings: DEFAULT_PATHS.learnings,
         amplifyStructures: DEFAULT_PATHS.amplifyStructures,
-        amplifyTriggers: DEFAULT_PATHS.amplifyTriggers,
         amplifyHooks: DEFAULT_PATHS.amplifyHooks,
-        amplifyPrompts: DEFAULT_PATHS.amplifyPrompts,
+        amplifyPersuasion: DEFAULT_PATHS.amplifyPersuasion,
         scripts: DEFAULT_PATHS.scripts,
         studioOutputs: DEFAULT_PATHS.studioOutputs,
         strategyDocs: DEFAULT_PATHS.strategyDocs,
@@ -96,9 +95,7 @@ export async function initCommand(targetPath?: string): Promise<void> {
   console.log(`  Learnings: ${DEFAULT_PATHS.learnings}`);
   console.log(`  Amplify:`);
   console.log(`    Structures: ${DEFAULT_PATHS.amplifyStructures}`);
-  console.log(`    Triggers:   ${DEFAULT_PATHS.amplifyTriggers}`);
-  console.log(`    Hooks:      ${DEFAULT_PATHS.amplifyHooks}/Hooks.md`);
-  console.log(`    Prompts:    ${DEFAULT_PATHS.amplifyPrompts}/Prompts.md`);
+  console.log(`    Hooks:      ${DEFAULT_PATHS.amplifyHooks}`);
   console.log(`  Scripts: ${DEFAULT_PATHS.scripts}`);
   console.log(`  Studio:  ${DEFAULT_PATHS.studioOutputs}`);
 
