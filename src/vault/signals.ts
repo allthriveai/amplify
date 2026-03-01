@@ -7,7 +7,6 @@ import type {
   SignalsFile,
   MomentCapturedSignal,
   RecommendationRejectedSignal,
-  ScriptDraftedSignal,
   ContentPostedSignal,
   EngagementUpdatedSignal,
   ClusterFormedSignal,
@@ -77,7 +76,6 @@ export function emitSignal(config: LumisConfig, signal: Signal): void {
 export interface SignalSummary {
   recentMoments: MomentCapturedSignal[];
   rejectedTopics: RecommendationRejectedSignal[];
-  scriptedSources: ScriptDraftedSignal[];
   postedContent: ContentPostedSignal[];
   topEngagement: EngagementUpdatedSignal[];
   recentClusters: ClusterFormedSignal[];
@@ -89,7 +87,6 @@ export function summarizeSignals(config: LumisConfig): SignalSummary {
 
   const recentMoments = recent.filter((s): s is MomentCapturedSignal => s.type === "moment_captured");
   const rejectedTopics = recent.filter((s): s is RecommendationRejectedSignal => s.type === "recommendation_rejected");
-  const scriptedSources = recent.filter((s): s is ScriptDraftedSignal => s.type === "script_drafted");
   const postedContent = recent.filter((s): s is ContentPostedSignal => s.type === "content_posted");
   const recentClusters = recent.filter((s): s is ClusterFormedSignal => s.type === "cluster_formed");
 
@@ -104,7 +101,6 @@ export function summarizeSignals(config: LumisConfig): SignalSummary {
   return {
     recentMoments,
     rejectedTopics,
-    scriptedSources,
     postedContent,
     topEngagement,
     recentClusters,

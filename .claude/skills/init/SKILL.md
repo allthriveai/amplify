@@ -41,7 +41,6 @@ Lumis/Research/Courses & Learning
 Lumis/Learnings
 Lumis/Amplify/Hooks
 Lumis/Amplify/Structures
-Lumis/Scripts
 Lumis/Studio/Outputs
 Lumis/Signals
 Lumis/Memory/sessions
@@ -71,7 +70,6 @@ If `.lumisrc` doesn't already exist in the vault root, write it:
     "amplifyHooks": "Lumis/Amplify/Hooks",
     "amplifyStructures": "Lumis/Amplify/Structures",
     "amplifyPersuasion": "Lumis/Amplify",
-    "scripts": "Lumis/Scripts",
     "studioOutputs": "Lumis/Studio/Outputs",
     "strategyDocs": "2 - Areas/All Thrive",
     "voice": "Lumis/Voice.md",
@@ -224,11 +222,25 @@ Only replace brackets that appear in the template files. Don't modify frontmatte
 
 Count the total number of Amplify files copied and personalized. Store this for the Report step.
 
-### Step 8: Studio Setup (optional)
+### Step 8: Brand Setup (optional)
+
+Ask if they want to set up their brand:
+
+"Want to set up your brand? This gives your videos, carousels, and articles a consistent visual identity."
+
+Options:
+- Set up now
+- Skip for now
+
+If they choose to set up, run the brand interview inline (same as `/brand` Setup Mode Steps 1-4). This writes the `.lumisrc` brand section and Brand.md.
+
+If they skip, move on. They can run `/brand` later.
+
+### Step 9: Studio Setup (optional)
 
 Ask if they want to set up video production:
 
-"Want to set up video production? This lets Lumis produce branded videos with an AI avatar from your scripts. You'll need accounts with HeyGen and ElevenLabs. Skip if you're not ready."
+"Want to set up video production? This lets Lumis produce branded videos with an AI avatar from your stories. You'll need accounts with HeyGen and ElevenLabs. Skip if you're not ready."
 
 Options:
 - Set up now
@@ -262,7 +274,7 @@ After collecting, update the `studio` section in the `.lumisrc` file with the pr
 
 If all four values were skipped, don't write the studio section.
 
-### Step 9: Report
+### Step 10: Report
 
 Give a summary:
 
@@ -273,6 +285,7 @@ Directories: {count} created
 Config: .lumisrc written
 Voice: {filled}/5 sections filled
 Amplify: {count} templates installed (8 hook types, 18 structures, persuasion glossary)
+Brand: {configured|skipped}
 Studio: {configured|skipped}
 
 You're ready. Try /moment to capture your first moment.
@@ -280,4 +293,5 @@ You're ready. Try /moment to capture your first moment.
 
 If any voice sections were skipped, add: "Run /voice anytime to fill in the rest."
 If voice sections were filled, add: "Amplify templates personalized with your voice."
+If brand was skipped, add: "Run /brand anytime to set up your visual identity."
 If studio was skipped, add: "Run /init again to set up video production later."

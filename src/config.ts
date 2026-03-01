@@ -43,7 +43,6 @@ export function loadConfig(overrides?: Partial<LumisConfig>): LumisConfig {
       amplifyStructures: overrides?.paths?.amplifyStructures ?? rcPaths?.amplifyStructures ?? DEFAULT_PATHS.amplifyStructures,
       amplifyHooks: overrides?.paths?.amplifyHooks ?? rcPaths?.amplifyHooks ?? DEFAULT_PATHS.amplifyHooks,
       amplifyPersuasion: overrides?.paths?.amplifyPersuasion ?? rcPaths?.amplifyPersuasion ?? DEFAULT_PATHS.amplifyPersuasion,
-      scripts: overrides?.paths?.scripts ?? rcPaths?.scripts ?? DEFAULT_PATHS.scripts,
       studioOutputs: overrides?.paths?.studioOutputs ?? rcPaths?.studioOutputs ?? DEFAULT_PATHS.studioOutputs,
       strategyDocs: overrides?.paths?.strategyDocs ?? rcPaths?.strategyDocs ?? DEFAULT_PATHS.strategyDocs,
       voice: overrides?.paths?.voice ?? rcPaths?.voice ?? DEFAULT_PATHS.voice,
@@ -51,8 +50,10 @@ export function loadConfig(overrides?: Partial<LumisConfig>): LumisConfig {
       memory: overrides?.paths?.memory ?? rcPaths?.memory ?? DEFAULT_PATHS.memory,
       people: overrides?.paths?.people ?? rcPaths?.people ?? DEFAULT_PATHS.people,
       thinking: overrides?.paths?.thinking ?? rcPaths?.thinking ?? DEFAULT_PATHS.thinking,
+      brand: overrides?.paths?.brand ?? rcPaths?.brand ?? DEFAULT_PATHS.brand,
     },
     researchCategories: overrides?.researchCategories ?? rc?.researchCategories ?? DEFAULT_RESEARCH_CATEGORIES,
+    ...(overrides?.brand ?? rc?.brand ? { brand: overrides?.brand ?? rc?.brand } : {}),
     ...(studio ? { studio } : {}),
   };
 }

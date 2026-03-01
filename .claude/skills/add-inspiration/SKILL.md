@@ -17,7 +17,7 @@ Find the `.lumisrc` config file. Check these locations in order:
 2. `.lumisrc` at the path specified by `VAULT_PATH` environment variable
 3. `.lumisrc` at the fallback vault path (if configured in CLAUDE.md or known from previous sessions)
 
-Read the config and resolve the vault path. The people directory is at `{vaultPath}/{paths.people}` (default: `2 - Areas/Personal/People Who Inspire Me`).
+Read the config and resolve the vault path. The people directory is at `{vaultPath}/{paths.inspiration}` (default: `1 - Projects/Lumis/People Who Inspire Me`).
 
 Read `{vaultPath}/{paths.voice}` (Voice.md) if it exists.
 
@@ -81,7 +81,7 @@ Collect any matches as back-links: note title, path, and a short excerpt of the 
 
 ### Step 5: Write the Note
 
-Write to `{vaultPath}/{paths.people}/{Person Name}.md` using this template:
+Write to `{vaultPath}/{paths.inspiration}/{Person Name}.md` using this template:
 
 ```markdown
 ---
@@ -142,7 +142,7 @@ If back-links were found in Step 4, add:
 
 ### Step 6: Update README
 
-Check if `{vaultPath}/{paths.people}/README.md` exists.
+Check if `{vaultPath}/{paths.inspiration}/README.md` exists.
 
 If it exists, read it and append the new person to the list, maintaining alphabetical order.
 
@@ -167,7 +167,7 @@ Append to the signals file at `{vaultPath}/{paths.signals}/signals.json`:
     "person": "{Person Name}",
     "tags": ["{domain-tags}"],
     "backLinks": {count},
-    "path": "{paths.people}/{Person Name}.md"
+    "path": "{paths.inspiration}/{Person Name}.md"
   }
 }
 ```
@@ -189,7 +189,7 @@ Tell the user what happened:
 **Bio**: {one-line summary}
 **Tags**: {tags joined with ", "}
 **Back-links**: {count} connections found in your vault
-**Saved to**: {paths.people}/{Person Name}.md
+**Saved to**: {paths.inspiration}/{Person Name}.md
 
 {If back-links > 0: "This person already shows up in {count} of your notes. Check the Connections section."}
 ```

@@ -5,7 +5,6 @@
 export type SignalType =
   | "moment_captured"
   | "learning_extracted"
-  | "script_drafted"
   | "recommendation_rejected"
   | "content_posted"
   | "engagement_updated"
@@ -43,16 +42,6 @@ export interface LearningExtractedSignal extends BaseSignal {
     pillar: string;
     topicTags: string[];
     sourceResearch: string;
-  };
-}
-
-export interface ScriptDraftedSignal extends BaseSignal {
-  type: "script_drafted";
-  data: {
-    filename: string;
-    platform: string[];
-    pillar: string;
-    sourceContent: string;
   };
 }
 
@@ -183,7 +172,6 @@ export interface ChallengeCompletedSignal extends BaseSignal {
 export type Signal =
   | MomentCapturedSignal
   | LearningExtractedSignal
-  | ScriptDraftedSignal
   | RecommendationRejectedSignal
   | ContentPostedSignal
   | EngagementUpdatedSignal

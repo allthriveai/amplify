@@ -89,7 +89,7 @@ tags: [moment, moment/[type]]
 
 # [Evocative title]
 
-[The moment, written clearly but preserving the user's voice. Clean up rambling but keep their language and feeling. 2-5 sentences.]
+[The user's full input, preserved in their voice. Fix grammar, clean up awkward phrasing, and run the humanizer pass, but keep everything they said. No length limit. A moment can be one sentence or ten paragraphs. Don't compress, summarize, or rewrite into fewer words. The 5-Second Moment section handles distillation.]
 
 ## The 5-Second Moment
 [The specific instant of shift/change/realization. 1-3 sentences. Be precise about what changed internally.]

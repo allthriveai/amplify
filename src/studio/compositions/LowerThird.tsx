@@ -44,13 +44,13 @@ export const LowerThird: React.FC = () => {
         <div
           style={{
             width: 6,
-            backgroundColor: brand.colors.canary,
+            backgroundColor: brand.colors.gold,
             borderRadius: '3px 0 0 3px',
           }}
         />
         <div
           style={{
-            backgroundColor: brand.colors.teal,
+            backgroundColor: brand.colors.navy,
             padding: '14px 28px',
             borderRadius: '0 6px 6px 0',
             display: 'flex',
@@ -66,17 +66,17 @@ export const LowerThird: React.FC = () => {
               color: brand.colors.white,
             }}
           >
-            Allie Jones
+            {brand.name}
           </div>
           <div
             style={{
               fontFamily: brand.fonts.body,
               fontSize: 18,
               fontWeight: 400,
-              color: brand.colors.canary,
+              color: brand.colors.gold,
             }}
           >
-            example.com
+            {brand.domain}
           </div>
         </div>
       </div>

@@ -11,7 +11,7 @@ Lumis maintains session history and user preferences in `Lumis/Memory/`.
 
 - **15:00** — moment_captured: Captured "The question I couldn't answer" (high potential, themes: parenthood, identity)
 - **15:05** — research_added: Saved "Building Agents with MCP" to AI & Agents, extracted 2 learnings
-- **16:00** — coaching_done: Created 3 scripts for linkedin, x, youtube (pillars: building, thriving)
+- **16:00** — coaching_done: Created 3 recommendations for linkedin, x, youtube
 ```
 
 ## Preferences

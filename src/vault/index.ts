@@ -12,7 +12,6 @@ export {
   resolveAmplifyStructuresDir,
   resolveAmplifyHooksDir,
   resolveAmplifyPersuasionPath,
-  resolveScriptsDir,
   resolveStudioOutputsDir,
   resolveStrategyDocsDir,
   resolveVoicePath,
@@ -27,7 +26,7 @@ export {
   resolveThinkingDir,
   resolveChallengeLogPath,
   resolveStoryDir,
-  resolveTimelinePath,
+  resolveDirectorCutPath,
 } from "./paths.js";
 
 // Re-export readCanvas for convenience
@@ -47,3 +46,7 @@ export { writeTimeline } from "./timeline-writer.js";
 
 // Memory
 export { formatSessionTime, appendSessionEntry, readSession, readRecentSessions, readPreferences, addPreference } from "./memory.js";
+
+// Brand
+export { readBrand, readBrandInspirations } from "./brand-reader.js";
+export { resolveBrandDir, resolveBrandPath, resolveBrandInspirationDir } from "./paths.js";

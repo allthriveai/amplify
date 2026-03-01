@@ -1,5 +1,6 @@
 import type { ResearchCategory } from "./research.js";
 import type { StudioConfig } from "./studio.js";
+import type { BrandConfig } from "./brand.js";
 
 export interface LumisConfig {
   /** Absolute path to the Obsidian vault root */
@@ -32,8 +33,6 @@ export interface LumisConfig {
     amplifyHooks: string;
     /** Where the persuasion glossary lives. Default: "Lumis/Amplify" */
     amplifyPersuasion: string;
-    /** Where platform scripts are stored. Default: "Lumis/Scripts" */
-    scripts: string;
     /** Where finished studio outputs go. Default: "Lumis/Studio/Outputs" */
     studioOutputs: string;
     /** Where strategy docs live. Default: "2 - Areas/All Thrive" */
@@ -48,10 +47,15 @@ export interface LumisConfig {
     people: string;
     /** Where promoted challenge/thinking notes are stored. Default: "2 - Areas/Personal/Thinking" */
     thinking: string;
+    /** Where brand guidelines and inspiration live. Default: "Brand" */
+    brand: string;
   };
 
   /** Categories for auto-classifying research notes */
   researchCategories: ResearchCategory[];
+
+  /** Optional brand config for visual identity */
+  brand?: BrandConfig;
 
   /** Optional studio config for video production (HeyGen, ElevenLabs) */
   studio?: StudioConfig;
@@ -69,7 +73,6 @@ export const DEFAULT_PATHS: LumisConfig["paths"] = {
   amplifyStructures: "Lumis/Amplify/Structures",
   amplifyHooks: "Lumis/Amplify/Hooks",
   amplifyPersuasion: "Lumis/Amplify",
-  scripts: "Lumis/Scripts",
   studioOutputs: "Lumis/Studio/Outputs",
   strategyDocs: "2 - Areas/All Thrive",
   voice: "Lumis/Voice.md",
@@ -77,6 +80,7 @@ export const DEFAULT_PATHS: LumisConfig["paths"] = {
   memory: "Lumis/Memory",
   people: "2 - Areas/Personal/People Who Inspire Me",
   thinking: "2 - Areas/Personal/Thinking",
+  brand: "Brand",
 };
 
 export const DEFAULT_RESEARCH_CATEGORIES: ResearchCategory[] = [

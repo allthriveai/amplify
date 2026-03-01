@@ -40,7 +40,7 @@ export const BrandedIntro: React.FC = () => {
   return (
     <AbsoluteFill
       style={{
-        backgroundColor: brand.colors.teal,
+        backgroundColor: brand.colors.navy,
         justifyContent: 'center',
         alignItems: 'center',
         opacity: fadeOut,
@@ -64,20 +64,20 @@ export const BrandedIntro: React.FC = () => {
             transform: `scale(${titleScale})`,
           }}
         >
-          All Thrive
+          {brand.name}
         </div>
         <div
           style={{
             fontFamily: brand.fonts.body,
             fontSize: 28,
             fontWeight: 400,
-            color: brand.colors.canary,
+            color: brand.colors.gold,
             opacity: subtitleOpacity,
             letterSpacing: 4,
             textTransform: 'uppercase',
           }}
         >
-          example.com
+          {brand.domain}
         </div>
       </div>
     </AbsoluteFill>

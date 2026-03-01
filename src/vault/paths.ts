@@ -68,11 +68,6 @@ export function resolveAmplifyPersuasionPath(config: LumisConfig): string {
   return resolvePath(config, join(config.paths.amplifyPersuasion, "Persuasion-Glossary.md"));
 }
 
-/** Resolve the scripts directory */
-export function resolveScriptsDir(config: LumisConfig): string {
-  return resolvePath(config, config.paths.scripts);
-}
-
 /** Resolve the studio outputs directory */
 export function resolveStudioOutputsDir(config: LumisConfig): string {
   return resolvePath(config, config.paths.studioOutputs);
@@ -138,7 +133,22 @@ export function resolveStoryDir(config: LumisConfig, slug: string): string {
   return join(resolveStoriesDir(config), slug);
 }
 
-/** Resolve a timeline file: {stories}/{slug}/timeline.md */
-export function resolveTimelinePath(config: LumisConfig, slug: string): string {
-  return join(resolveStoryDir(config, slug), "timeline.md");
+/** Resolve a director cut file: {stories}/{slug}/{filename} */
+export function resolveDirectorCutPath(config: LumisConfig, slug: string, filename: string): string {
+  return join(resolveStoryDir(config, slug), filename);
+}
+
+/** Resolve the brand directory */
+export function resolveBrandDir(config: LumisConfig): string {
+  return resolvePath(config, config.paths.brand);
+}
+
+/** Resolve the Brand.md file */
+export function resolveBrandPath(config: LumisConfig): string {
+  return resolvePath(config, join(config.paths.brand, "Brand.md"));
+}
+
+/** Resolve the brand inspiration directory */
+export function resolveBrandInspirationDir(config: LumisConfig): string {
+  return resolvePath(config, join(config.paths.brand, "Inspiration"));
 }

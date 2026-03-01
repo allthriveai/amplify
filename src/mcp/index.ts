@@ -10,7 +10,6 @@
  *   get_patterns           — Get the Pattern Map
  *   add_research           — Save research to the vault
  *   social_coach           — Recommend what to post and where
- *   get_scripts            — List scripts with status and metadata
  *   record_signal          — Record user feedback signals
  *   remember               — Save a user preference
  *   recall                 — Read preferences and session history
@@ -29,12 +28,11 @@ import { captureMoment } from "../pipeline/capture.js";
 import { readMoments, readCanvas, readStories } from "../vault/reader.js";
 import { writeResearchNote, writeStory, appendPracticeLog } from "../vault/writer.js";
 import { parseFrontmatter } from "../vault/frontmatter.js";
-import { resolveScriptsDir, resolveVoicePath, resolveStoriesDir, resolvePracticeLogPath, resolveMomentsDir } from "../vault/paths.js";
+import { resolveVoicePath, resolveStoriesDir, resolvePracticeLogPath, resolveMomentsDir } from "../vault/paths.js";
 import { emitSignal, signalId, summarizeSignals } from "../vault/signals.js";
 import { appendSessionEntry, formatSessionTime, readRecentSessions, readPreferences, addPreference } from "../vault/memory.js";
 import type { LumisConfig } from "../types/config.js";
 import type { ResearchFrontmatter, ResearchCategory } from "../types/research.js";
-import type { ScriptFrontmatter } from "../types/studio.js";
 import type { CanvasFile, CanvasNode, CanvasEdge } from "../types/canvas.js";
 import type { Signal, LearningExtractedSignal, StoryDevelopedSignal, StoryPracticeSignal } from "../types/signal.js";
 import type { StoryFrontmatter } from "../types/story.js";
@@ -405,52 +403,21 @@ server.registerTool("social_coach", {
       return b.frontmatter.date.localeCompare(a.frontmatter.date);
     });
 
-    // Read existing scripts for pillar balance
-    const scriptsDir = resolveScriptsDir(config);
-    const scripts: Array<{ filename: string; pillar: string; platform: string[]; status: string }> = [];
+    // Read existing stories for content balance
+    const storiesDir = resolveStoriesDir(config);
+    const stories = readStories(config);
 
-    if (existsSync(scriptsDir)) {
-      const scriptFiles = readdirSync(scriptsDir).filter((f) => f.endsWith(".md") && f !== "README.md");
-      for (const sf of scriptFiles) {
-        try {
-          const raw = readFileSync(join(scriptsDir, sf), "utf-8");
-          const { frontmatter } = parseFrontmatter<ScriptFrontmatter>(raw);
-          scripts.push({
-            filename: sf,
-            pillar: frontmatter.pillar ?? "unknown",
-            platform: frontmatter.platform ?? [],
-            status: frontmatter.status ?? "unknown",
-          });
-        } catch {
-          // skip unparseable files
-        }
+    // Count director cuts across story folders
+    let directorCutCount = 0;
+    if (existsSync(storiesDir)) {
+      const storyFolders = readdirSync(storiesDir, { withFileTypes: true })
+        .filter((d) => d.isDirectory());
+      for (const folder of storyFolders) {
+        const storyFolder = join(storiesDir, folder.name);
+        const files = readdirSync(storyFolder).filter((f) => f.endsWith(".md") && f !== "story.md" && f !== "raw.md" && f !== "README.md");
+        directorCutCount += files.length;
       }
     }
-
-    // Calculate pillar balance
-    const pillarCounts: Record<string, number> = { building: 0, strategy: 0, ethics: 0, thriving: 0 };
-    for (const s of scripts) {
-      const p = s.pillar.toLowerCase();
-      if (p in pillarCounts) {
-        pillarCounts[p]++;
-      }
-    }
-    const totalScripts = Object.values(pillarCounts).reduce((sum, n) => sum + n, 0);
-    const pillarTargets: Record<string, number> = { building: 0.3, strategy: 0.3, ethics: 0.2, thriving: 0.2 };
-    const pillarBalance: Record<string, { actual: number; target: number; gap: number }> = {};
-    for (const [pillar, target] of Object.entries(pillarTargets)) {
-      const actual = totalScripts > 0 ? pillarCounts[pillar] / totalScripts : 0;
-      pillarBalance[pillar] = {
-        actual: Math.round(actual * 100),
-        target: Math.round(target * 100),
-        gap: Math.round((actual - target) * 100),
-      };
-    }
-
-    // Determine which pillars need content
-    const underservedPillars = Object.entries(pillarBalance)
-      .filter(([, v]) => v.gap < -5)
-      .map(([k]) => k);
 
     // Build recommendations (top 5 candidates)
     const recommendations = candidates.slice(0, 5).map((m) => {
@@ -471,9 +438,14 @@ server.registerTool("social_coach", {
         storyPotential: m.frontmatter["story-potential"],
         fiveSecondMoment: m.fiveSecondMoment ?? null,
         suggestedPlatforms: platforms,
-        alreadyScripted: scripts.some((s) =>
-          s.filename.toLowerCase().includes(m.filename.toLowerCase().replace(/\.md$/, "").slice(13)),
-        ),
+        hasDirectorCuts: (() => {
+          // Check if any story folder has director cuts related to this moment
+          const momentSlug = m.filename.toLowerCase().replace(/\.md$/, "").slice(11); // remove date prefix
+          const storyFolder = join(storiesDir, momentSlug);
+          return existsSync(storyFolder) && readdirSync(storyFolder).some((f) =>
+            f.endsWith(".md") && f !== "story.md" && f !== "raw.md" && f !== "README.md"
+          );
+        })(),
       };
     });
 
@@ -512,11 +484,10 @@ server.registerTool("social_coach", {
     const result = {
       voice: voice ? voice.slice(0, 500) : null,
       recommendations,
-      pillarBalance,
-      underservedPillars,
       totalMoments: moments.length,
       highPotentialCount: moments.filter((m) => m.frontmatter["story-potential"] === "high").length,
-      existingScriptCount: scripts.length,
+      existingStoryCount: stories.length,
+      directorCutCount,
       signals: {
         rejectedPillars,
         postedPlatforms,
@@ -545,79 +516,14 @@ server.registerTool("social_coach", {
 });
 
 // ---------------------------------------------------------------------------
-// Tool 6: get_scripts
-// ---------------------------------------------------------------------------
-
-server.registerTool("get_scripts", {
-  description:
-    "List scripts in the vault with their status, platform, and pillar.",
-  inputSchema: {
-    status: z.string().optional().describe("Filter scripts by status: draft, ready, rendering, published"),
-  },
-}, async ({ status }) => {
-  try {
-    const scriptsDir = resolveScriptsDir(config);
-    const results: Array<{
-      filename: string;
-      title: string;
-      platform: string[];
-      pillar: string;
-      status: string;
-      source: string;
-    }> = [];
-
-    if (!existsSync(scriptsDir)) {
-      return {
-        content: [{ type: "text" as const, text: JSON.stringify([], null, 2) }],
-      };
-    }
-
-    const files = readdirSync(scriptsDir).filter((f) => f.endsWith(".md") && f !== "README.md");
-
-    for (const filename of files) {
-      try {
-        const raw = readFileSync(join(scriptsDir, filename), "utf-8");
-        const { frontmatter } = parseFrontmatter<ScriptFrontmatter>(raw);
-
-        // Apply status filter if provided
-        if (status && frontmatter.status !== status) {
-          continue;
-        }
-
-        results.push({
-          filename,
-          title: frontmatter.title ?? filename.replace(/\.md$/, ""),
-          platform: frontmatter.platform ?? [],
-          pillar: frontmatter.pillar ?? "unknown",
-          status: frontmatter.status ?? "unknown",
-          source: frontmatter.source ?? "",
-        });
-      } catch {
-        // skip unparseable files
-      }
-    }
-
-    return {
-      content: [{ type: "text" as const, text: JSON.stringify(results, null, 2) }],
-    };
-  } catch (err) {
-    const message = err instanceof Error ? err.message : String(err);
-    return {
-      content: [{ type: "text" as const, text: `Error reading scripts: ${message}` }],
-      isError: true,
-    };
-  }
-});
-
-// ---------------------------------------------------------------------------
-// Tool 7: record_signal
+// Tool 6: record_signal
 // ---------------------------------------------------------------------------
 
 server.registerTool("record_signal", {
   description:
     "Record user feedback as a signal: rejected recommendations, posted content, or engagement metrics. Writes to signals.json and session memory.",
   inputSchema: {
-    signalType: z.enum(["recommendation_rejected", "content_posted", "engagement_updated", "script_drafted", "cluster_formed"])
+    signalType: z.enum(["recommendation_rejected", "content_posted", "engagement_updated", "cluster_formed"])
       .describe("Type of signal to record"),
     reason: z.string().optional().describe("Why a recommendation was rejected"),
     pillar: z.enum(["building", "strategy", "ethics", "thriving"]).optional().describe("Content pillar"),
@@ -630,7 +536,6 @@ server.registerTool("record_signal", {
     comments: z.number().optional().describe("Comment count"),
     shares: z.number().optional().describe("Share count"),
     filename: z.string().optional().describe("Script or learning filename"),
-    platforms: z.array(z.enum(["linkedin", "x", "youtube"])).optional().describe("Platforms for script_drafted signal"),
     topicTag: z.string().optional().describe("Topic tag for cluster_formed signal"),
     learningCount: z.number().optional().describe("Number of learnings in cluster"),
     learningFilenames: z.array(z.string()).optional().describe("Learning filenames in cluster"),
@@ -694,21 +599,6 @@ server.registerTool("record_signal", {
           args.shares != null ? `${args.shares} shares` : null,
         ].filter(Boolean).join(", ");
         sessionDetail = `Engagement update on ${args.platform}: ${metrics}`;
-        break;
-
-      case "script_drafted":
-        signal = {
-          id: signalId(),
-          type: "script_drafted",
-          timestamp,
-          data: {
-            filename: args.filename ?? "",
-            platform: args.platforms ?? [],
-            pillar: args.pillar ?? "",
-            sourceContent: args.sourceContent ?? "",
-          },
-        };
-        sessionDetail = `Script drafted: ${args.filename ?? "unknown"} for ${(args.platforms ?? []).join(", ")}`;
         break;
 
       case "cluster_formed":
@@ -813,7 +703,6 @@ server.registerTool("recall", {
           pillar: s.data.pillar,
           timestamp: s.timestamp,
         })),
-        scriptedCount: signals.scriptedSources.length,
         postedCount: signals.postedContent.length,
         postedContent: signals.postedContent.map((s) => ({
           platform: s.data.platform,

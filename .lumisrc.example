@@ -12,14 +12,14 @@
     "amplifyStructures": "Lumis/Amplify/Structures",
     "amplifyHooks": "Lumis/Amplify/Hooks",
     "amplifyPersuasion": "Lumis/Amplify",
-    "scripts": "Lumis/Scripts",
     "studioOutputs": "Lumis/Studio/Outputs",
     "strategyDocs": "2 - Areas/All Thrive",
     "voice": "Lumis/Voice.md",
     "signals": "Lumis/Signals",
     "memory": "Lumis/Memory",
     "people": "2 - Areas/Personal/People Who Inspire Me",
-    "thinking": "2 - Areas/Personal/Thinking"
+    "thinking": "2 - Areas/Personal/Thinking",
+    "brand": "Brand"
   },
   "researchCategories": [
     {
@@ -48,6 +48,22 @@
       "keywords": ["course", "tutorial", "workshop", "training", "certification"]
     }
   ],
+  "brand": {
+    "name": "Your Brand",
+    "tagline": "What you do in one line",
+    "domain": "yourdomain.com",
+    "colors": {
+      "primary": "#2e4a6e",
+      "secondary": "#389590",
+      "text": "#1a2538",
+      "accent": "#e0a53c",
+      "background": "#ece6de",
+      "neutral": "#d1c9be"
+    },
+    "fonts": {
+      "body": "Inter"
+    }
+  },
   "studio": {
     "heygenApiKey": "",
     "heygenAvatarId": "",

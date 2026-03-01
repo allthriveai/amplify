@@ -29,7 +29,7 @@ const StatCard: React.FC<{ lines: string[] }> = ({ lines }) => {
   return (
     <AbsoluteFill
       style={{
-        backgroundColor: brand.colors.teal,
+        backgroundColor: brand.colors.navy,
         justifyContent: 'center',
         alignItems: 'center',
       }}
@@ -39,7 +39,7 @@ const StatCard: React.FC<{ lines: string[] }> = ({ lines }) => {
           fontFamily: brand.fonts.body,
           fontSize: brand.textCard.statFontSize,
           fontWeight: 800,
-          color: brand.colors.canary,
+          color: brand.colors.gold,
           transform: `scale(${scale})`,
           textAlign: 'center',
         }}
@@ -92,7 +92,7 @@ const QuoteCard: React.FC<{ lines: string[] }> = ({ lines }) => {
           style={{
             width: brand.textCard.accentBarWidth,
             height: barHeight,
-            backgroundColor: brand.colors.canary,
+            backgroundColor: brand.colors.gold,
             borderRadius: 3,
             flexShrink: 0,
           }}
@@ -130,7 +130,7 @@ const ContrastCard: React.FC<{ lines: string[] }> = ({ lines }) => {
       <div
         style={{
           flex: 1,
-          backgroundColor: brand.colors.teal,
+          backgroundColor: brand.colors.navy,
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
@@ -154,7 +154,7 @@ const ContrastCard: React.FC<{ lines: string[] }> = ({ lines }) => {
       <div
         style={{
           flex: 1,
-          backgroundColor: brand.colors.canary,
+          backgroundColor: brand.colors.gold,
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
@@ -222,7 +222,7 @@ const ListCard: React.FC<{ lines: string[] }> = ({ lines }) => {
                 width: 8,
                 height: 8,
                 borderRadius: 4,
-                backgroundColor: brand.colors.canary,
+                backgroundColor: brand.colors.gold,
                 flexShrink: 0,
               }}
             />
@@ -244,7 +244,7 @@ const StatementCard: React.FC<{ lines: string[] }> = ({ lines }) => {
   return (
     <AbsoluteFill
       style={{
-        backgroundColor: brand.colors.teal,
+        backgroundColor: brand.colors.navy,
         justifyContent: 'center',
         alignItems: 'center',
         padding: brand.textCard.padding * 2,

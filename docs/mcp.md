@@ -12,8 +12,7 @@ Entry point: `src/mcp/index.ts` (compiles to `dist/mcp/index.js`). Runs on stdio
 | `get_moments` | Read moments with optional theme filter and limit |
 | `get_patterns` | Pattern map theme clusters and connection summary |
 | `add_research` | Auto-categorize and save research to vault, emit signal |
-| `social_coach` | Recommend content with pillar balance analysis, reads signals + memory |
-| `get_scripts` | List scripts with status filter |
+| `social_coach` | Recommend content based on stories and moments, reads signals + memory |
 | `record_signal` | Record user feedback: rejected recommendations, posted content, engagement metrics |
 | `remember` | Save a user preference to preferences.md |
 | `recall` | Read preferences, recent sessions, and signal summary |
@@ -41,7 +40,7 @@ Entry point: `src/mcp/index.ts` (compiles to `dist/mcp/index.js`). Runs on stdio
 
 For user feedback: rejected recommendations, posted content, engagement metrics.
 
-Accepts `signalType` (enum: `recommendation_rejected`, `content_posted`, `engagement_updated`, `script_drafted`, `cluster_formed`) plus type-specific fields. Validates `pillar` against `building | strategy | ethics | thriving` and `platform` against `linkedin | x | youtube`. Writes to signals.json and session memory.
+Accepts `signalType` (enum: `recommendation_rejected`, `content_posted`, `engagement_updated`, `cluster_formed`) plus type-specific fields. Validates `pillar` against `building | strategy | ethics | thriving` and `platform` against `linkedin | x | youtube`. Writes to signals.json and session memory.
 
 ### remember
 

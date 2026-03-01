@@ -40,7 +40,7 @@ export const BRollPlaceholder: React.FC<BRollPlaceholderProps> = ({ direction })
             fontFamily: 'monospace',
             fontSize: 20,
             fontWeight: 700,
-            color: brand.colors.canary,
+            color: brand.colors.gold,
             letterSpacing: 6,
             textTransform: 'uppercase',
           }}
@@ -52,7 +52,7 @@ export const BRollPlaceholder: React.FC<BRollPlaceholderProps> = ({ direction })
             fontFamily: brand.fonts.body,
             fontSize: 32,
             fontWeight: 400,
-            color: brand.colors.taupe,
+            color: brand.colors.sand,
             textAlign: 'center',
             maxWidth: '70%',
             lineHeight: 1.4,

@@ -20,6 +20,8 @@ Read the config and resolve the vault path.
 
 Read `{vaultPath}/{paths.voice}` (Voice.md) if it exists. This shapes tone and phrasing for the script lines.
 
+Read `{vaultPath}/{paths.brand}/Brand.md` if it exists. Use the brand colors, visual style, and inspiration references when choosing shot direction, text card styling, and b-roll placeholder descriptions.
+
 ### Step 1: Find the Story
 
 If the user provided a slug (e.g., `/director-video why-we-rebuilt-onboarding`), read directly from `{stories}/{slug}/story.md` and `{stories}/{slug}/raw.md`.
@@ -117,7 +119,7 @@ Loop until the user approves. They can:
 
 ### Step 6: Save Timeline
 
-Write `{stories}/{slug}/timeline.md` with this format:
+Write `{stories}/{slug}/video-{hook}-{slug}-{YYYY-MM-DD}.md` (e.g., `video-curiosity-gap-why-we-rebuilt-onboarding-2026-03-01.md`) with this format:
 
 ```yaml
 ---
@@ -195,7 +197,7 @@ Emit a `video_rendered` signal and log to session memory.
 **If no**: report what was saved and how to produce later:
 
 ```
-Timeline saved: {stories}/{slug}/timeline.md
+Timeline saved: {stories}/{slug}/video-{hook}-{slug}-{date}.md
   Shots: {N} ({avatarCount} avatar, {textCardCount} text cards, {bRollCount} b-roll)
   Duration: ~{duration}s
   Platform: {platform}
@@ -213,9 +215,9 @@ Script lines should sound spoken, not written. Read each line out loud. If it so
 
 ```
 {stories}/{slug}/
-  raw.md          ← free write + interview (craft-content)
-  story.md        ← pure narrative (craft-content)
-  timeline.md     ← Director Cut timeline (director-video)
-  carousel.md     ← carousel cards (director-carousel)
-  article.md      ← long-form article (director-article)
+  raw.md                                    ← free write + interview (craft-content)
+  story.md                                  ← pure narrative (craft-content)
+  video-{hook}-{slug}-{date}.md             ← video timeline (director-video)
+  carousel-{hook}-{slug}-{date}.md          ← carousel cards (director-carousel)
+  article-{hook}-{slug}-{date}.md           ← blog post (director-article)
 ```

@@ -20,6 +20,8 @@ export type {
 
 export type { LumisConfig } from "./types/config.js";
 export { DEFAULT_PATHS, DEFAULT_RESEARCH_CATEGORIES } from "./types/config.js";
+
+export type { BrandConfig, BrandColors, BrandFonts } from "./types/brand.js";
 export { THEME_COLORS } from "./types/canvas.js";
 
 export type {
@@ -28,7 +30,6 @@ export type {
   SignalsFile,
   MomentCapturedSignal,
   LearningExtractedSignal,
-  ScriptDraftedSignal,
   RecommendationRejectedSignal,
   ContentPostedSignal,
   EngagementUpdatedSignal,
@@ -55,9 +56,6 @@ export type {
 
 export type {
   Platform,
-  ScriptStatus,
-  ScriptFrontmatter,
-  Script,
   StudioConfig,
 } from "./types/studio.js";
 
@@ -133,7 +131,6 @@ export type { HeyGenClient } from "./studio/index.js";
 export type { ElevenLabsClient } from "./studio/index.js";
 export type { RenderProps, DirectorCutRenderProps } from "./studio/index.js";
 export {
-  resolveScriptsDir,
   resolveStudioOutputsDir,
   resolveStrategyDocsDir,
   resolveVoicePath,
@@ -145,7 +142,7 @@ export {
   resolveStoriesDir,
   resolvePracticeLogPath,
   resolveStoryDir,
-  resolveTimelinePath,
+  resolveDirectorCutPath,
 } from "./vault/index.js";
 
 // Signals
@@ -153,3 +150,6 @@ export { readSignals, readRecentSignals, emitSignal, signalId, summarizeSignals 
 
 // Memory
 export { formatSessionTime, appendSessionEntry, readSession, readRecentSessions, readPreferences, addPreference } from "./vault/index.js";
+
+// Brand
+export { readBrand, readBrandInspirations, resolveBrandDir, resolveBrandPath, resolveBrandInspirationDir } from "./vault/index.js";

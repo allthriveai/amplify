@@ -32,10 +32,11 @@ export async function initCommand(targetPath?: string): Promise<void> {
     DEFAULT_PATHS.learnings,
     DEFAULT_PATHS.amplifyStructures,
     DEFAULT_PATHS.amplifyHooks,
-    DEFAULT_PATHS.scripts,
     DEFAULT_PATHS.studioOutputs,
     DEFAULT_PATHS.signals,
     join(DEFAULT_PATHS.memory, "sessions"),
+    DEFAULT_PATHS.brand,
+    join(DEFAULT_PATHS.brand, "Inspiration"),
   ];
 
   // Add research category subfolders
@@ -71,12 +72,12 @@ export async function initCommand(targetPath?: string): Promise<void> {
         amplifyStructures: DEFAULT_PATHS.amplifyStructures,
         amplifyHooks: DEFAULT_PATHS.amplifyHooks,
         amplifyPersuasion: DEFAULT_PATHS.amplifyPersuasion,
-        scripts: DEFAULT_PATHS.scripts,
         studioOutputs: DEFAULT_PATHS.studioOutputs,
         strategyDocs: DEFAULT_PATHS.strategyDocs,
         voice: DEFAULT_PATHS.voice,
         signals: DEFAULT_PATHS.signals,
         memory: DEFAULT_PATHS.memory,
+        brand: DEFAULT_PATHS.brand,
       },
       researchCategories: DEFAULT_RESEARCH_CATEGORIES,
     };
@@ -96,7 +97,6 @@ export async function initCommand(targetPath?: string): Promise<void> {
   console.log(`  Amplify:`);
   console.log(`    Structures: ${DEFAULT_PATHS.amplifyStructures}`);
   console.log(`    Hooks:      ${DEFAULT_PATHS.amplifyHooks}`);
-  console.log(`  Scripts: ${DEFAULT_PATHS.scripts}`);
   console.log(`  Studio:  ${DEFAULT_PATHS.studioOutputs}`);
 
   // Write Voice.md template
@@ -132,4 +132,5 @@ export async function initCommand(targetPath?: string): Promise<void> {
 
   console.log(`  Signals: ${DEFAULT_PATHS.signals}`);
   console.log(`  Memory:  ${DEFAULT_PATHS.memory}`);
+  console.log(`  Brand:   ${DEFAULT_PATHS.brand}`);
 }

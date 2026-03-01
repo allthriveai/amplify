@@ -20,6 +20,8 @@ Read the config and resolve the vault path.
 
 Read `{vaultPath}/{paths.voice}` (Voice.md) if it exists. This shapes tone, phrasing, and the article's voice.
 
+Read `{vaultPath}/{paths.brand}/Brand.md` if it exists. Use the brand visual style when suggesting header images, pull quotes, or visual callouts.
+
 ### Step 1: Find the Story
 
 If the user provided a slug (e.g., `/director-article why-we-rebuilt-onboarding`), read directly from `{stories}/{slug}/story.md` and `{stories}/{slug}/raw.md`.
@@ -97,7 +99,7 @@ Loop until the user approves.
 
 ### Step 6: Save Article
 
-Write `{stories}/{slug}/article.md` with this format:
+Write `{stories}/{slug}/article-{hook}-{slug}-{YYYY-MM-DD}.md` (e.g., `article-curiosity-gap-why-we-rebuilt-onboarding-2026-03-01.md`) with this format:
 
 ```yaml
 ---
@@ -195,7 +197,7 @@ Log to session memory at `{vaultPath}/{paths.memory}/sessions/YYYY-MM-DD.md`:
 Report what was saved:
 
 ```
-Article saved: {stories}/{slug}/article.md
+Article saved: {stories}/{slug}/article-{hook}-{slug}-{date}.md
   Sections: {N} ({headingCount} with headings, {noHeadingCount} cold)
   Word count: ~{wordCount}
   Platform: blog
@@ -217,9 +219,9 @@ The article should sound written by a person with opinions, not assembled by a s
 
 ```
 {stories}/{slug}/
-  raw.md          <- free write + interview (craft-content)
-  story.md        <- pure narrative (craft-content)
-  timeline.md     <- Director Cut timeline (director-video)
-  carousel.md     <- carousel cards (director-carousel)
-  article.md      <- long-form article (director-article)
+  raw.md                                    <- free write + interview (craft-content)
+  story.md                                  <- pure narrative (craft-content)
+  video-{hook}-{slug}-{date}.md             <- video timeline (director-video)
+  carousel-{hook}-{slug}-{date}.md          <- carousel cards (director-carousel)
+  article-{hook}-{slug}-{date}.md           <- blog post (director-article)
 ```

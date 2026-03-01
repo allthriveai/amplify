@@ -36,8 +36,8 @@ Lumis works fine without studio config. The capture, storytelling, and content c
 ## Commands
 
 ```bash
-lumis studio list        # List scripts and status
-lumis studio render      # Render script to branded video
+lumis studio list        # List director cuts across stories
+lumis studio render      # Render a story's timeline to video
 lumis studio preview     # Open Remotion preview
 ```
 

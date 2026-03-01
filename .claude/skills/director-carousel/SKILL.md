@@ -20,6 +20,8 @@ Read the config and resolve the vault path.
 
 Read `{vaultPath}/{paths.voice}` (Voice.md) if it exists. This shapes tone and phrasing for the card copy.
 
+Read `{vaultPath}/{paths.brand}/Brand.md` if it exists. Use the brand colors, visual style, and inspiration references when choosing image direction and card styling.
+
 ### Step 1: Find the Story
 
 If the user provided a slug (e.g., `/director-carousel why-we-rebuilt-onboarding`), read directly from `{stories}/{slug}/story.md` and `{stories}/{slug}/raw.md`.
@@ -118,7 +120,7 @@ Loop until the user approves. They can:
 
 ### Step 6: Save Carousel
 
-Write `{stories}/{slug}/carousel.md` with this format:
+Write `{stories}/{slug}/carousel-{hook}-{slug}-{YYYY-MM-DD}.md` (e.g., `carousel-curiosity-gap-why-we-rebuilt-onboarding-2026-03-01.md`) with this format:
 
 ```yaml
 ---
@@ -219,7 +221,7 @@ Log to session memory at `{vaultPath}/{paths.memory}/sessions/YYYY-MM-DD.md`:
 Report what was saved:
 
 ```
-Carousel saved: {stories}/{slug}/carousel.md
+Carousel saved: {stories}/{slug}/carousel-{hook}-{slug}-{date}.md
   Cards: {N} ({hookCount} hook, {narrativeCount} narrative, {statCount} stat, {contrastCount} contrast, {ctaCount} CTA, {closerCount} closer)
   Platform: LinkedIn
 
@@ -236,9 +238,9 @@ Card copy should sound punchy and conversational. If a headline sounds like a co
 
 ```
 {stories}/{slug}/
-  raw.md          <- free write + interview (craft-content)
-  story.md        <- pure narrative (craft-content)
-  timeline.md     <- Director Cut timeline (director-video)
-  carousel.md     <- carousel cards (director-carousel)
-  article.md      <- long-form article (director-article)
+  raw.md                                    <- free write + interview (craft-content)
+  story.md                                  <- pure narrative (craft-content)
+  video-{hook}-{slug}-{date}.md             <- video timeline (director-video)
+  carousel-{hook}-{slug}-{date}.md          <- carousel cards (director-carousel)
+  article-{hook}-{slug}-{date}.md           <- blog post (director-article)
 ```

@@ -50,7 +50,7 @@ export const BrandedOutro: React.FC = () => {
   return (
     <AbsoluteFill
       style={{
-        backgroundColor: brand.colors.teal,
+        backgroundColor: brand.colors.navy,
         justifyContent: 'center',
         alignItems: 'center',
         opacity: Math.min(fadeIn, fadeOut),
@@ -73,14 +73,14 @@ export const BrandedOutro: React.FC = () => {
             transform: `scale(${urlScale})`,
           }}
         >
-          example.com
+          {brand.domain}
         </div>
 
         <div
           style={{
             width: accentWidth,
             height: 4,
-            backgroundColor: brand.colors.canary,
+            backgroundColor: brand.colors.gold,
             borderRadius: 2,
           }}
         />
@@ -90,7 +90,7 @@ export const BrandedOutro: React.FC = () => {
             fontFamily: brand.fonts.body,
             fontSize: 32,
             fontWeight: 500,
-            color: brand.colors.canary,
+            color: brand.colors.gold,
             opacity: ctaOpacity,
             letterSpacing: 2,
           }}

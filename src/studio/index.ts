@@ -2,7 +2,6 @@ import { join } from "node:path";
 import { mkdir } from "node:fs/promises";
 
 import type { LumisConfig } from "../types/config.js";
-import type { Script } from "../types/studio.js";
 import { resolveStudioOutputsDir } from "../vault/paths.js";
 import { createHeyGenClient } from "./heygen.js";
 import { renderVideo } from "./render.js";
@@ -31,7 +30,7 @@ const MAX_POLLS = 120;
  */
 export async function produceVideo(
   config: LumisConfig,
-  script: Script,
+  script: { filename: string; content: string; frontmatter: { title: string } },
 ): Promise<string> {
   // 1. Validate studio config
   const studio = config.studio;

@@ -40,7 +40,6 @@ Lumis/
   Memory/             ← session history and preferences
     sessions/         ← daily session logs (YYYY-MM-DD.md)
     preferences.md    ← user preferences (markdown)
-  Scripts/            ← platform-specific content drafts
   Studio/
     Outputs/          ← finished branded videos
 2 - Areas/

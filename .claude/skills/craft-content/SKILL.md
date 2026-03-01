@@ -184,14 +184,14 @@ Each story lives in its own folder under `{paths.stories}/`:
 
 ```
 {paths.stories}/{slug}/
-  raw.md          ← free write + 5 interview answers (craft-content)
-  story.md        ← pure narrative draft (craft-content)
-  timeline.md     ← Director Cut timeline (director-video)
-  carousel.md     ← carousel cards (director-carousel)
-  article.md      ← long-form article (director-article)
+  raw.md                                    ← free write + 5 interview answers (craft-content)
+  story.md                                  ← pure narrative draft (craft-content)
+  video-{hook}-{slug}-{date}.md             ← video timeline (director-video)
+  carousel-{hook}-{slug}-{date}.md          ← carousel cards (director-carousel)
+  article-{hook}-{slug}-{date}.md           ← blog post (director-article)
 ```
 
 **`/craft-content` creates:** `raw.md` and `story.md`
-**Director skills create:** `timeline.md`, `carousel.md`, `article.md`
+**Director skills create:** `video-*.md`, `carousel-*.md`, `article-*.md`
 
 The story is the reusable asset. Director skills remix it into different formats. Try a video and a carousel from the same story. Come back in 6 months and write an article from the same source.

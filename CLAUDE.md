@@ -55,6 +55,7 @@ Lumis has Claude Code skills in `.claude/skills/`:
 - **`/director-article`** — Long-form blog post from a crafted story. Writes the full article using the narrative arc.
 - **`/add-inspiration`** — Captures a person who inspires you. Researches their bio, work, and quotes on the web, then asks what you admire and what you've learned from them.
 - **`/challenge`** — Challenges an idea or belief through critical thinking prompts. Picks 2-3 prompts matched to the input, runs them one at a time, logs to Challenge Log, optionally promotes insights to the second brain.
+- **`/brand`** — Sets up your visual brand identity. Interview mode writes brand colors, fonts, and visual style to `.lumisrc` and Brand.md. Add mode (`/brand add [url]`) saves visual inspiration references.
 - **`/humanizer`** — Removes signs of AI-generated writing. Detects and fixes AI vocabulary, significance inflation, em dash overuse, filler phrases, and structural tells.
 
 All skills read `.lumisrc` for vault paths and write directly to the Obsidian vault.
@@ -78,8 +79,8 @@ npm test             # Run vitest
 lumis init [path]    # Scaffold vault structure
 lumis moment         # Capture a moment
 lumis import-sparks  # Import content from sparks.json manifest
-lumis studio list    # List scripts and status
-lumis studio render  # Render script to branded video
+lumis studio list    # List director cuts across stories
+lumis studio render  # Render a story's timeline to video
 lumis studio preview # Open Remotion preview
 ```
 
