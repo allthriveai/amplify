@@ -157,7 +157,7 @@ Append a link to the new research note in the appropriate `README.md`. If the no
 - [[filename]] — [one-line description]
 ```
 
-### Step 7b: Extract Learnings
+### Step 7: Extract Learnings
 
 After saving the research note and TL;DR, extract professional insights that connect to the content strategy.
 
@@ -204,7 +204,7 @@ Key rules:
 
 If no learnings are worth extracting (purely reference material, no actionable insight), skip this step and note it in the confirmation.
 
-### Step 7c: Cluster Report
+### Step 8: Cluster Report
 
 After creating learnings, scan all files in `{vaultPath}/{paths.learnings}/` (excluding README.md). For each file, extract the `tags` from frontmatter.
 
@@ -221,7 +221,7 @@ If a cluster reaches 4+ for the first time with this addition, highlight it:
 
 This report runs every time `/add-research` is used, not just when new clusters form, so the user always sees what's building up. If no clusters exist yet, say so briefly and move on.
 
-### Step 7d: Emit Signals + Session Memory
+### Step 9: Emit Signals + Session Memory
 
 After creating learnings and checking clusters, emit signals and log to session memory:
 
@@ -259,7 +259,7 @@ After creating learnings and checking clusters, emit signals and log to session 
 - **HH:MM** — research_added: Saved "[title]" to [category], extracted [N] learnings
 ```
 
-### Step 7: Confirm to the User
+### Step 10: Confirm to the User
 
 Report:
 - Where the files were saved (full note path + TL;DR path)
@@ -267,4 +267,4 @@ Report:
 - A 2-3 sentence summary of what was captured
 - Any related notes already in the vault (check for overlapping tags or titles in existing research notes)
 - How many learnings were extracted (with titles and pillars)
-- The cluster report from Step 7c
+- The cluster report from Step 8

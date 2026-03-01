@@ -39,6 +39,8 @@ export type {
   VideoRenderedSignal,
   CarouselCreatedSignal,
   ArticleCreatedSignal,
+  InspirationAddedSignal,
+  ChallengeCompletedSignal,
 } from "./types/signal.js";
 
 export type { SessionEntry } from "./types/memory.js";

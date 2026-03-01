@@ -216,4 +216,6 @@ Script lines should sound spoken, not written. Read each line out loud. If it so
   raw.md          ← free write + interview (craft-content)
   story.md        ← pure narrative (craft-content)
   timeline.md     ← Director Cut timeline (director-video)
+  carousel.md     ← carousel cards (director-carousel)
+  article.md      ← long-form article (director-article)
 ```

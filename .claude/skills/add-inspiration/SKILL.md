@@ -160,7 +160,7 @@ Append to the signals file at `{vaultPath}/{paths.signals}/signals.json`:
 
 ```json
 {
-  "id": "{uuid}",
+  "id": "sig-[timestamp]-[random6hex]",
   "type": "inspiration_added",
   "timestamp": "{ISO 8601}",
   "data": {

@@ -18,7 +18,7 @@ Lumis is a CLI tool and MCP server that lives in an Obsidian vault. It helps cap
 
 ```
 src/
-  types/          ← TypeScript interfaces (moment, canvas, config, research, amplify, signal, memory, director)
+  types/          ← TypeScript interfaces (moment, canvas, config, research, amplify, signal, memory, story, studio, director)
   vault/          ← Read/write Obsidian markdown files with gray-matter frontmatter
   cli/            ← CLI commands (moment, init, import-sparks)
   mcp/            ← MCP server (stdio transport, 11 tools)
@@ -44,17 +44,18 @@ src/
 
 Lumis has Claude Code skills in `.claude/skills/`:
 
-- **`/init`** — Interactive vault setup. Asks for vault path, scaffolds directories, writes `.lumisrc`, walks through voice interview to populate Voice.md, then copies and personalizes the Amplify toolkit (101 hooks, 21 structures, 34 triggers, prompts).
+- **`/init`** — Interactive vault setup. Asks for vault path, scaffolds directories, writes `.lumisrc`, walks through voice interview to populate Voice.md, then copies and personalizes the Amplify toolkit (8 hook types, 18 structures, persuasion glossary).
 - **`/voice`** — Standalone voice interview. Fills in or redoes Voice.md through a guided conversation.
 - **`/moment`** — Captures a daily moment. Reads all existing moments, analyzes the input, finds connections, writes the note, regenerates the Pattern Map canvas, and reports back.
 - **`/add-research`** — Saves a URL/PDF/article as research. Fetches content, categorizes it, writes a full note + TL;DR companion, extracts learnings, and reports topic clusters.
 - **`/craft-storytelling`** — Develops storytelling skill from captured moments. Practice mode or full story development.
-- **`/craft-content`** — Finds a story and shapes it into content for any medium. Free write, find the 5-second moment, build the arc, write, review.
+- **`/craft-content`** — Finds a story and shapes it into a clean narrative draft. Free write, find the 5-second moment, build the arc, write, review. The story is the asset; director skills remix it into formats.
 - **`/director-video`** — Takes a crafted story and produces a shot-by-shot video timeline. Picks hook + structure from Amplify, builds a Director Cut timeline, optionally produces avatar clips via HeyGen and assembles with Remotion.
 - **`/director-carousel`** — LinkedIn carousel from a crafted story. Builds card-by-card plan with copy and image direction.
 - **`/director-article`** — Long-form blog post from a crafted story. Writes the full article using the narrative arc.
 - **`/add-inspiration`** — Captures a person who inspires you. Researches their bio, work, and quotes on the web, then asks what you admire and what you've learned from them.
 - **`/challenge`** — Challenges an idea or belief through critical thinking prompts. Picks 2-3 prompts matched to the input, runs them one at a time, logs to Challenge Log, optionally promotes insights to the second brain.
+- **`/humanizer`** — Removes signs of AI-generated writing. Detects and fixes AI vocabulary, significance inflation, em dash overuse, filler phrases, and structural tells.
 
 All skills read `.lumisrc` for vault paths and write directly to the Obsidian vault.
 

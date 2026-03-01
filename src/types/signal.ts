@@ -15,7 +15,9 @@ export type SignalType =
   | "timeline_created"
   | "video_rendered"
   | "carousel_created"
-  | "article_created";
+  | "article_created"
+  | "inspiration_added"
+  | "challenge_completed";
 
 interface BaseSignal {
   id: string;
@@ -158,6 +160,26 @@ export interface ArticleCreatedSignal extends BaseSignal {
   };
 }
 
+export interface InspirationAddedSignal extends BaseSignal {
+  type: "inspiration_added";
+  data: {
+    person: string;
+    tags: string[];
+    backLinks: number;
+    path: string;
+  };
+}
+
+export interface ChallengeCompletedSignal extends BaseSignal {
+  type: "challenge_completed";
+  data: {
+    idea: string;
+    prompts: string[];
+    promoted: boolean;
+    path: string;
+  };
+}
+
 export type Signal =
   | MomentCapturedSignal
   | LearningExtractedSignal
@@ -171,7 +193,9 @@ export type Signal =
   | TimelineCreatedSignal
   | VideoRenderedSignal
   | CarouselCreatedSignal
-  | ArticleCreatedSignal;
+  | ArticleCreatedSignal
+  | InspirationAddedSignal
+  | ChallengeCompletedSignal;
 
 export interface SignalsFile {
   version: 1;

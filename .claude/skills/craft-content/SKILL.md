@@ -105,7 +105,7 @@ If the user provides additional context during the interview (clarifications, fo
 
 Using the free write, the five answers, and Voice.md, write the story.
 
-The story is the asset. It has no hooks, no CTAs, no platform formatting. It's a clean narrative that can be remixed into any format later by `/social-coach`.
+The story is the asset. It has no hooks, no CTAs, no platform formatting. It's a clean narrative that the director skills remix into video, carousel, or article.
 
 **Rules:**
 - Use the user's words from the free write and interview wherever possible. Don't replace their language with yours.
@@ -119,7 +119,7 @@ The story is the asset. It has no hooks, no CTAs, no platform formatting. It's a
 - Active voice only. Never passive. "Agents enroll" not "agents are enrolled." "The academy evaluates" not "agents get evaluated."
 - **Run a humanizer pass on everything you write.** Read the full humanizer skill at `.claude/skills/humanizer/SKILL.md` and apply every rule: AI vocabulary replacements, significance inflation cuts, superficial -ing phrase removal, filler/hedging removal, structural tells (em dashes, rule-of-three, sentence rhythm, paragraph starts, negative parallelisms), and promotional tone checks. Then read each paragraph out loud. If it sounds assembled rather than said, rewrite it.
 - Do NOT invent claims, stats, stories, or details the user didn't provide.
-- No hooks, CTAs, or platform-specific structure. The social coach adds those later.
+- No hooks, CTAs, or platform-specific structure. The director skills add those later.
 
 Save to `{vaultPath}/{paths.stories}/{slug}/story.md` with frontmatter:
 
@@ -127,7 +127,7 @@ Save to `{vaultPath}/{paths.stories}/{slug}/story.md` with frontmatter:
 ---
 title: "Title"
 type: story
-status: draft
+craft-status: drafting
 created: YYYY-MM-DD
 tags: [craft]
 ---
@@ -151,20 +151,23 @@ Loop on edits until the user explicitly approves. Do not interpret "looks good" 
 
 ### Step 5: Report and Hand Off
 
-Update the story frontmatter: change `status` to `approved`.
+Update the story frontmatter: change `craft-status` to `told`.
 
 Report what happened:
 
 ```
 **Story**: {title}
-**Status**: approved
+**Status**: told
 **Saved to**: {stories}/{slug}/
 
 Contents:
   raw.md   — your free write and interview answers
   story.md — the narrative draft
 
-Ready to adapt this for platforms? Run `/social-coach {slug}` to add hooks, CTAs, and produce for video/posts.
+Ready to turn this into content? Pick a format:
+  /director-video {slug}     — shot-by-shot video timeline
+  /director-carousel {slug}  — LinkedIn carousel with card copy
+  /director-article {slug}   — long-form blog post
 ```
 
 ### Step 5b: Log to Session Memory
@@ -181,14 +184,14 @@ Each story lives in its own folder under `{paths.stories}/`:
 
 ```
 {paths.stories}/{slug}/
-  raw.md                                ← free write + 5 interview answers (craft-content)
-  story.md                              ← pure narrative draft (craft-content)
-  {platform}-{hook-type}-{date}.md      ← platform remix (social-coach)
-  {platform}-{hook-type}-{date}.md      ← another remix, different hook
-  ...
+  raw.md          ← free write + 5 interview answers (craft-content)
+  story.md        ← pure narrative draft (craft-content)
+  timeline.md     ← Director Cut timeline (director-video)
+  carousel.md     ← carousel cards (director-carousel)
+  article.md      ← long-form article (director-article)
 ```
 
 **`/craft-content` creates:** `raw.md` and `story.md`
-**`/social-coach` creates:** platform remixes like `youtube-cold-open-2026-02-28.md`, `linkedin-elephant-2026-02-28.md`, `x-thread-contrast-2026-02-28.md`
+**Director skills create:** `timeline.md`, `carousel.md`, `article.md`
 
-The story is the reusable asset. Remixes are experiments. Try different hooks on the same story. Cut a 3-minute video and a 45-second Short from the same source. Come back in 6 months and remix for a new platform.
+The story is the reusable asset. Director skills remix it into different formats. Try a video and a carousel from the same story. Come back in 6 months and write an article from the same source.
