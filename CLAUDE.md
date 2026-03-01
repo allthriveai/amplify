@@ -51,6 +51,8 @@ Lumis has Claude Code skills in `.claude/skills/`:
 - **`/craft-storytelling`** — Develops storytelling skill from captured moments. Practice mode or full story development.
 - **`/craft-content`** — Finds a story and shapes it into content for any medium. Free write, find the 5-second moment, build the arc, write, review.
 - **`/director-video`** — Takes a crafted story and produces a shot-by-shot video timeline. Picks hook + structure from Amplify, builds a Director Cut timeline, optionally produces avatar clips via HeyGen and assembles with Remotion.
+- **`/director-carousel`** — LinkedIn carousel from a crafted story. Builds card-by-card plan with copy and image direction.
+- **`/director-article`** — Long-form blog post from a crafted story. Writes the full article using the narrative arc.
 - **`/add-inspiration`** — Captures a person who inspires you. Researches their bio, work, and quotes on the web, then asks what you admire and what you've learned from them.
 - **`/challenge`** — Challenges an idea or belief through critical thinking prompts. Picks 2-3 prompts matched to the input, runs them one at a time, logs to Challenge Log, optionally promotes insights to the second brain.
 

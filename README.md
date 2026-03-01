@@ -15,6 +15,8 @@ Tell Lumis about your life, share research you are interested in, and learn to c
 - **Builds a Pattern Map** in Obsidian that visualizes how your moments relate over time
 - **Develops stories** through free writing and guided questions, then shapes them into clean narratives
 - **Directs video production** by turning your story into a shot-by-shot timeline, generating avatar clips, and assembling branded video
+- **Builds carousels** from stories into card-by-card LinkedIn carousel plans with copy and image direction
+- **Writes articles** from stories into full long-form blog posts ready to publish
 - **Challenges your thinking** through targeted critical thinking prompts with honest feedback
 - **Captures inspiration** by researching people you admire and connecting them to your vault
 
@@ -25,48 +27,49 @@ This repo is the engine. Your [Obsidian](https://obsidian.md) vault is where you
 Lumis owns the full content flywheel. Most tools handle one step. Lumis connects all of them because a video director that doesn't know your moments is useless, and a content tool that doesn't know your voice is just another template.
 
 ```
-  live your life          read something          someone inspires you
-       │                       │                         │
-       ▼                       ▼                         ▼
-  ┌─────────┐           ┌─────────┐               ┌───────────┐
-  │ /moment │           │/add-    │               │/add-      │
-  │         │           │research │               │inspiration│
-  └────┬────┘           └────┬────┘               └─────┬─────┘
-       │                     │                          │
-       │  5-second moment    │  learnings extracted     │  bio researched
-       │  connections found  │  topics clustered        │  vault back-links
-       │  pattern map built  │  TL;DR companion         │  found
-       │                     │                          │
-       └─────────────────────┼──────────────────────────┘
-                             │
-                     ┌───────▼───────┐
-                     │    Vault      │  moments, learnings, stories,
-                     │   (Obsidian)  │  voice, inspiration, patterns
-                     └───────┬───────┘
-                             │
-              ┌──────────────┼──────────────┐
-              │              │              │
-      ┌───────▼───────┐ ┌───▼──────┐ ┌─────▼─────────┐
-      │/craft-content │ │ /craft-  │ │  /challenge   │
-      │               │ │ story-   │ │               │
-      │ free write    │ │ telling  │ │ pressure-test │
-      │ find the story│ │          │ │ your ideas    │
-      │ shape the arc │ │ practice │ │ honest feedback│
-      └───────┬───────┘ │ & develop│ └───────────────┘
-              │         └──────────┘
-              │
-      ┌───────▼─────────┐
-      │ /director-video │  shot-by-shot timeline
-      │                 │  HeyGen → Remotion →
-      │  Director Cut   │  CapCut polish
-      └───────┬─────────┘
-              │
-              ▼
-       branded video output
-       (YouTube Shorts, Long-form)
+  live your life           read something         someone inspires you
+       │                        │                        │
+       ▼                        ▼                        ▼
+  ┌─────────┐            ┌─────────┐             ┌───────────┐
+  │ /moment │            │ /add-   │             │ /add-     │
+  │         │            │ research│             │inspiration│
+  └────┬────┘            └────┬────┘             └─────┬─────┘
+       │                      │                        │
+       │  5-second moment     │  learnings extracted   │  bio researched
+       │  connections found   │  topics clustered      │  vault back-links
+       │  pattern map built   │  TL;DR companion       │  found
+       │                      │                        │
+       └──────────────────────┼────────────────────────┘
+                              │
+                      ┌───────▼───────┐
+                      │    Vault      │  moments, learnings, stories,
+                      │   (Obsidian)  │  voice, inspiration, patterns
+                      └───────┬───────┘
+                              │
+           ┌──────────────────┼──────────────────┐
+           │                  │                  │
+   ┌───────▼───────┐  ┌──────▼────────┐  ┌──────▼──────────┐
+   │ /craft-content│  │ /craft-       │  │ /challenge      │
+   │               │  │  storytelling │  │                 │
+   │ free write    │  │               │  │ pressure-test   │
+   │ find the story│  │ practice      │  │ your ideas      │
+   │ shape the arc │  │ & develop     │  │ honest feedback │
+   └───────┬───────┘  └───────────────┘  └─────────────────┘
+           │
+   ┌───────▼──────────────┐
+   │   Director Cuts      │
+   │                      │
+   │ /director-video      │  shot-by-shot timeline
+   │ /director-carousel   │  card-by-card plan
+   │ /director-article    │  full blog post
+   └───────┬──────────────┘
+           │
+           ▼
+    video, carousel, article
+    (YouTube, LinkedIn, blog)
 ```
 
-Each step feeds the next. Your moments become the raw material for stories. `/craft-content` finds the story through free writing and guided questions. `/director-video` turns the story into a shot-by-shot timeline, generates avatar clips via HeyGen, and assembles branded video with Remotion.
+Each step feeds the next. Your moments become the raw material for stories. `/craft-content` finds the story through free writing and guided questions. `/director-video` turns the story into a shot-by-shot timeline, `/director-carousel` builds a card-by-card LinkedIn carousel plan, and `/director-article` writes the full long-form blog post.
 
 ## Setup
 
@@ -92,6 +95,8 @@ claude
 /craft-content      Free write, find the story, shape the narrative
 /craft-storytelling Practice or develop storytelling from moments
 /director-video     Build a shot-by-shot timeline and produce video
+/director-carousel  Build a LinkedIn carousel from a story
+/director-article   Write a long-form article from a story
 /challenge          Pressure-test an idea with critical thinking prompts
 ```
 

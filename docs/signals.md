@@ -19,6 +19,8 @@ Lumis uses a structured event log (`Lumis/Signals/signals.json`) to connect pipe
 | `challenge_completed` | /challenge | idea, prompts, promoted, path |
 | `timeline_created` | /director-video | slug, storySource, hook, structure, platform, shotCount, targetDuration |
 | `video_rendered` | /director-video produce | slug, outputPath, platform, duration |
+| `carousel_created` | /director-carousel | slug, storySource, hook, structure, platform, cardCount |
+| `article_created` | /director-article | slug, storySource, hook, structure, platform, wordCount |
 
 ## Behavior
 
@@ -26,11 +28,13 @@ Lumis uses a structured event log (`Lumis/Signals/signals.json`) to connect pipe
 - `summarizeSignals()` returns a typed digest: recent moments, rejections, scripted sources, posted content, top engagement, clusters
 - User feedback signals come through the `record_signal` MCP tool
 
-## How Director Video Uses Signals
+## How Director Skills Use Signals
 
-1. Emits `timeline_created` when a shot-by-shot timeline is saved
-2. Emits `video_rendered` when production completes (HeyGen + Remotion assembly)
-3. Future directors (carousel, article) can check `timeline_created` to see what stories already have video timelines
+1. `/director-video` emits `timeline_created` when a shot-by-shot timeline is saved
+2. `/director-video` emits `video_rendered` when production completes (HeyGen + Remotion assembly)
+3. `/director-carousel` emits `carousel_created` when a card plan is saved
+4. `/director-article` emits `article_created` when a blog post is saved
+5. Each director can check the others' signals to see what formats a story already has
 
 ## Implementation
 

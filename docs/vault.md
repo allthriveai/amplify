@@ -17,6 +17,8 @@ Lumis/
       raw.md          ← free write + interview answers (from /craft-content)
       story.md        ← clean narrative draft (from /craft-content)
       timeline.md     ← Director Cut timeline (from /director-video)
+      carousel.md     ← carousel cards with copy and image direction (from /director-carousel)
+      article.md      ← long-form blog post (from /director-article)
     Practice Log.md   ← storytelling practice history
   Learnings/          ← insights extracted from research
   Research/           ← full research notes
@@ -53,6 +55,8 @@ Lumis/
 `Lumis/Voice.md` is the identity file. It captures who you are, what you're trying to accomplish, who you're talking to, what you believe, and how you talk. The coaching and content layers read it:
 
 - **Director video** uses Voice to shape script lines and match your speaking style.
+- **Director carousel** uses Voice to match card copy to your tone.
+- **Director article** uses Voice to write the full article in your style.
 - **Craft content** uses Voice to shape how stories are written.
 - **Amplify toolkit** is personalized with Voice during `/init`, replacing generic placeholders with your audience, mission, and niche.
 - **Moments are never influenced by Voice.** Moments are pure life reflection, unfiltered by goals or strategy. Voice only matters when you decide to turn a moment into content.
@@ -67,7 +71,7 @@ Lumis/
 - **18 content structures**: frameworks with persuasion principles embedded (e.g., "I Used to Believe," "The Great Paradox," "The Vulnerable Admission").
 - **Persuasion Glossary**: 10 persuasion principles for reference.
 
-`/director-video` reads these when building timelines, selecting the right hook type and structure for each video.
+`/director-video`, `/director-carousel`, and `/director-article` read these when building their outputs, selecting the right hook type and structure for each format.
 
 ## IP Separation
 

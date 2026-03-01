@@ -13,7 +13,9 @@ export type SignalType =
   | "story_developed"
   | "story_practice"
   | "timeline_created"
-  | "video_rendered";
+  | "video_rendered"
+  | "carousel_created"
+  | "article_created";
 
 interface BaseSignal {
   id: string;
@@ -132,6 +134,30 @@ export interface VideoRenderedSignal extends BaseSignal {
   };
 }
 
+export interface CarouselCreatedSignal extends BaseSignal {
+  type: "carousel_created";
+  data: {
+    slug: string;
+    storySource: string;
+    hook: string;
+    structure: string;
+    platform: string;
+    cardCount: number;
+  };
+}
+
+export interface ArticleCreatedSignal extends BaseSignal {
+  type: "article_created";
+  data: {
+    slug: string;
+    storySource: string;
+    hook: string;
+    structure: string;
+    platform: string;
+    wordCount: number;
+  };
+}
+
 export type Signal =
   | MomentCapturedSignal
   | LearningExtractedSignal
@@ -143,7 +169,9 @@ export type Signal =
   | StoryDevelopedSignal
   | StoryPracticeSignal
   | TimelineCreatedSignal
-  | VideoRenderedSignal;
+  | VideoRenderedSignal
+  | CarouselCreatedSignal
+  | ArticleCreatedSignal;
 
 export interface SignalsFile {
   version: 1;

@@ -37,6 +37,8 @@ export type {
   StoryPracticeSignal,
   TimelineCreatedSignal,
   VideoRenderedSignal,
+  CarouselCreatedSignal,
+  ArticleCreatedSignal,
 } from "./types/signal.js";
 
 export type { SessionEntry } from "./types/memory.js";
