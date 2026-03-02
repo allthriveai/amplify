@@ -118,14 +118,14 @@ export function resolvePeopleDir(config: LumisConfig): string {
   return resolvePath(config, config.paths.people);
 }
 
-/** Resolve the thinking directory (for promoted challenge notes) */
-export function resolveThinkingDir(config: LumisConfig): string {
-  return resolvePath(config, config.paths.thinking);
+/** Resolve the challenges directory */
+export function resolveChallengesDir(config: LumisConfig): string {
+  return resolvePath(config, config.paths.challenges);
 }
 
 /** Resolve the challenge log file path */
 export function resolveChallengeLogPath(config: LumisConfig): string {
-  return join(resolvePath(config, "Lumis/Thinking"), "Challenge Log.md");
+  return join(resolveChallengesDir(config), "Challenge Log.md");
 }
 
 /** Resolve a story folder by slug: {stories}/{slug}/ */

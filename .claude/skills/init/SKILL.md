@@ -43,9 +43,8 @@ Lumis/Amplify/Hooks
 Lumis/Amplify/Structures
 Lumis/Signals
 Lumis/Memory/sessions
-Lumis/Thinking
+Lumis/Challenges
 2 - Areas/Personal/People Who Inspire Me
-2 - Areas/Personal/Thinking
 ```
 
 Add a `README.md` with `# {folder-name}\n` in each directory that doesn't already have one.
@@ -74,7 +73,7 @@ If `.lumisrc` doesn't already exist in the vault root, write it:
     "signals": "Lumis/Signals",
     "memory": "Lumis/Memory",
     "people": "2 - Areas/Personal/People Who Inspire Me",
-    "thinking": "2 - Areas/Personal/Thinking"
+    "challenges": "Lumis/Challenges"
   },
   "researchCategories": [
     {"name": "AI & Agents", "folder": "AI & Agents", "keywords": ["ai", "agent", "llm", "mcp", "ml", "machine learning", "prompt engineering", "rag", "embedding", "transformer", "gpt", "claude", "neural"]},

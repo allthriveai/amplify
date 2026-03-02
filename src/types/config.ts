@@ -67,8 +67,8 @@ export interface LumisConfig {
     memory: string;
     /** Where people/inspiration notes are stored. Default: "Lumis/People Who Inspire Me" */
     people: string;
-    /** Where promoted challenge/thinking notes are stored. Default: "2 - Areas/Personal/Thinking" */
-    thinking: string;
+    /** Where challenge logs and promoted challenge notes are stored. Default: "Lumis/Challenges" */
+    challenges: string;
     /** Where brand guidelines and inspiration live. Default: "Brand" */
     brand: string;
   };
@@ -103,7 +103,7 @@ export const DEFAULT_PATHS: LumisConfig["paths"] = {
   signals: "Lumis/Signals",
   memory: "Lumis/Memory",
   people: "2 - Areas/Personal/People Who Inspire Me",
-  thinking: "2 - Areas/Personal/Thinking",
+  challenges: "Lumis/Challenges",
   brand: "Brand",
 };
 

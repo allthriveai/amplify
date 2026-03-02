@@ -50,7 +50,7 @@ export function loadConfig(overrides?: Partial<LumisConfig>): LumisConfig {
       signals: overrides?.paths?.signals ?? rcPaths?.signals ?? DEFAULT_PATHS.signals,
       memory: overrides?.paths?.memory ?? rcPaths?.memory ?? DEFAULT_PATHS.memory,
       people: overrides?.paths?.people ?? rcPaths?.people ?? DEFAULT_PATHS.people,
-      thinking: overrides?.paths?.thinking ?? rcPaths?.thinking ?? DEFAULT_PATHS.thinking,
+      challenges: overrides?.paths?.challenges ?? rcPaths?.challenges ?? DEFAULT_PATHS.challenges,
       brand: overrides?.paths?.brand ?? rcPaths?.brand ?? DEFAULT_PATHS.brand,
     },
     researchCategories: overrides?.researchCategories ?? rc?.researchCategories ?? DEFAULT_RESEARCH_CATEGORIES,

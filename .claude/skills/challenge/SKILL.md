@@ -27,7 +27,7 @@ Read the config and extract:
 
 ```
 vaultPath        -> absolute path to the Obsidian vault
-paths.thinking   -> thinking folder (default: "2 - Areas/Personal/Thinking")
+paths.challenges -> challenges folder (default: "Lumis/Challenges")
 paths.signals    -> signals folder (default: "Lumis/Signals")
 paths.memory     -> memory folder (default: "Lumis/Memory")
 paths.voice      -> voice file (default: "Lumis/Voice.md")
@@ -96,7 +96,7 @@ For each prompt:
 
 After all prompts are done, generate a one-line takeaway that captures the core tension or insight from the session. This is your summary, not the user's words.
 
-Append to `{vaultPath}/Lumis/Thinking/Challenge Log.md`:
+Append to `{vaultPath}/{paths.challenges}/Challenge Log.md`:
 
 ```markdown
 ## YYYY-MM-DD - [Short version of the idea]
@@ -137,13 +137,13 @@ Options:
 
 ### Step 6: Promote to Second Brain (if yes)
 
-If the user chose yes, write a note to `{vaultPath}/{paths.thinking}/{Topic}.md` where `{Topic}` is a clean title derived from the idea (e.g., "AI Replacing Knowledge Work" or "Remote Work Productivity").
+If the user chose yes, write a note to `{vaultPath}/{paths.challenges}/{Topic}.md` where `{Topic}` is a clean title derived from the idea (e.g., "AI Replacing Knowledge Work" or "Remote Work Productivity").
 
 ```markdown
 ---
 date: YYYY-MM-DD
-tags: [thinking, challenge]
-source: "[[Lumis/Thinking/Challenge Log]]"
+tags: [challenge]
+source: "[[Lumis/Challenges/Challenge Log]]"
 ---
 
 # {Topic}
@@ -197,7 +197,7 @@ Log to session memory at `{vaultPath}/{paths.memory}/sessions/YYYY-MM-DD.md`:
 **Challenged**: [The original idea, short form]
 **Prompts used**: [Prompt 1], [Prompt 2], [Prompt 3 if used]
 **Takeaway**: [One-line takeaway]
-**Logged to**: Lumis/Thinking/Challenge Log.md
+**Logged to**: Lumis/Challenges/Challenge Log.md
 **Saved to second brain**: [yes -> path | no]
 ```
 

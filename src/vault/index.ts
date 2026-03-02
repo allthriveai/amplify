@@ -23,7 +23,7 @@ export {
   resolveStoriesDir,
   resolvePracticeLogPath,
   resolvePeopleDir,
-  resolveThinkingDir,
+  resolveChallengesDir,
   resolveChallengeLogPath,
   resolveStoryDir,
   resolveDirectorCutPath,
