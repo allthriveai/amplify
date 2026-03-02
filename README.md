@@ -57,34 +57,20 @@ Lumis owns the full content flywheel. Most tools handle one step. Lumis connects
    │ shape the arc │  │ & develop     │  │ honest feedback │
    └───────┬───────┘  └───────────────┘  └─────────────────┘
            │
-   ┌───────▼──────────────┐
-   │   Director Cuts      │
-   │                      │
-   │ /director-video      │  shot-by-shot timeline
-   │ /director-carousel   │  card-by-card plan
-   │ /director-article    │  full blog post
-   └──┬─────┬─────────┬───┘
+   ┌───────▼──────────────────┐
+   │   Director Cuts          │
+   │                          │
+   │ /director-video          │  shot-by-shot timeline
+   │ /director-carousel       │  card-by-card plan
+   │ /director-article        │  full blog post
+   │ /director-images         │  AI images (Google Imagen)
+   └──┬─────┬─────────┬───────┘
       │     │         │
       │     │         └──────────────────────┐
       │     └──────────────┐                 │
       ▼                    ▼                 ▼
    timeline.md        carousel.md      article.md
    (shot-by-shot)     (LinkedIn)       (blog)
-      │                    │                 │
-      └────────────────────┼─────────────────┘
-                           │
-                   ┌───────▼───────┐
-                   │/director-     │
-                   │ images        │  AI images via
-                   │               │  Google Imagen
-                   │ brand-aware   │
-                   │ prompts       │  updates source
-                   └───┬───┬───┬───┘  files in-place
-                       │   │   │
-      ┌────────────────┘   │   └──────────────────┐
-      ▼                    ▼                      ▼
-   assets/             assets/                assets/
-   (video b-roll)      (carousel cards)       (article images)
       │
       │  lumis studio render <slug>
       ▼
