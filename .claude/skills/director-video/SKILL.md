@@ -271,7 +271,7 @@ Ask: "Timeline saved. Want to produce now? This generates {N} avatar clips via H
 **If yes**: call `produceTimeline(config, slug)`. Report progress as clips generate. When complete, report:
 
 ```
-Video rendered: {studioOutputs}/{slug}.mp4
+Video rendered: {stories}/{slug}/{slug}.mp4
   Avatar clips: {N} generated via HeyGen
   Text cards: {N} rendered
   Total duration: ~{duration}s

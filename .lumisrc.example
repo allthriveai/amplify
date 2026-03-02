@@ -12,7 +12,6 @@
     "amplifyStructures": "Lumis/Amplify/Structures",
     "amplifyHooks": "Lumis/Amplify/Hooks",
     "amplifyPersuasion": "Lumis/Amplify",
-    "studioOutputs": "Lumis/Studio/Outputs",
     "strategyDocs": "2 - Areas/All Thrive",
     "voice": "Lumis/Voice.md",
     "signals": "Lumis/Signals",
@@ -69,6 +68,19 @@
     "heygenAvatarId": "",
     "heygenVoiceId": "",
     "elevenlabsApiKey": "",
-    "elevenlabsVoiceId": ""
+    "elevenlabsVoiceId": "",
+    "googleApiKey": ""
+  },
+  "capture": {
+    "obsWebsocketUrl": "ws://localhost:4455",
+    "obsWebsocketPassword": "",
+    "defaultScene": "Lumis: Screen + Camera",
+    "hotkeys": {
+      "startRecording": "OBS_KEY_F9",
+      "stopRecording": "OBS_KEY_F10",
+      "sceneScreenCamera": "OBS_KEY_F5",
+      "sceneScreenOnly": "OBS_KEY_F6",
+      "sceneCameraOnly": "OBS_KEY_F7"
+    }
   }
 }

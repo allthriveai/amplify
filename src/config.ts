@@ -3,6 +3,7 @@ import { resolve, join } from "node:path";
 import { config as loadDotenv } from "dotenv";
 import { LumisConfig, DEFAULT_PATHS, DEFAULT_RESEARCH_CATEGORIES } from "./types/config.js";
 import type { StudioConfig } from "./types/studio.js";
+import type { CaptureConfig } from "./types/config.js";
 
 /**
  * Load Lumis configuration from (in priority order):
@@ -27,6 +28,7 @@ export function loadConfig(overrides?: Partial<LumisConfig>): LumisConfig {
     ?? "";
 
   const studio = loadStudioConfig(overrides?.studio, rc?.studio);
+  const capture = loadCaptureConfig(overrides?.capture, rc?.capture);
 
   return {
     vaultPath: resolve(vaultPath.replace(/^~/, process.env.HOME ?? "")),
@@ -43,7 +45,6 @@ export function loadConfig(overrides?: Partial<LumisConfig>): LumisConfig {
       amplifyStructures: overrides?.paths?.amplifyStructures ?? rcPaths?.amplifyStructures ?? DEFAULT_PATHS.amplifyStructures,
       amplifyHooks: overrides?.paths?.amplifyHooks ?? rcPaths?.amplifyHooks ?? DEFAULT_PATHS.amplifyHooks,
       amplifyPersuasion: overrides?.paths?.amplifyPersuasion ?? rcPaths?.amplifyPersuasion ?? DEFAULT_PATHS.amplifyPersuasion,
-      studioOutputs: overrides?.paths?.studioOutputs ?? rcPaths?.studioOutputs ?? DEFAULT_PATHS.studioOutputs,
       strategyDocs: overrides?.paths?.strategyDocs ?? rcPaths?.strategyDocs ?? DEFAULT_PATHS.strategyDocs,
       voice: overrides?.paths?.voice ?? rcPaths?.voice ?? DEFAULT_PATHS.voice,
       signals: overrides?.paths?.signals ?? rcPaths?.signals ?? DEFAULT_PATHS.signals,
@@ -55,6 +56,7 @@ export function loadConfig(overrides?: Partial<LumisConfig>): LumisConfig {
     researchCategories: overrides?.researchCategories ?? rc?.researchCategories ?? DEFAULT_RESEARCH_CATEGORIES,
     ...(overrides?.brand ?? rc?.brand ? { brand: overrides?.brand ?? rc?.brand } : {}),
     ...(studio ? { studio } : {}),
+    ...(capture ? { capture } : {}),
   };
 }
 
@@ -68,11 +70,26 @@ function loadStudioConfig(
     heygenVoiceId: overrides?.heygenVoiceId ?? rc?.heygenVoiceId ?? process.env.HEYGEN_VOICE_ID,
     elevenlabsApiKey: overrides?.elevenlabsApiKey ?? rc?.elevenlabsApiKey ?? process.env.ELEVENLABS_API_KEY,
     elevenlabsVoiceId: overrides?.elevenlabsVoiceId ?? rc?.elevenlabsVoiceId ?? process.env.ELEVENLABS_VOICE_ID,
+    googleApiKey: overrides?.googleApiKey ?? rc?.googleApiKey ?? process.env.GOOGLE_API_KEY,
   };
 
   // Only return studio config if at least one value is set
   const hasValue = Object.values(studio).some(Boolean);
   return hasValue ? studio : undefined;
+}
+
+function loadCaptureConfig(
+  overrides?: CaptureConfig,
+  rc?: CaptureConfig,
+): CaptureConfig | undefined {
+  const capture: CaptureConfig = {
+    obsWebsocketUrl: overrides?.obsWebsocketUrl ?? rc?.obsWebsocketUrl ?? process.env.OBS_WEBSOCKET_URL,
+    obsWebsocketPassword: overrides?.obsWebsocketPassword ?? rc?.obsWebsocketPassword ?? process.env.OBS_WEBSOCKET_PASSWORD,
+    defaultScene: overrides?.defaultScene ?? rc?.defaultScene,
+  };
+
+  const hasValue = Object.values(capture).some(Boolean);
+  return hasValue ? capture : undefined;
 }
 
 function readLumisrc(): Partial<LumisConfig> | null {

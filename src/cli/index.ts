@@ -37,6 +37,11 @@ async function main() {
       await studioCommand(args[0], args.slice(1));
       break;
     }
+    case "capture": {
+      const { captureCommand } = await import("./commands/capture.js");
+      await captureCommand(args[0], args.slice(1));
+      break;
+    }
     case "story-craft": {
       const { storyCraftCommand } = await import("./commands/story-craft.js");
       const mode = args[0] === "develop" ? "develop" : "practice";
@@ -53,6 +58,7 @@ Commands:
   lumis init [path]                  Set up Lumis in a vault
   lumis import-sparks --from <path>  Import sparks from manifest
   lumis studio <cmd>                 Video production (list, render, preview)
+  lumis capture <cmd>                OBS capture (setup, start, stop, list, scene)
   lumis story-craft                  Practice storytelling (pick a moment, one exercise)
   lumis story-craft develop [term]   Develop a moment into a full story
 

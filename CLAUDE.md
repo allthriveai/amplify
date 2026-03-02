@@ -26,7 +26,7 @@ src/
   canvas/         ← Obsidian canvas file generation
   pipeline/       ← Moment capture pipeline
   amplify/        ← Content amplification context builder
-  studio/         ← Video production (HeyGen, ElevenLabs, Remotion clients)
+  studio/         ← Video production (HeyGen, ElevenLabs, Google Imagen, Remotion rendering, asset management)
   config.ts       ← Loads .lumisrc config with fallbacks to env vars
   index.ts        ← Public API re-exports
 ```
@@ -53,6 +53,7 @@ Lumis has Claude Code skills in `.claude/skills/`:
 - **`/director-video`** — Takes a crafted story and produces a shot-by-shot video timeline. Picks hook + structure from Amplify, builds a Director Cut timeline, optionally produces avatar clips via HeyGen and assembles with Remotion.
 - **`/director-carousel`** — LinkedIn carousel from a crafted story. Builds card-by-card plan with copy and image direction.
 - **`/director-article`** — Long-form blog post from a crafted story. Writes the full article using the narrative arc.
+- **`/director-images`** — Generates AI images for any director format (video, carousel, article) using Google Imagen. Finds image slots, builds brand-aware prompts, generates images, and updates source files so images flow into rendering automatically.
 - **`/add-inspiration`** — Captures a person who inspires you. Researches their bio, work, and quotes on the web, then asks what you admire and what you've learned from them.
 - **`/challenge`** — Challenges an idea or belief through critical thinking prompts. Picks 2-3 prompts matched to the input, runs them one at a time, logs to Challenge Log, optionally promotes insights to the second brain.
 - **`/brand`** — Sets up your visual brand identity. Interview mode writes brand colors, fonts, and visual style to `.lumisrc` and Brand.md. Add mode (`/brand add [url]`) saves visual inspiration references.
@@ -93,3 +94,4 @@ Detailed documentation for each subsystem:
 - **[Memory](docs/memory.md)** — session history, preferences, boundaries
 - **[MCP Server](docs/mcp.md)** — all tools, Claude Desktop config, tool details
 - **[Studio](docs/studio.md)** — video production pipeline, API setup, Remotion
+- **[OBS Capture](docs/obs.md)** — OBS integration, screen/camera recording, keyboard shortcuts

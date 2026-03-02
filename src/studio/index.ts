@@ -2,7 +2,7 @@ import { join } from "node:path";
 import { mkdir } from "node:fs/promises";
 
 import type { LumisConfig } from "../types/config.js";
-import { resolveStudioOutputsDir } from "../vault/paths.js";
+import { resolveStoryDir } from "../vault/paths.js";
 import { createHeyGenClient } from "./heygen.js";
 import { renderVideo } from "./render.js";
 
@@ -13,6 +13,9 @@ export type { ElevenLabsClient } from "./elevenlabs.js";
 export { renderVideo, renderDirectorCut, previewVideo } from "./render.js";
 export type { RenderProps, DirectorCutRenderProps } from "./render.js";
 export { produceTimeline } from "./produce-timeline.js";
+export { validateAssets, resolveAssetPath } from "./assets.js";
+export { createImagenClient } from "./imagen.js";
+export type { ImagenClient } from "./imagen.js";
 
 /** How long to wait between status polls (ms) */
 const POLL_INTERVAL = 10_000;
@@ -86,8 +89,8 @@ export async function produceVideo(
   const rawPath = join(rawDir, rawFilename);
   await heygen.downloadVideo(videoUrl, rawPath);
 
-  // 5. Render branded video with Remotion
-  const outputDir = resolveStudioOutputsDir(config);
+  // 5. Render branded video to story folder
+  const outputDir = resolveStoryDir(config, script.filename);
   await mkdir(outputDir, { recursive: true });
 
   const outputFilename = `${script.filename}.mp4`;

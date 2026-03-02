@@ -8,7 +8,11 @@ import {
 } from 'remotion';
 import { brand } from './brand';
 
-export const BrandedOutro: React.FC = () => {
+interface BrandedOutroProps {
+  title?: string;
+}
+
+export const BrandedOutro: React.FC<BrandedOutroProps> = ({ title }) => {
   const frame = useCurrentFrame();
   const { fps, durationInFrames } = useVideoConfig();
 
@@ -73,7 +77,7 @@ export const BrandedOutro: React.FC = () => {
             transform: `scale(${urlScale})`,
           }}
         >
-          {brand.domain}
+          {brand.domain || title || ''}
         </div>
 
         <div

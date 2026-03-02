@@ -2,6 +2,30 @@ import type { ResearchCategory } from "./research.js";
 import type { StudioConfig } from "./studio.js";
 import type { BrandConfig } from "./brand.js";
 
+export interface CaptureHotkeys {
+  /** OBS key for Start Recording. Default: OBS_KEY_F9 */
+  startRecording?: string;
+  /** OBS key for Stop Recording. Default: OBS_KEY_F10 */
+  stopRecording?: string;
+  /** OBS key for Screen + Camera scene. Default: OBS_KEY_F5 */
+  sceneScreenCamera?: string;
+  /** OBS key for Screen Only scene. Default: OBS_KEY_F6 */
+  sceneScreenOnly?: string;
+  /** OBS key for Camera Only scene. Default: OBS_KEY_F7 */
+  sceneCameraOnly?: string;
+}
+
+export interface CaptureConfig {
+  /** OBS WebSocket URL. Default: ws://localhost:4455 */
+  obsWebsocketUrl?: string;
+  /** OBS WebSocket password (if set in OBS settings) */
+  obsWebsocketPassword?: string;
+  /** Default scene to switch to on capture start */
+  defaultScene?: string;
+  /** Keyboard shortcuts for OBS actions */
+  hotkeys?: CaptureHotkeys;
+}
+
 export interface LumisConfig {
   /** Absolute path to the Obsidian vault root */
   vaultPath: string;
@@ -33,8 +57,6 @@ export interface LumisConfig {
     amplifyHooks: string;
     /** Where the persuasion glossary lives. Default: "Lumis/Amplify" */
     amplifyPersuasion: string;
-    /** Where finished studio outputs go. Default: "Lumis/Studio/Outputs" */
-    studioOutputs: string;
     /** Where strategy docs live. Default: "2 - Areas/All Thrive" */
     strategyDocs: string;
     /** Your voice/identity file. Default: "Lumis/Voice.md" */
@@ -59,6 +81,9 @@ export interface LumisConfig {
 
   /** Optional studio config for video production (HeyGen, ElevenLabs) */
   studio?: StudioConfig;
+
+  /** Optional capture config for OBS integration */
+  capture?: CaptureConfig;
 }
 
 export const DEFAULT_PATHS: LumisConfig["paths"] = {
@@ -73,7 +98,6 @@ export const DEFAULT_PATHS: LumisConfig["paths"] = {
   amplifyStructures: "Lumis/Amplify/Structures",
   amplifyHooks: "Lumis/Amplify/Hooks",
   amplifyPersuasion: "Lumis/Amplify",
-  studioOutputs: "Lumis/Studio/Outputs",
   strategyDocs: "2 - Areas/All Thrive",
   voice: "Lumis/Voice.md",
   signals: "Lumis/Signals",

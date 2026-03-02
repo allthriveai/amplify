@@ -7,4 +7,5 @@ export interface StudioConfig {
   heygenVoiceId?: string;
   elevenlabsApiKey?: string;
   elevenlabsVoiceId?: string;
+  googleApiKey?: string;
 }

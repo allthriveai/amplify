@@ -12,7 +12,7 @@ export {
   resolveAmplifyStructuresDir,
   resolveAmplifyHooksDir,
   resolveAmplifyPersuasionPath,
-  resolveStudioOutputsDir,
+  resolveStoryAssetsDir,
   resolveStrategyDocsDir,
   resolveVoicePath,
   resolveSignalsDir,
@@ -43,6 +43,12 @@ export type { SignalSummary } from "./signals.js";
 // Timeline (director)
 export { readTimeline, listTimelines } from "./timeline-reader.js";
 export { writeTimeline } from "./timeline-writer.js";
+
+// Carousel (director)
+export { readCarousel, listCarousels } from "./carousel-reader.js";
+
+// Article (director)
+export { readArticle, listArticles } from "./article-reader.js";
 
 // Memory
 export { formatSessionTime, appendSessionEntry, readSession, readRecentSessions, readPreferences, addPreference } from "./memory.js";

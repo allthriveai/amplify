@@ -18,7 +18,7 @@ export type {
   CanvasColor,
 } from "./types/canvas.js";
 
-export type { LumisConfig } from "./types/config.js";
+export type { LumisConfig, CaptureConfig, CaptureHotkeys } from "./types/config.js";
 export { DEFAULT_PATHS, DEFAULT_RESEARCH_CATEGORIES } from "./types/config.js";
 
 export type { BrandConfig, BrandColors, BrandFonts } from "./types/brand.js";
@@ -86,6 +86,13 @@ export type {
   TimelineFrontmatter,
   Timeline,
   ResolvedShot,
+  CarouselCardType,
+  CarouselCard,
+  CarouselFrontmatter,
+  Carousel,
+  ArticleSection,
+  ArticleFrontmatter,
+  Article,
 } from "./types/director.js";
 
 // Modules
@@ -111,6 +118,10 @@ export {
   readTimeline,
   listTimelines,
   writeTimeline,
+  readCarousel,
+  listCarousels,
+  readArticle,
+  listArticles,
 } from "./vault/index.js";
 export { generatePatternMap } from "./canvas/index.js";
 export { captureMoment } from "./pipeline/capture.js";
@@ -121,17 +132,21 @@ export type { AmplifyContext } from "./amplify/index.js";
 export {
   createHeyGenClient,
   createElevenLabsClient,
+  createImagenClient,
   renderVideo,
   renderDirectorCut,
   previewVideo,
   produceVideo,
   produceTimeline,
+  validateAssets,
+  resolveAssetPath,
 } from "./studio/index.js";
 export type { HeyGenClient } from "./studio/index.js";
 export type { ElevenLabsClient } from "./studio/index.js";
+export type { ImagenClient } from "./studio/index.js";
 export type { RenderProps, DirectorCutRenderProps } from "./studio/index.js";
 export {
-  resolveStudioOutputsDir,
+  resolveStoryAssetsDir,
   resolveStrategyDocsDir,
   resolveVoicePath,
   resolveSignalsDir,
@@ -153,3 +168,17 @@ export { formatSessionTime, appendSessionEntry, readSession, readRecentSessions,
 
 // Brand
 export { readBrand, readBrandInspirations, resolveBrandDir, resolveBrandPath, resolveBrandInspirationDir } from "./vault/index.js";
+
+// Capture
+export {
+  connectOBS,
+  setupScenes,
+  configureOutput,
+  startRecording,
+  stopRecording,
+  listCapturedAssets,
+  installHotkeys,
+  formatHotkeyTable,
+  DEFAULT_HOTKEYS,
+} from "./capture/index.js";
+export type { HotkeyBindings } from "./capture/index.js";

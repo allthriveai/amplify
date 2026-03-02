@@ -68,9 +68,9 @@ export function resolveAmplifyPersuasionPath(config: LumisConfig): string {
   return resolvePath(config, join(config.paths.amplifyPersuasion, "Persuasion-Glossary.md"));
 }
 
-/** Resolve the studio outputs directory */
-export function resolveStudioOutputsDir(config: LumisConfig): string {
-  return resolvePath(config, config.paths.studioOutputs);
+/** Resolve the assets directory within a story folder: {stories}/{slug}/assets/ */
+export function resolveStoryAssetsDir(config: LumisConfig, slug: string): string {
+  return join(resolveStoryDir(config, slug), "assets");
 }
 
 /** Resolve the strategy docs directory */

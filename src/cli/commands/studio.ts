@@ -1,7 +1,7 @@
 import { readdirSync, readFileSync, existsSync } from "node:fs";
 import { join } from "node:path";
 import { loadConfig } from "../../config.js";
-import { resolveStoriesDir, resolveStudioOutputsDir } from "../../vault/paths.js";
+import { resolveStoriesDir } from "../../vault/paths.js";
 import { parseFrontmatter } from "../../vault/frontmatter.js";
 import type { TimelineFrontmatter } from "../../types/director.js";
 

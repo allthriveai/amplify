@@ -8,7 +8,11 @@ import {
 } from 'remotion';
 import { brand } from './brand';
 
-export const BrandedIntro: React.FC = () => {
+interface BrandedIntroProps {
+  title?: string;
+}
+
+export const BrandedIntro: React.FC<BrandedIntroProps> = ({ title }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
@@ -64,7 +68,7 @@ export const BrandedIntro: React.FC = () => {
             transform: `scale(${titleScale})`,
           }}
         >
-          {brand.name}
+          {brand.name || title || ''}
         </div>
         <div
           style={{

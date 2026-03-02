@@ -41,7 +41,6 @@ Lumis/Research/Courses & Learning
 Lumis/Learnings
 Lumis/Amplify/Hooks
 Lumis/Amplify/Structures
-Lumis/Studio/Outputs
 Lumis/Signals
 Lumis/Memory/sessions
 Lumis/Thinking
@@ -70,7 +69,6 @@ If `.lumisrc` doesn't already exist in the vault root, write it:
     "amplifyHooks": "Lumis/Amplify/Hooks",
     "amplifyStructures": "Lumis/Amplify/Structures",
     "amplifyPersuasion": "Lumis/Amplify",
-    "studioOutputs": "Lumis/Studio/Outputs",
     "strategyDocs": "2 - Areas/All Thrive",
     "voice": "Lumis/Voice.md",
     "signals": "Lumis/Signals",

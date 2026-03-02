@@ -32,7 +32,6 @@ export async function initCommand(targetPath?: string): Promise<void> {
     DEFAULT_PATHS.learnings,
     DEFAULT_PATHS.amplifyStructures,
     DEFAULT_PATHS.amplifyHooks,
-    DEFAULT_PATHS.studioOutputs,
     DEFAULT_PATHS.signals,
     join(DEFAULT_PATHS.memory, "sessions"),
     DEFAULT_PATHS.brand,
@@ -72,7 +71,6 @@ export async function initCommand(targetPath?: string): Promise<void> {
         amplifyStructures: DEFAULT_PATHS.amplifyStructures,
         amplifyHooks: DEFAULT_PATHS.amplifyHooks,
         amplifyPersuasion: DEFAULT_PATHS.amplifyPersuasion,
-        studioOutputs: DEFAULT_PATHS.studioOutputs,
         strategyDocs: DEFAULT_PATHS.strategyDocs,
         voice: DEFAULT_PATHS.voice,
         signals: DEFAULT_PATHS.signals,
@@ -97,7 +95,7 @@ export async function initCommand(targetPath?: string): Promise<void> {
   console.log(`  Amplify:`);
   console.log(`    Structures: ${DEFAULT_PATHS.amplifyStructures}`);
   console.log(`    Hooks:      ${DEFAULT_PATHS.amplifyHooks}`);
-  console.log(`  Studio:  ${DEFAULT_PATHS.studioOutputs}`);
+  console.log(`  Studio:  videos output to each story folder`);
 
   // Write Voice.md template
   const voicePath = join(vaultPath, DEFAULT_PATHS.voice);

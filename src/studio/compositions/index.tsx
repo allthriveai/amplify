@@ -6,6 +6,7 @@ import { BrandedOutro } from './BrandedOutro';
 import { DirectorCut, DirectorCutProps, calculateDirectorCutMetadata } from './DirectorCut';
 import { TextCard, TextCardProps } from './TextCard';
 import { BRollPlaceholder, BRollPlaceholderProps } from './BRollPlaceholder';
+import { ScreenCapture, ScreenCaptureProps } from './ScreenCapture';
 import { brand } from './brand';
 
 const RemotionRoot: React.FC = () => {
@@ -68,6 +69,21 @@ const RemotionRoot: React.FC = () => {
         height={height}
         defaultProps={{
           direction: 'Screen recording of agent evaluation dashboard',
+        }}
+      />
+
+      {/* Screen capture preview */}
+      <Composition<ScreenCaptureProps>
+        id="ScreenCapture"
+        component={ScreenCapture}
+        durationInFrames={150}
+        fps={fps}
+        width={width}
+        height={height}
+        defaultProps={{
+          src: '',
+          isVideo: false,
+          direction: 'Screen recording placeholder',
         }}
       />
 
