@@ -35,6 +35,7 @@ export function createImagenClient(apiKey: string): ImagenClient {
           parameters: {
             aspectRatio,
             sampleCount,
+            personGeneration: "allow_adult",
           },
         }),
       });

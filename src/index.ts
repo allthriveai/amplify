@@ -42,6 +42,7 @@ export type {
   ArticleCreatedSignal,
   InspirationAddedSignal,
   ChallengeCompletedSignal,
+  ImagesGeneratedSignal,
 } from "./types/signal.js";
 
 export type { SessionEntry } from "./types/memory.js";

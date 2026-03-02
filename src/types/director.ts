@@ -161,7 +161,7 @@ export interface ArticleFrontmatter {
     platformTarget: string;
   };
   sections: ArticleSection[];
-  images?: string[];
+  images?: Array<{ sectionId: number; path: string }>;
 }
 
 export interface Article {
