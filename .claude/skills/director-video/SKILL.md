@@ -48,15 +48,96 @@ Load the Amplify context from the vault:
 
 Use `buildAmplifyContext(config)` if available, or read the files directly.
 
-### Step 3: Recommend Hook + Structure
+### Step 3: Creative Brief
 
-Based on the story elements, recommend:
+A multi-turn conversation that builds the creative direction before you touch the timeline. Ask one or two questions at a time. Never dump all sub-steps in a single message.
 
-- **Hook type**: which of the 8 fits this story's opening. Consider the 5-second moment and transformation to pick the right hook.
-- **Structure**: which of the 18 frameworks organizes the body. Match the story's arc (number of turns, type of transformation) to the framework.
-- **Persuasion principles**: 2-3 that fit naturally into this story.
+#### Step 3a: Hook Exploration
 
-Present the recommendation with one sentence explaining each choice. Ask the user to confirm or pick different ones.
+Present all 8 hooks as a numbered menu. For each hook, write 1-2 example opening lines tailored to THIS story (use its transformation, 5-second moment, protagonist). Include one sentence per hook explaining WHY it works, naming the persuasion principle at play.
+
+Example format:
+
+```
+1. **Curiosity Gap** — "Most AI agents have guardrails. Zero have character."
+   Opens a gap the viewer needs closed. (Information-gap theory: withholding the answer creates pull.)
+
+2. **Bold Claim** — "Your agent's safety benchmarks are measuring the wrong thing."
+   Stakes a position that demands proof. (Commitment bias: a strong claim earns the chance to back it up.)
+
+3. ...
+```
+
+End with: "Which pulls you in? You can pick one, combine ideas from two, or give me a direction and I'll draft something new."
+
+#### Step 3b: Media & Visual Assets
+
+Ask: "Are there websites, screens, demos, or other media you want to show? Video lets you cut to screen recordings or product shots."
+
+If yes, ask which story beats should feature them. These become `screen-capture` shots in the timeline.
+
+If no, move on.
+
+#### Step 3c: Call to Action
+
+Ask: "What do you want people to do after seeing this?"
+
+Present 4-5 concrete examples:
+- Comment with their answer to a question
+- Subscribe / follow for more
+- Visit a specific URL
+- Share the video
+- Just let it sit (no explicit ask)
+
+Reference the story's natural question from `theQuestion` and ask if they want to use it or something more specific.
+
+#### Step 3d: Structure Recommendation
+
+NOW recommend 2-3 structures. This comes after hook, media, and CTA are decided so reasoning can reference all three. For each structure:
+
+- How it organizes the story beats (reference specific story elements)
+- Why it fits the chosen hook (the transition from hook to body)
+- Which persuasion principles it activates (by name, one sentence why)
+- What it does well and what it sacrifices
+
+Label one as **Recommended**, one as **Alternative**, optionally a third as **Dark horse**. Ask which feels right.
+
+#### Step 3e: Platform Guidance
+
+Ask: "Shorts (under 60s) or standard (1-3 min)?"
+
+All video output caps at under 3 minutes.
+
+Then give specific pacing rules for the chosen format:
+
+**Shorts** (under 60s): Hook in first 2s. No branded intro. Avatar shots 3-5s each. Skip branded outro, end on CTA. Total: 8-12 shots.
+
+**Standard** (1-3 min): Full beat sequence. Branded intro at shot 2. Mix avatar, screen-capture, and text cards. Avatar shots 5-10s, vary rhythm. 5-second moment is the longest unbroken avatar shot. Total: 15-25 shots.
+
+If the user already specified a platform in the command (e.g., "YouTube Short"), skip this question and confirm the choice.
+
+#### Step 3f: Production Plan
+
+Before building the timeline, present what production looks like:
+
+- Number of avatar shots to generate via HeyGen (timing estimate)
+- Number of text cards rendered via Remotion
+- Number of screen-capture or b-roll shots needing manual recording
+- Assembly plan and estimated total duration
+- What needs manual work after (b-roll replacement, music, color grade)
+- HeyGen avatar/voice config status (configured vs needs setup)
+
+Ask: "This look right before I build the timeline?"
+
+#### Creative Brief Tone
+
+- Have opinions. Say which hook you'd pick and why. Let the user override.
+- Build on answers. Reference what they said in 3a when asking 3b.
+- Ask one or two questions at a time. Never all 6 sub-steps at once.
+- Use their words from raw.md and story.md.
+- Be direct about trade-offs.
+- Skip steps when the user already answered (e.g., if they said "YouTube Short" in the command, don't ask about platform).
+- If the user seems eager to see a draft, compress 3b-3e into one turn: "Before I build this: any media to include, what's the CTA, and which platform?"
 
 ### Step 4: Build the Timeline
 
@@ -83,10 +164,10 @@ Generate the shot sequence following these rules:
 **B-roll placeholders**: insert where the story references something visual (a screen, a product, a place). These become CapCut edit points.
 
 **Duration targets:**
-- YouTube Shorts: 15-45s
-- YouTube Long: 3-10min
+- YouTube Shorts: 15-60s
+- YouTube Standard: 1-3min (hard cap at 3 minutes)
 
-Default to Shorts unless the story has enough depth for long-form. Ask the user which platform they're targeting.
+Follow the platform guidance from Step 3e. The user already chose Shorts or Standard in the Creative Brief.
 
 ### Step 5: Present and Edit
 
@@ -132,6 +213,12 @@ structure: point-of-high-drama
 persuasion: [contrast-principle, sensory-specificity]
 platform: youtube
 targetDuration: 45
+creativeBrief:
+  hookExplored: true
+  mediaAssets: []
+  cta: "What's the one question..."
+  platformTarget: "youtube-shorts"
+  productionPlan: true
 shots:
   - id: 1
     beat: hook

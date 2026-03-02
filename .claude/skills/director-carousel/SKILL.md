@@ -48,15 +48,82 @@ Load the Amplify context from the vault:
 
 Use `buildAmplifyContext(config)` if available, or read the files directly.
 
-### Step 3: Recommend Hook + Structure
+### Step 3: Creative Brief
 
-Based on the story elements, recommend:
+A multi-turn conversation that builds the creative direction before you touch the cards. Ask one or two questions at a time. Never dump all sub-steps in a single message.
 
-- **Hook type**: which of the 8 fits this story's opening. Consider the 5-second moment and transformation to pick the right hook.
-- **Structure**: which of the 18 frameworks organizes the card flow. Match the story's arc to the framework.
-- **Persuasion principles**: 2-3 that fit naturally into this story.
+#### Step 3a: Hook Exploration
 
-Present the recommendation with one sentence explaining each choice. Ask the user to confirm or pick different ones.
+Present all 8 hooks as a numbered menu. For each hook, write 1-2 example opening lines tailored to THIS story (use its transformation, 5-second moment, protagonist). Include one sentence per hook explaining WHY it works, naming the persuasion principle at play.
+
+Example format:
+
+```
+1. **Curiosity Gap** — "Most AI agents have guardrails. Zero have character."
+   Opens a gap the viewer needs closed. (Information-gap theory: withholding the answer creates pull.)
+
+2. **Bold Claim** — "Your agent's safety benchmarks are measuring the wrong thing."
+   Stakes a position that demands proof. (Commitment bias: a strong claim earns the chance to back it up.)
+
+3. ...
+```
+
+End with: "Which pulls you in? You can pick one, combine ideas from two, or give me a direction and I'll draft something new."
+
+#### Step 3b: Media & Visual Assets
+
+Ask: "Do you have screenshots, diagrams, or visual assets for specific cards? Carousels work best with 2-3 visual anchors beyond text."
+
+If yes, ask which cards they belong to.
+
+If no, ask preferred visual style: photography, illustration, or text-only.
+
+#### Step 3c: Call to Action
+
+Ask: "What do you want people to do after seeing this?"
+
+Present 4-5 concrete examples:
+- Comment with their take
+- Save the post for later
+- DM you about the topic
+- Follow for more on this subject
+- Skip the ask entirely (let the content speak)
+
+Reference the story's natural question from `theQuestion` and ask if they want to use it or something more specific.
+
+#### Step 3d: Structure Recommendation
+
+NOW recommend 2-3 structures. This comes after hook, media, and CTA are decided so reasoning can reference all three. For each structure:
+
+- How it organizes the story beats (reference specific story elements)
+- Why it fits the chosen hook (the transition from hook to body)
+- Which persuasion principles it activates (by name, one sentence why)
+- What it does well and what it sacrifices
+
+Label one as **Recommended**, one as **Alternative**, optionally a third as **Dark horse**. Ask which feels right.
+
+#### Step 3e: Platform Guidance
+
+Give LinkedIn-specific carousel guidance:
+
+- Sweet spot is 7-10 cards
+- Card 1 stops the scroll. Bold, zero subtext.
+- Card 2 must create momentum. If they don't swipe past card 2, you've lost them.
+- Stat cards work best in positions 3-5 (after setup, before climax)
+- CTA card should ask a commentable question, not "follow me for more"
+- Closer card is name/handle only. No hard sell.
+
+If the user mentions a different platform, adapt guidance accordingly.
+
+#### Creative Brief Tone
+
+- Have opinions. Say which hook you'd pick and why. Let the user override.
+- Build on answers. Reference what they said in 3a when asking 3b.
+- Ask one or two questions at a time. Never all 5 sub-steps at once.
+- Use their words from raw.md and story.md.
+- Be direct about trade-offs.
+- Skip steps when the user already answered.
+- If the user seems eager to see a draft, compress 3b-3e into one turn: "Before I build this: any visual assets to include, what's the CTA, and anything specific about card count?"
 
 ### Step 4: Build the Carousel
 
@@ -133,6 +200,11 @@ structure: problem-solution
 persuasion: [contrast-principle, social-proof]
 platform: linkedin
 cardCount: 8
+creativeBrief:
+  hookExplored: true
+  mediaAssets: []
+  cta: "What character traits would you want in your agent?"
+  platformTarget: "linkedin"
 cards:
   - id: 1
     beat: hook

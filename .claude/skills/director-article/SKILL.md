@@ -48,15 +48,81 @@ Load the Amplify context from the vault:
 
 Use `buildAmplifyContext(config)` if available, or read the files directly.
 
-### Step 3: Recommend Hook + Structure
+### Step 3: Creative Brief
 
-Based on the story elements, recommend:
+A multi-turn conversation that builds the creative direction before you write a word. Ask one or two questions at a time. Never dump all sub-steps in a single message.
 
-- **Hook type**: which of the 8 fits this article's opening. Consider the 5-second moment and transformation to pick the right hook.
-- **Structure**: which of the 18 frameworks organizes the article. Match the story's arc (number of turns, type of transformation) to the framework.
-- **Persuasion principles**: 2-3 that fit naturally into this story.
+#### Step 3a: Hook Exploration
 
-Present the recommendation with one sentence explaining each choice. Ask the user to confirm or pick different ones.
+Present all 8 hooks as a numbered menu. For each hook, write 1-2 example opening lines tailored to THIS story (use its transformation, 5-second moment, protagonist). Include one sentence per hook explaining WHY it works, naming the persuasion principle at play.
+
+Example format:
+
+```
+1. **Curiosity Gap** — "Most AI agents have guardrails. Zero have character."
+   Opens a gap the reader needs closed. (Information-gap theory: withholding the answer creates pull.)
+
+2. **Bold Claim** — "Your agent's safety benchmarks are measuring the wrong thing."
+   Stakes a position that demands proof. (Commitment bias: a strong claim earns the chance to back it up.)
+
+3. ...
+```
+
+End with: "Which pulls you in? You can pick one, combine ideas from two, or give me a direction and I'll draft something new."
+
+#### Step 3b: Media & Visual Assets
+
+Ask: "Are there links, images, screenshots, or data visualizations to embed? Blog posts with 2-3 visual breaks hold attention longer."
+
+If yes, ask which should appear above the fold vs. further down.
+
+If no, move on.
+
+#### Step 3c: Call to Action
+
+Ask: "What do you want people to do after reading this?"
+
+Present 4-5 concrete examples:
+- Leave a comment with their experience
+- Subscribe to your newsletter
+- Read a related piece you've written
+- Try something specific based on the article
+- Share it with someone who needs to read it
+
+Reference the story's natural question from `theQuestion` and ask if they want to use it or something more specific.
+
+#### Step 3d: Structure Recommendation
+
+NOW recommend 2-3 structures. This comes after hook, media, and CTA are decided so reasoning can reference all three. For each structure:
+
+- How it organizes the story beats (reference specific story elements)
+- Why it fits the chosen hook (the transition from hook to body)
+- Which persuasion principles it activates (by name, one sentence why)
+- What it does well and what it sacrifices
+
+Label one as **Recommended**, one as **Alternative**, optionally a third as **Dark horse**. Ask which feels right.
+
+#### Step 3e: Platform Guidance
+
+Ask: "Where will this be published?" (Medium, Substack, LinkedIn article, personal blog, not sure)
+
+Give platform-specific guidance:
+
+- **Medium**: 1000-1500 words. Strong opening line (no heading). Subheadings every 200-300 words. Lists and pull quotes break up text. Kicker line at the end.
+- **Substack**: 1200-2000 words. More personal, more room to breathe. Readers expect depth. Opening can be slower. Footnotes and asides work well.
+- **LinkedIn article**: 800-1200 words. Professional but not corporate. Short paragraphs (2-3 sentences). Bold key phrases. End with a question to drive comments.
+- **Personal blog**: Flexible length. Match existing blog voice and structure. Ask about typical post length if unknown.
+- **Not sure**: Default to 1200 words, clean structure that adapts to any platform.
+
+#### Creative Brief Tone
+
+- Have opinions. Say which hook you'd pick and why. Let the user override.
+- Build on answers. Reference what they said in 3a when asking 3b.
+- Ask one or two questions at a time. Never all 5 sub-steps at once.
+- Use their words from raw.md and story.md.
+- Be direct about trade-offs.
+- Skip steps when the user already answered.
+- If the user seems eager to see a draft, compress 3b-3e into one turn: "Before I write: any media to embed, what's the CTA, and where is this going?"
 
 ### Step 4: Build the Article
 
@@ -112,6 +178,11 @@ structure: i-used-to-believe
 persuasion: [contrast-principle, narrative-transportation]
 platform: blog
 wordCount: 1200
+creativeBrief:
+  hookExplored: true
+  mediaAssets: []
+  cta: "What character traits would you want in your agent?"
+  platformTarget: "medium"
 sections:
   - id: 1
     beat: hook
