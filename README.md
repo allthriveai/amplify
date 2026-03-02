@@ -62,14 +62,30 @@ Lumis owns the full content flywheel. Most tools handle one step. Lumis connects
    │ /director-video      │  shot-by-shot timeline
    │ /director-carousel   │  card-by-card plan
    │ /director-article    │  full blog post
-   └───────┬──────────────┘
-           │
-           ▼
-    video, carousel, article
-    (YouTube, LinkedIn, blog)
+   └──┬─────┬─────────┬───┘
+      │     │         │
+      │     │         └──────────────────────┐
+      │     └──────────────┐                 │
+      ▼                    ▼                 ▼
+   timeline.md        carousel.md      article.md
+   (shot-by-shot)     (LinkedIn)       (blog)
+      │
+      │  lumis studio render <slug>
+      ▼
+   ┌──────────────┐
+   │   Studio     │
+   │              │
+   │ HeyGen      │  avatar clips
+   │ ElevenLabs  │  voiceover audio
+   │ Remotion    │  branded render
+   └──────┬───────┘
+          │
+          ▼
+    branded .mp4
+    (YouTube)
 ```
 
-Each step feeds the next. Your moments become the raw material for stories. `/craft-content` finds the story through free writing and guided questions. `/director-video` turns the story into a shot-by-shot timeline, `/director-carousel` builds a card-by-card LinkedIn carousel plan, and `/director-article` writes the full long-form blog post.
+Each step feeds the next. Your moments become the raw material for stories. `/craft-content` finds the story through free writing and guided questions. The director skills turn stories into platform-ready formats: `/director-video` creates a shot-by-shot timeline that the Studio renders into branded video (HeyGen avatars, ElevenLabs voiceover, Remotion assembly), `/director-carousel` builds a card-by-card LinkedIn carousel plan, and `/director-article` writes a full long-form blog post.
 
 ## Setup
 
@@ -98,6 +114,11 @@ claude
 /director-carousel  Build a LinkedIn carousel from a story
 /director-article   Write a long-form article from a story
 /challenge          Pressure-test an idea with critical thinking prompts
+/brand              Set up your visual brand identity
+
+lumis studio list           List all director cuts with status
+lumis studio render <slug>  Render a director cut to branded video
+lumis studio preview        Open Remotion Studio for previewing
 ```
 
 ## Docs
