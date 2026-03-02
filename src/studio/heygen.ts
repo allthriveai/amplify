@@ -2,7 +2,7 @@ import { writeFile } from "node:fs/promises";
 
 export interface HeyGenClient {
   /** Generate an avatar video from a script. Returns the task/video ID. */
-  generateVideo(script: string): Promise<string>;
+  generateVideo(script: string, title?: string): Promise<string>;
   /** Check the status of a video generation task. */
   checkStatus(taskId: string): Promise<{ status: string; videoUrl?: string }>;
   /** Download a completed video to a local path. Returns the output path. */
@@ -20,7 +20,7 @@ export function createHeyGenClient(
   };
 
   return {
-    async generateVideo(script: string): Promise<string> {
+    async generateVideo(script: string, title?: string): Promise<string> {
       const voice: Record<string, string> = {
         type: "text",
         input_text: script,
@@ -30,6 +30,7 @@ export function createHeyGenClient(
       }
 
       const body: Record<string, unknown> = {
+        title: title ?? script.slice(0, 80),
         video_inputs: [
           {
             character: {

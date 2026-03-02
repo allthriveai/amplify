@@ -34,12 +34,15 @@
   "dependencies": {
     "@anthropic-ai/sdk": "^0.39.0",
     "@modelcontextprotocol/sdk": "^1.0.0",
-    "@remotion/cli": "4.0.430",
+    "@remotion/cli": "^4.0.431",
+    "@remotion/google-fonts": "^4.0.431",
+    "@remotion/media": "^4.0.431",
+    "@remotion/transitions": "^4.0.431",
     "dotenv": "^17.3.1",
     "gray-matter": "^4.0.3",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
-    "remotion": "4.0.430"
+    "remotion": "^4.0.431"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",

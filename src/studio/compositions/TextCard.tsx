@@ -7,6 +7,7 @@ import {
   spring,
 } from 'remotion';
 import { brand } from './brand';
+import { useEntranceExit } from './animations';
 
 export interface TextCardProps {
   type: 'stat' | 'quote' | 'contrast' | 'list' | 'statement';
@@ -269,16 +270,26 @@ const StatementCard: React.FC<{ lines: string[] }> = ({ lines }) => {
 };
 
 export const TextCard: React.FC<TextCardProps> = ({ type, lines }) => {
-  switch (type) {
-    case 'stat':
-      return <StatCard lines={lines} />;
-    case 'quote':
-      return <QuoteCard lines={lines} />;
-    case 'contrast':
-      return <ContrastCard lines={lines} />;
-    case 'list':
-      return <ListCard lines={lines} />;
-    case 'statement':
-      return <StatementCard lines={lines} />;
-  }
+  const { exitOpacity } = useEntranceExit(10);
+
+  const inner = (() => {
+    switch (type) {
+      case 'stat':
+        return <StatCard lines={lines} />;
+      case 'quote':
+        return <QuoteCard lines={lines} />;
+      case 'contrast':
+        return <ContrastCard lines={lines} />;
+      case 'list':
+        return <ListCard lines={lines} />;
+      case 'statement':
+        return <StatementCard lines={lines} />;
+    }
+  })();
+
+  return (
+    <AbsoluteFill style={{ opacity: exitOpacity }}>
+      {inner}
+    </AbsoluteFill>
+  );
 };

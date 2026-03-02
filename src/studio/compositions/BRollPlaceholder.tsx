@@ -1,22 +1,16 @@
 import React from 'react';
 import {
   AbsoluteFill,
-  useCurrentFrame,
-  interpolate,
 } from 'remotion';
 import { brand } from './brand';
+import { useEntranceExit } from './animations';
 
 export interface BRollPlaceholderProps {
   direction: string;
 }
 
 export const BRollPlaceholder: React.FC<BRollPlaceholderProps> = ({ direction }) => {
-  const frame = useCurrentFrame();
-
-  const opacity = interpolate(frame, [0, 15], [0, 1], {
-    extrapolateLeft: 'clamp',
-    extrapolateRight: 'clamp',
-  });
+  const { combinedOpacity } = useEntranceExit();
 
   return (
     <AbsoluteFill
@@ -24,7 +18,7 @@ export const BRollPlaceholder: React.FC<BRollPlaceholderProps> = ({ direction })
         backgroundColor: '#1a1a1a',
         justifyContent: 'center',
         alignItems: 'center',
-        opacity,
+        opacity: combinedOpacity,
       }}
     >
       <div

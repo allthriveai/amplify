@@ -2,21 +2,12 @@
 // Director types — shot-by-shot video production from stories
 // ---------------------------------------------------------------------------
 
-export type StoryBeat =
-  | "hook"
-  | "intro"
-  | "setup"
-  | "tension"
-  | "five-second-moment"
-  | "transformation"
-  | "takeaway"
-  | "cta"
-  | "b-roll"
-  | "outro";
+export type StoryBeat = string;
 
 export type ShotType =
   | "avatar"
   | "text-card"
+  | "screen-capture"
   | "b-roll-placeholder"
   | "branded-intro"
   | "branded-outro";
@@ -33,6 +24,10 @@ export interface Shot {
   script?: string;
   direction?: string;
   textCardType?: TextCardType;
+  text?: string;
+  asset?: string;
+  voiceover?: string;
+  voiceoverSource?: string;
 }
 
 export interface TimelineFrontmatter {
@@ -45,6 +40,13 @@ export interface TimelineFrontmatter {
   persuasion: string[];
   platform: string;
   targetDuration: number;
+  creativeBrief?: {
+    hookExplored: boolean;
+    mediaAssets: string[];
+    cta: string;
+    platformTarget: string;
+    productionPlan?: boolean;
+  };
   shots: Shot[];
 }
 
@@ -59,9 +61,20 @@ export interface Timeline {
   content: string;
 }
 
+export type TransitionType = 'fade' | 'slide' | 'wipe' | 'light-leak' | 'none';
+
+export interface TransitionConfig {
+  type: TransitionType;
+  durationInFrames: number;
+}
+
 export interface ResolvedShot extends Shot {
   durationInFrames: number;
   startFrame: number;
   videoSrc?: string;
+  audioSrc?: string;
+  imageSrc?: string;
+  isVideo?: boolean;
   textCard?: { type: TextCardType; lines: string[] };
+  transitionIn?: TransitionConfig;
 }
