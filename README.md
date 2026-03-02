@@ -131,6 +131,7 @@ lumis studio preview        Open Remotion Studio for previewing
 - **[Memory](docs/memory.md)** — session history and user preferences
 - **[MCP Server](docs/mcp.md)** — all tools and Claude Desktop config
 - **[Studio](docs/studio.md)** — video production pipeline, image generation, and API setup
+- **[OBS Capture](docs/obs.md)** — OBS integration, screen/camera recording, keyboard shortcuts
 
 ## Tech stack
 
