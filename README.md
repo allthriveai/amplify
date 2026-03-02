@@ -19,6 +19,7 @@ Tell Lumis about your life, share research you are interested in, and learn to c
 - **Directs video production** by turning your story into a shot-by-shot timeline, generating avatar clips, and assembling branded video
 - **Builds carousels** from stories into card-by-card LinkedIn carousel plans with copy and image direction
 - **Writes articles** from stories into full long-form blog posts ready to publish
+- **Generates images** for any director format using Google Imagen, with brand-aware prompts that update source files automatically
 
 This repo is the engine. Your [Obsidian](https://obsidian.md) vault is where your moments, stories, and research live. They stay separate so your personal content never ends up in a code repo. Your stories remain private to you.
 
@@ -69,6 +70,21 @@ Lumis owns the full content flywheel. Most tools handle one step. Lumis connects
       ▼                    ▼                 ▼
    timeline.md        carousel.md      article.md
    (shot-by-shot)     (LinkedIn)       (blog)
+      │                    │                 │
+      └────────────────────┼─────────────────┘
+                           │
+                   ┌───────▼───────┐
+                   │/director-     │
+                   │ images        │  AI images via
+                   │               │  Google Imagen
+                   │ brand-aware   │
+                   │ prompts       │  updates source
+                   └───┬───┬───┬───┘  files in-place
+                       │   │   │
+      ┌────────────────┘   │   └──────────────────┐
+      ▼                    ▼                      ▼
+   assets/             assets/                assets/
+   (video b-roll)      (carousel cards)       (article images)
       │
       │  lumis studio render <slug>
       ▼
@@ -85,7 +101,7 @@ Lumis owns the full content flywheel. Most tools handle one step. Lumis connects
     (YouTube)
 ```
 
-Each step feeds the next. Your moments become the raw material for stories. `/craft-content` finds the story through free writing and guided questions. The director skills turn stories into platform-ready formats: `/director-video` creates a shot-by-shot timeline that the Studio renders into branded video (HeyGen avatars, ElevenLabs voiceover, Remotion assembly), `/director-carousel` builds a card-by-card LinkedIn carousel plan, and `/director-article` writes a full long-form blog post.
+Each step feeds the next. Your moments become the raw material for stories. `/craft-content` finds the story through free writing and guided questions. The director skills turn stories into platform-ready formats: `/director-video` creates a shot-by-shot timeline that the Studio renders into branded video (HeyGen avatars, ElevenLabs voiceover, Remotion assembly), `/director-carousel` builds a card-by-card LinkedIn carousel plan, and `/director-article` writes a full long-form blog post. `/director-images` generates AI images for any of these formats using Google Imagen, building brand-aware prompts and updating the source files so images flow into rendering automatically.
 
 ## Setup
 
@@ -113,6 +129,7 @@ claude
 /director-video     Build a shot-by-shot timeline and produce video
 /director-carousel  Build a LinkedIn carousel from a story
 /director-article   Write a long-form article from a story
+/director-images    Generate AI images for any director format
 /challenge          Pressure-test an idea with critical thinking prompts
 /brand              Set up your visual brand identity
 
@@ -127,7 +144,7 @@ lumis studio preview        Open Remotion Studio for previewing
 - **[Signals](docs/signals.md)** — event log connecting pipeline stages
 - **[Memory](docs/memory.md)** — session history and user preferences
 - **[MCP Server](docs/mcp.md)** — all tools and Claude Desktop config
-- **[Studio](docs/studio.md)** — video production pipeline and API setup
+- **[Studio](docs/studio.md)** — video production pipeline, image generation, and API setup
 
 ## Tech stack
 
@@ -138,6 +155,7 @@ lumis studio preview        Open Remotion Studio for previewing
 - **Remotion** for programmatic video rendering
 - **HeyGen** for AI avatar video generation
 - **ElevenLabs** for text-to-speech
+- **Google Imagen** for AI image generation
 
 ## License
 
