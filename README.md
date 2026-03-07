@@ -50,19 +50,20 @@ Lumis owns the full content flywheel. Most tools handle one step. Lumis connects
                       │   (Obsidian)  │  voice, inspiration, patterns
                       └───────┬───────┘
                               │
-      ┌───────────────────────┼──────────────────┬──────────────┐
-      │                       │                  │              │
-┌─────▼────────┐  ┌───────────▼──┐  ┌────────────▼──┐  ┌───────▼──────┐
-│/craft-content│  │ /craft-      │  │ /challenge    │  │ /listen      │
-│              │  │  storytelling│  │               │  │              │
-│ free write   │  │              │  │ pressure-test │  │ research     │
-│ find story   │  │ practice     │  │ your ideas    │  │ notes to     │
-│ shape arc    │  │ & develop    │  │ honest feedbk │  │ audio (TTS)  │
-└──────┬───────┘  └──────────────┘  └───────────────┘  └──────┬───────┘
-       │                                                       │
-       │                                                       ▼
-       │                                                  narrated .mp3
-   ┌───▼──────────────────────┐
+        ┌──────────────────┬──┴───────────────┬──────────────────┐
+        │                  │                  │                  │
+        ▼                  ▼                  ▼                  ▼
+┌───────────────┐  ┌───────────────┐  ┌───────────────┐  ┌───────────────┐
+│ /craft-content│  │ /craft-       │  │ /challenge    │  │ /listen       │
+│               │  │  storytelling │  │               │  │               │
+│ free write    │  │               │  │ pressure-test │  │ research      │
+│ find story    │  │ practice      │  │ your ideas    │  │ notes to      │
+│ shape arc     │  │ & develop     │  │ honest feedbk │  │ audio (TTS)   │
+└───────┬───────┘  └───────────────┘  └───────────────┘  └───────┬───────┘
+        │                                                        │
+        │                                                        ▼
+        │                                                  narrated .mp3
+    ┌───▼──────────────────────┐
    │   Director Cuts          │
    │                          │
    │ /director-video          │  shot-by-shot timeline
