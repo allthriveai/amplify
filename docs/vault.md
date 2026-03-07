@@ -20,7 +20,6 @@ Lumis/
       carousel.md     ← carousel cards with copy and image direction (from /director-carousel)
       article.md      ← long-form blog post (from /director-article)
     Practice Log.md   ← storytelling practice history
-  Learnings/          ← insights extracted from research
   Research/           ← full research notes
     TL;DR/            ← companion summaries
     AI & Agents/      ← categorized by topic

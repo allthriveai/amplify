@@ -34,7 +34,7 @@ import { appendSessionEntry, formatSessionTime, readRecentSessions, readPreferen
 import type { LumisConfig } from "../types/config.js";
 import type { ResearchFrontmatter, ResearchCategory } from "../types/research.js";
 import type { CanvasFile, CanvasNode, CanvasEdge } from "../types/canvas.js";
-import type { Signal, LearningExtractedSignal, StoryDevelopedSignal, StoryPracticeSignal } from "../types/signal.js";
+import type { Signal, StoryDevelopedSignal, StoryPracticeSignal } from "../types/signal.js";
 import type { StoryFrontmatter } from "../types/story.js";
 
 // ---------------------------------------------------------------------------
@@ -315,20 +315,6 @@ server.registerTool("add_research", {
     // Write the note
     const filepath = writeResearchNote(config, filename, frontmatter, content, matchedCategory);
 
-    // Emit learning_extracted signal
-    const learningSignal: LearningExtractedSignal = {
-      id: signalId(),
-      type: "learning_extracted",
-      timestamp: new Date().toISOString(),
-      data: {
-        filename,
-        pillar: matchedCategory?.name.toLowerCase().replace(/ & /g, "-").replace(/ /g, "-") ?? "uncategorized",
-        topicTags: tags,
-        sourceResearch: title,
-      },
-    };
-    emitSignal(config, learningSignal);
-
     // Log to session memory
     const now = new Date();
     const timeStr = formatSessionTime(now);
@@ -363,7 +349,7 @@ server.registerTool("add_research", {
 
 server.registerTool("social_coach", {
   description:
-    "Recommend what to post and where, based on your moments, learnings, and content strategy. Returns high-potential moments, suggested platforms, and pillar balance status.",
+    "Recommend what to post and where, based on your moments and content strategy. Returns high-potential moments, suggested platforms, and pillar balance status.",
   inputSchema: {
     focus: z.string().optional().describe("Optional: focus on a specific moment or topic (filename or keyword)"),
   },
@@ -467,11 +453,6 @@ server.registerTool("social_coach", {
       likes: s.data.likes,
     }));
 
-    const clusterTopics = signalSummary.recentClusters.map((s) => ({
-      topicTag: s.data.topicTag,
-      learningCount: s.data.learningCount,
-    }));
-
     // Log to session memory
     const now = new Date();
     const timeStr = formatSessionTime(now);
@@ -492,7 +473,6 @@ server.registerTool("social_coach", {
         rejectedPillars,
         postedPlatforms,
         topEngagement: topEngagementData,
-        clusters: clusterTopics,
       },
       preferences: preferences ? preferences.slice(0, 500) : null,
       storyCraftNudge: (() => {
@@ -523,7 +503,7 @@ server.registerTool("record_signal", {
   description:
     "Record user feedback as a signal: rejected recommendations, posted content, or engagement metrics. Writes to signals.json and session memory.",
   inputSchema: {
-    signalType: z.enum(["recommendation_rejected", "content_posted", "engagement_updated", "cluster_formed"])
+    signalType: z.enum(["recommendation_rejected", "content_posted", "engagement_updated"])
       .describe("Type of signal to record"),
     reason: z.string().optional().describe("Why a recommendation was rejected"),
     pillar: z.enum(["building", "strategy", "ethics", "thriving"]).optional().describe("Content pillar"),
@@ -535,10 +515,7 @@ server.registerTool("record_signal", {
     likes: z.number().optional().describe("Like count"),
     comments: z.number().optional().describe("Comment count"),
     shares: z.number().optional().describe("Share count"),
-    filename: z.string().optional().describe("Script or learning filename"),
-    topicTag: z.string().optional().describe("Topic tag for cluster_formed signal"),
-    learningCount: z.number().optional().describe("Number of learnings in cluster"),
-    learningFilenames: z.array(z.string()).optional().describe("Learning filenames in cluster"),
+    filename: z.string().optional().describe("Script filename"),
   },
 }, async (args) => {
   try {
@@ -599,20 +576,6 @@ server.registerTool("record_signal", {
           args.shares != null ? `${args.shares} shares` : null,
         ].filter(Boolean).join(", ");
         sessionDetail = `Engagement update on ${args.platform}: ${metrics}`;
-        break;
-
-      case "cluster_formed":
-        signal = {
-          id: signalId(),
-          type: "cluster_formed",
-          timestamp,
-          data: {
-            topicTag: args.topicTag ?? "",
-            learningCount: args.learningCount ?? 0,
-            learningFilenames: args.learningFilenames ?? [],
-          },
-        };
-        sessionDetail = `Cluster formed: ${args.topicTag} (${args.learningCount ?? 0} learnings)`;
         break;
 
       default:
@@ -714,12 +677,6 @@ server.registerTool("recall", {
           url: s.data.url,
           views: s.data.views,
           likes: s.data.likes,
-          timestamp: s.timestamp,
-        })),
-        clusterCount: signals.recentClusters.length,
-        clusters: signals.recentClusters.map((s) => ({
-          topicTag: s.data.topicTag,
-          learningCount: s.data.learningCount,
           timestamp: s.timestamp,
         })),
       },

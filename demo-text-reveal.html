@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Text Reveal Demo</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      font-family: 'Inter', system-ui, sans-serif;
+      background: #0a0a0a;
+    }
+
+    .scene {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .bg {
+      position: absolute;
+      inset: 0;
+      background: url('./demo-bg.jpeg') center/cover no-repeat;
+    }
+
+    /* Subtle dark vignette so text pops */
+    .bg::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.4) 100%);
+    }
+
+    .text-container {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      max-width: 75%;
+      gap: 10px;
+      padding: 40px;
+    }
+
+    .word {
+      display: inline-block;
+      padding: 8px 20px;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+      color: #ffffff;
+      font-size: clamp(32px, 5vw, 64px);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+
+      opacity: 0;
+      transform: translateY(12px) scale(0.92);
+      transition: opacity 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                  transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    .word.revealed {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    .line-break {
+      flex-basis: 100%;
+      height: 0;
+    }
+
+    /* Accent words: teal glass with bright white text */
+    .word.accent {
+      background: rgba(53, 101, 110, 0.7);
+      border-color: rgba(255, 255, 255, 0.2);
+      color: #ffffff;
+      font-weight: 900;
+    }
+
+    /* Highlight word: canary yellow background, dark text */
+    .word.highlight {
+      background: rgba(232, 200, 74, 0.92);
+      border-color: rgba(232, 200, 74, 0.6);
+      color: #0f172a;
+      font-weight: 900;
+      text-shadow: none;
+    }
+
+    .replay-btn {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 10;
+      padding: 10px 20px;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 10px;
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .replay-btn:hover { background: rgba(255,255,255,0.15); }
+  </style>
+</head>
+<body>
+  <div class="scene">
+    <div class="bg"></div>
+    <div class="text-container">
+      <span class="word">Can</span>
+      <span class="word">we</span>
+      <span class="word">teach</span>
+      <span class="word">agents</span>
+      <span class="word accent">integrity,</span>
+      <span class="word accent">compassion,</span>
+      <div class="line-break"></div>
+      <span class="word">as</span>
+      <span class="word">well</span>
+      <span class="word">as</span>
+      <span class="word highlight">accuracy?</span>
+    </div>
+  </div>
+
+  <button class="replay-btn" onclick="replay()">Replay</button>
+
+  <script>
+    const WORD_DELAY = 280;  // ms between each word
+    const START_DELAY = 600; // ms before first word
+
+    function reveal() {
+      const words = document.querySelectorAll('.word');
+      words.forEach((w, i) => {
+        setTimeout(() => w.classList.add('revealed'), START_DELAY + i * WORD_DELAY);
+      });
+    }
+
+    function replay() {
+      const words = document.querySelectorAll('.word');
+      words.forEach(w => w.classList.remove('revealed'));
+      setTimeout(reveal, 200);
+    }
+
+    // Auto-play on load
+    reveal();
+  </script>
+</body>
+</html>

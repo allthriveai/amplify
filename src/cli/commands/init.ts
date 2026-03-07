@@ -29,7 +29,6 @@ export async function initCommand(targetPath?: string): Promise<void> {
     DEFAULT_PATHS.stories,
     DEFAULT_PATHS.research,
     DEFAULT_PATHS.researchTldr,
-    DEFAULT_PATHS.learnings,
     DEFAULT_PATHS.amplifyStructures,
     DEFAULT_PATHS.amplifyHooks,
     DEFAULT_PATHS.signals,
@@ -67,7 +66,6 @@ export async function initCommand(targetPath?: string): Promise<void> {
         dailyNoteFormat: DEFAULT_PATHS.dailyNoteFormat,
         research: DEFAULT_PATHS.research,
         researchTldr: DEFAULT_PATHS.researchTldr,
-        learnings: DEFAULT_PATHS.learnings,
         amplifyStructures: DEFAULT_PATHS.amplifyStructures,
         amplifyHooks: DEFAULT_PATHS.amplifyHooks,
         amplifyPersuasion: DEFAULT_PATHS.amplifyPersuasion,
@@ -91,7 +89,6 @@ export async function initCommand(targetPath?: string): Promise<void> {
     console.log(`    - ${cat.name}: ${join(DEFAULT_PATHS.research, cat.folder)}`);
   }
   console.log(`  TL;DR:    ${DEFAULT_PATHS.researchTldr}`);
-  console.log(`  Learnings: ${DEFAULT_PATHS.learnings}`);
   console.log(`  Amplify:`);
   console.log(`    Structures: ${DEFAULT_PATHS.amplifyStructures}`);
   console.log(`    Hooks:      ${DEFAULT_PATHS.amplifyHooks}`);

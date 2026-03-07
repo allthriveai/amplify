@@ -7,11 +7,9 @@ Lumis uses a structured event log (`Lumis/Signals/signals.json`) to connect pipe
 | Type | Emitted By | Key Data |
 |------|-----------|----------|
 | `moment_captured` | capture pipeline, /moment | filename, themes, storyPotential, momentType, fiveSecondMoment |
-| `learning_extracted` | MCP add_research, /add-research | filename, pillar, topicTags, sourceResearch |
 | `recommendation_rejected` | MCP `record_signal` (user feedback) | reason, pillar, sourceContent |
 | `content_posted` | MCP `record_signal` (user feedback) | platform, url, scriptFilename, pillar |
 | `engagement_updated` | MCP `record_signal` (user feedback) | platform, url, views, likes, comments, shares |
-| `cluster_formed` | /add-research | topicTag, learningCount, learningFilenames[] |
 | `story_developed` | /craft-storytelling develop | storyFilename, sourceMoment, craftStatus |
 | `story_practice` | /craft-storytelling practice | momentTitle, element |
 | `inspiration_added` | /add-inspiration | person, tags, backLinks, path |
@@ -24,7 +22,7 @@ Lumis uses a structured event log (`Lumis/Signals/signals.json`) to connect pipe
 ## Behavior
 
 - Signals auto-prune after 90 days on every write
-- `summarizeSignals()` returns a typed digest: recent moments, rejections, posted content, top engagement, clusters
+- `summarizeSignals()` returns a typed digest: recent moments, rejections, posted content, top engagement
 - User feedback signals come through the `record_signal` MCP tool
 
 ## How Director Skills Use Signals

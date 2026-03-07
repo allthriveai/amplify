@@ -9,7 +9,6 @@ import type {
   RecommendationRejectedSignal,
   ContentPostedSignal,
   EngagementUpdatedSignal,
-  ClusterFormedSignal,
 } from "../types/signal.js";
 import { resolveSignalsPath } from "./paths.js";
 
@@ -78,7 +77,6 @@ export interface SignalSummary {
   rejectedTopics: RecommendationRejectedSignal[];
   postedContent: ContentPostedSignal[];
   topEngagement: EngagementUpdatedSignal[];
-  recentClusters: ClusterFormedSignal[];
 }
 
 /** Summarize signals for the social coach */
@@ -88,7 +86,6 @@ export function summarizeSignals(config: LumisConfig): SignalSummary {
   const recentMoments = recent.filter((s): s is MomentCapturedSignal => s.type === "moment_captured");
   const rejectedTopics = recent.filter((s): s is RecommendationRejectedSignal => s.type === "recommendation_rejected");
   const postedContent = recent.filter((s): s is ContentPostedSignal => s.type === "content_posted");
-  const recentClusters = recent.filter((s): s is ClusterFormedSignal => s.type === "cluster_formed");
 
   // Top engagement: sort by total engagement descending
   const engagementSignals = recent.filter((s): s is EngagementUpdatedSignal => s.type === "engagement_updated");
@@ -103,6 +100,5 @@ export function summarizeSignals(config: LumisConfig): SignalSummary {
     rejectedTopics,
     postedContent,
     topEngagement,
-    recentClusters,
   };
 }

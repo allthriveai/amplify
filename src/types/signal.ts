@@ -4,11 +4,9 @@
 
 export type SignalType =
   | "moment_captured"
-  | "learning_extracted"
   | "recommendation_rejected"
   | "content_posted"
   | "engagement_updated"
-  | "cluster_formed"
   | "story_developed"
   | "story_practice"
   | "timeline_created"
@@ -36,16 +34,6 @@ export interface MomentCapturedSignal extends BaseSignal {
     storyPotential: string;
     momentType: string;
     fiveSecondMoment: string;
-  };
-}
-
-export interface LearningExtractedSignal extends BaseSignal {
-  type: "learning_extracted";
-  data: {
-    filename: string;
-    pillar: string;
-    topicTags: string[];
-    sourceResearch: string;
   };
 }
 
@@ -77,15 +65,6 @@ export interface EngagementUpdatedSignal extends BaseSignal {
     likes?: number;
     comments?: number;
     shares?: number;
-  };
-}
-
-export interface ClusterFormedSignal extends BaseSignal {
-  type: "cluster_formed";
-  data: {
-    topicTag: string;
-    learningCount: number;
-    learningFilenames: string[];
   };
 }
 
@@ -220,11 +199,9 @@ export interface AudioGeneratedSignal extends BaseSignal {
 
 export type Signal =
   | MomentCapturedSignal
-  | LearningExtractedSignal
   | RecommendationRejectedSignal
   | ContentPostedSignal
   | EngagementUpdatedSignal
-  | ClusterFormedSignal
   | StoryDevelopedSignal
   | StoryPracticeSignal
   | TimelineCreatedSignal

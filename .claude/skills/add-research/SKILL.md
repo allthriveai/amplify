@@ -157,114 +157,17 @@ Append a link to the new research note in the appropriate `README.md`. If the no
 - [[filename]] — [one-line description]
 ```
 
-### Step 7: Extract Learnings
-
-After saving the research note and TL;DR, extract professional insights that connect to the content strategy.
-
-1. Read the content pillars from `{vaultPath}/2 - Areas/All Thrive/Content Pillars.md` to understand the 4 pillars: building, strategy, ethics, thriving.
-2. Read the `.lumisrc` config to get `paths.learnings` (the folder where learnings live).
-3. Identify 1-4 learnings from the research. A learning qualifies if it:
-   - Teaches something actionable about building with AI, AI strategy, AI ethics, or thriving with AI
-   - Connects to the "force multiplier" thesis (one person amplified by their own AI team)
-   - Offers a non-obvious insight that could become content
-4. For each learning, create a note in `{vaultPath}/{paths.learnings}/` using this format:
-
-```markdown
----
-title: "[Short, opinionated title]"
-source: "[[{category.folder}/{research-filename}]]"
-pillar: [building, strategy, ethics, thriving]
-created: YYYY-MM-DD
-tags:
-  - learning
-  - force-multiplier (when applicable)
-  - [topic tags like rag, tool-design, agent-context]
----
-
-# [Title]
-
-[The insight in 2-4 sentences. What you learned, why it matters, how it connects to the force multiplier thesis.]
-
-## Source Context
-[1-2 sentences on where this came from and what the original piece was about.]
-
-## Content Angle
-[1-2 sentences on how this becomes a post or video. Which pillar? What's the hook?]
-```
-
-Key rules:
-- Filename: `kebab-case-title.md`
-- The `source` field uses a wiki-link to the research note relative to the research root
-- `pillar` can be one or multiple from: building, strategy, ethics, thriving
-- Apply the `force-multiplier` tag to any learning supporting the "one person amplified by their own AI team" thesis
-- Topic tags should be specific enough to cluster (e.g., `rag`, `tool-design`, `agent-context`, `elicitation`)
-- Run the humanizer pass on prose sections (same rules as Step 5)
-
-5. Update `{vaultPath}/{paths.learnings}/README.md` — append each new learning to the `## Learnings` list following the existing format: `- [[filename]] — [one-line description]`
-
-If no learnings are worth extracting (purely reference material, no actionable insight), skip this step and note it in the confirmation.
-
-### Step 8: Cluster Report
-
-After creating learnings, scan all files in `{vaultPath}/{paths.learnings}/` (excluding README.md). For each file, extract the `tags` from frontmatter.
-
-Group learnings by shared topic tags (exclude generic tags like `learning` and `force-multiplier` from grouping). Report any clusters of 4+ learnings sharing a topic tag:
-
-```
-**Topic clusters building up:**
-- **[tag]** ([N] learnings): [one-line thesis summarizing what these learnings collectively say]
-- **[tag]** ([N] learnings): [one-line thesis]
-```
-
-If a cluster reaches 4+ for the first time with this addition, highlight it:
-> "You now have [N] learnings about [topic]. There might be a video here." followed by a 2-3 bullet summary of the cluster's thesis.
-
-This report runs every time `/add-research` is used, not just when new clusters form, so the user always sees what's building up. If no clusters exist yet, say so briefly and move on.
-
-### Step 9: Emit Signals + Session Memory
-
-After creating learnings and checking clusters, emit signals and log to session memory:
-
-**For each learning extracted**, emit a `learning_extracted` signal to `{vaultPath}/{paths.signals}/signals.json`:
-```json
-{
-  "id": "sig-[timestamp]-[random6hex]",
-  "type": "learning_extracted",
-  "timestamp": "[ISO timestamp]",
-  "data": {
-    "filename": "[learning filename]",
-    "pillar": "[pillar]",
-    "topicTags": ["tag1", "tag2"],
-    "sourceResearch": "[research note filename]"
-  }
-}
-```
-
-**If a cluster reaches 4+ learnings** for the first time with this addition, emit a `cluster_formed` signal:
-```json
-{
-  "id": "sig-[timestamp]-[random6hex]",
-  "type": "cluster_formed",
-  "timestamp": "[ISO timestamp]",
-  "data": {
-    "topicTag": "[tag]",
-    "learningCount": [N],
-    "learningFilenames": ["learning1.md", "learning2.md"]
-  }
-}
-```
+### Step 7: Emit Signals + Session Memory
 
 **Log to session memory** at `{vaultPath}/{paths.memory}/sessions/YYYY-MM-DD.md`:
 ```
-- **HH:MM** — research_added: Saved "[title]" to [category], extracted [N] learnings
+- **HH:MM** — research_added: Saved "[title]" to [category]
 ```
 
-### Step 10: Confirm to the User
+### Step 8: Confirm to the User
 
 Report:
 - Where the files were saved (full note path + TL;DR path)
 - The category that was matched and why
 - A 2-3 sentence summary of what was captured
 - Any related notes already in the vault (check for overlapping tags or titles in existing research notes)
-- How many learnings were extracted (with titles and pillars)
-- The cluster report from Step 8

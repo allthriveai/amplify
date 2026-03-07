@@ -12,7 +12,7 @@ Tell Lumis about your life, share research you are interested in, and learn to c
 - **Captures moments** and identifies the "5-second moment," the instant something shifted
 - **Finds connections** to your past moments, things you might not have linked on your own
 - **Builds a Pattern Map** in Obsidian that visualizes how your moments relate over time
-- **Saves research** from articles, books, and videos, and distills them into lessons
+- **Saves research** from articles, books, and videos with TL;DR companions
 - **Captures inspiration** by researching people you admire and connecting them to your vault
 - **Reads research aloud** by converting any vault note to narrated audio with ElevenLabs
 - **Challenges your thinking** through targeted critical thinking prompts with honest feedback
@@ -39,14 +39,14 @@ Lumis owns the full content flywheel. Most tools handle one step. Lumis connects
   │         │            │ research│             │inspiration│
   └────┬────┘            └────┬────┘             └─────┬─────┘
        │                      │                        │
-       │  5-second moment     │  learnings extracted   │  bio researched
-       │  connections found   │  topics clustered      │  vault back-links
-       │  pattern map built   │  TL;DR companion       │  found
+       │  5-second moment     │  TL;DR companion       │  bio researched
+       │  connections found   │  category matched      │  vault back-links
+       │  pattern map built   │                        │  found
        │                      │                        │
        └──────────────────────┼────────────────────────┘
                               │
                       ┌───────▼───────┐
-                      │    Vault      │  moments, learnings, stories,
+                      │    Vault      │  moments, stories, research,
                       │   (Obsidian)  │  voice, inspiration, patterns
                       └───────┬───────┘
                               │

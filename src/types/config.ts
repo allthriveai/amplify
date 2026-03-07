@@ -49,8 +49,6 @@ export interface LumisConfig {
     research: string;
     /** Where TL;DR companion notes are stored. Default: "Lumis/Research/TL;DR" */
     researchTldr: string;
-    /** Where lessons learned are stored. Default: "Lumis/Learnings" */
-    learnings: string;
     /** Where content structures are stored. Default: "Lumis/Amplify/Structures" */
     amplifyStructures: string;
     /** Where hook type files are stored. Default: "Lumis/Amplify/Hooks" */
@@ -89,51 +87,24 @@ export interface LumisConfig {
 }
 
 export const DEFAULT_PATHS: LumisConfig["paths"] = {
-  moments: "Lumis/Moments",
-  stories: "Lumis/Stories",
+  moments: "Moments",
+  stories: "Stories",
   canvas: "Lumis/Pattern Map.canvas",
   dailyNotes: "Daily Notes",
   dailyNoteFormat: "YYYY-MM-DD",
-  research: "Lumis/Research",
-  researchTldr: "Lumis/Research/TL;DR",
-  learnings: "Lumis/Learnings",
+  research: "Research",
+  researchTldr: "Research/TL;DR",
   amplifyStructures: "Lumis/Amplify/Structures",
   amplifyHooks: "Lumis/Amplify/Hooks",
   amplifyPersuasion: "Lumis/Amplify",
-  strategyDocs: "2 - Areas/All Thrive",
+  strategyDocs: "Strategy",
   voice: "Lumis/Voice.md",
   signals: "Lumis/Signals",
   memory: "Lumis/Memory",
-  people: "2 - Areas/Personal/People Who Inspire Me",
-  challenges: "Lumis/Challenges",
-  brand: "Brand",
-  audio: "3 - Resources/Research/Audio",
+  people: "People",
+  challenges: "Challenges",
+  brand: "Lumis/Brand",
+  audio: "Research/Audio",
 };
 
-export const DEFAULT_RESEARCH_CATEGORIES: ResearchCategory[] = [
-  {
-    name: "AI & Agents",
-    folder: "AI & Agents",
-    keywords: ["ai", "agent", "llm", "mcp", "ml", "machine learning", "prompt engineering", "rag", "embedding", "transformer", "gpt", "claude", "neural"],
-  },
-  {
-    name: "Tools & Software",
-    folder: "Tools & Software",
-    keywords: ["tool", "software", "platform", "app", "framework", "library", "sdk", "api", "saas", "devops", "cli"],
-  },
-  {
-    name: "Books",
-    folder: "Books",
-    keywords: ["book", "book summary", "book review", "author", "chapter", "reading"],
-  },
-  {
-    name: "Articles",
-    folder: "Articles",
-    keywords: ["article", "blog", "opinion", "essay", "post", "newsletter"],
-  },
-  {
-    name: "Courses & Learning",
-    folder: "Courses & Learning",
-    keywords: ["course", "tutorial", "workshop", "training", "certification", "lesson", "curriculum", "mooc"],
-  },
-];
+export const DEFAULT_RESEARCH_CATEGORIES: ResearchCategory[] = [];
