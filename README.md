@@ -92,7 +92,17 @@ Lumis owns the full content flywheel. Most tools handle one step. Lumis connects
              (YouTube)
 ```
 
-Each step feeds the next. Your moments become the raw material for stories. `/craft-content` finds the story through free writing and guided questions. The director skills turn stories into platform-ready formats: `/director-video` creates a shot-by-shot timeline that the Studio renders into branded video (HeyGen avatars, ElevenLabs voiceover, Remotion assembly), `/director-carousel` builds a card-by-card LinkedIn carousel plan, `/director-article` writes a full long-form blog post, and `/director-diagram` creates interactive React Flow visualizations. `/director-images` generates AI images for any of these formats using Google Imagen, building brand-aware prompts and updating the source files so images flow into rendering automatically. Meanwhile, `/listen` lets you consume your research by converting any vault note to narrated audio.
+Each step feeds the next. Your moments become the raw material for stories.
+
+`/craft-content` finds the story through free writing and guided questions. The director skills turn it into platform-ready formats:
+
+- `/director-video` creates a shot-by-shot timeline that the Studio renders into branded video (HeyGen avatars, ElevenLabs voiceover, Remotion assembly)
+- `/director-carousel` builds a card-by-card LinkedIn carousel plan
+- `/director-article` writes a full long-form blog post
+- `/director-diagram` creates interactive React Flow visualizations
+- `/director-images` generates AI images for any format using Google Imagen, building brand-aware prompts that update source files automatically
+
+`/listen` lets you consume your research by converting any vault note to narrated audio.
 
 ## Setup
 
