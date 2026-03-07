@@ -18,7 +18,8 @@
     "memory": "Lumis/Memory",
     "people": "2 - Areas/Personal/People Who Inspire Me",
     "challenges": "Lumis/Challenges",
-    "brand": "Brand"
+    "brand": "Brand",
+    "audio": "3 - Resources/Research/Audio"
   },
   "researchCategories": [
     {
@@ -69,6 +70,7 @@
     "heygenVoiceId": "",
     "elevenlabsApiKey": "",
     "elevenlabsVoiceId": "",
+    "listenVoiceId": "",
     "googleApiKey": ""
   },
   "capture": {

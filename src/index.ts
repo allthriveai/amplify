@@ -43,6 +43,9 @@ export type {
   InspirationAddedSignal,
   ChallengeCompletedSignal,
   ImagesGeneratedSignal,
+  DiagramCreatedSignal,
+  DiagramVideoRenderedSignal,
+  AudioGeneratedSignal,
 } from "./types/signal.js";
 
 export type { SessionEntry } from "./types/memory.js";
@@ -96,6 +99,16 @@ export type {
   Article,
 } from "./types/director.js";
 
+export type {
+  DiagramType,
+  DiagramNodeType,
+  DiagramNode,
+  DiagramEdge,
+  DiagramFrontmatter,
+  Diagram,
+  RenderDiagramVideoOptions,
+} from "./types/diagram.js";
+
 // Modules
 export { loadConfig } from "./config.js";
 export { analyzeMoment, humanize } from "./ai/index.js";
@@ -123,6 +136,8 @@ export {
   listCarousels,
   readArticle,
   listArticles,
+  readDiagram,
+  listDiagrams,
 } from "./vault/index.js";
 export { generatePatternMap } from "./canvas/index.js";
 export { captureMoment } from "./pipeline/capture.js";
@@ -141,6 +156,10 @@ export {
   produceTimeline,
   validateAssets,
   resolveAssetPath,
+  cleanMarkdownForNarration,
+  chunkText,
+  narrateToAudio,
+  estimateDuration,
 } from "./studio/index.js";
 export type { HeyGenClient } from "./studio/index.js";
 export type { ElevenLabsClient } from "./studio/index.js";
@@ -159,6 +178,7 @@ export {
   resolvePracticeLogPath,
   resolveStoryDir,
   resolveDirectorCutPath,
+  resolveAudioDir,
 } from "./vault/index.js";
 
 // Signals
@@ -169,6 +189,14 @@ export { formatSessionTime, appendSessionEntry, readSession, readRecentSessions,
 
 // Brand
 export { readBrand, readBrandInspirations, resolveBrandDir, resolveBrandPath, resolveBrandInspirationDir } from "./vault/index.js";
+
+// Diagram
+export { renderDiagramHtml } from "./diagram/render-html.js";
+export type { RenderDiagramOptions } from "./diagram/render-html.js";
+export { renderDiagramVideo } from "./diagram/animate.js";
+export { computeAnimationOrder } from "./diagram/animation-order.js";
+export { renderTextRevealVideo } from "./diagram/text-reveal.js";
+export type { TextRevealOptions } from "./diagram/text-reveal.js";
 
 // Capture
 export {

@@ -52,6 +52,7 @@ export function loadConfig(overrides?: Partial<LumisConfig>): LumisConfig {
       people: overrides?.paths?.people ?? rcPaths?.people ?? DEFAULT_PATHS.people,
       challenges: overrides?.paths?.challenges ?? rcPaths?.challenges ?? DEFAULT_PATHS.challenges,
       brand: overrides?.paths?.brand ?? rcPaths?.brand ?? DEFAULT_PATHS.brand,
+      audio: overrides?.paths?.audio ?? rcPaths?.audio ?? DEFAULT_PATHS.audio,
     },
     researchCategories: overrides?.researchCategories ?? rc?.researchCategories ?? DEFAULT_RESEARCH_CATEGORIES,
     ...(overrides?.brand ?? rc?.brand ? { brand: overrides?.brand ?? rc?.brand } : {}),
@@ -70,6 +71,7 @@ function loadStudioConfig(
     heygenVoiceId: overrides?.heygenVoiceId ?? rc?.heygenVoiceId ?? process.env.HEYGEN_VOICE_ID,
     elevenlabsApiKey: overrides?.elevenlabsApiKey ?? rc?.elevenlabsApiKey ?? process.env.ELEVENLABS_API_KEY,
     elevenlabsVoiceId: overrides?.elevenlabsVoiceId ?? rc?.elevenlabsVoiceId ?? process.env.ELEVENLABS_VOICE_ID,
+    listenVoiceId: overrides?.listenVoiceId ?? rc?.listenVoiceId ?? process.env.ELEVENLABS_LISTEN_VOICE_ID,
     googleApiKey: overrides?.googleApiKey ?? rc?.googleApiKey ?? process.env.GOOGLE_API_KEY,
   };
 

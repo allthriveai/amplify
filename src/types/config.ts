@@ -71,6 +71,8 @@ export interface LumisConfig {
     challenges: string;
     /** Where brand guidelines and inspiration live. Default: "Brand" */
     brand: string;
+    /** Where audio narrations are stored. Default: "3 - Resources/Research/Audio" */
+    audio: string;
   };
 
   /** Categories for auto-classifying research notes */
@@ -105,6 +107,7 @@ export const DEFAULT_PATHS: LumisConfig["paths"] = {
   people: "2 - Areas/Personal/People Who Inspire Me",
   challenges: "Lumis/Challenges",
   brand: "Brand",
+  audio: "3 - Resources/Research/Audio",
 };
 
 export const DEFAULT_RESEARCH_CATEGORIES: ResearchCategory[] = [

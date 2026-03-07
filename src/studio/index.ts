@@ -16,6 +16,7 @@ export { produceTimeline } from "./produce-timeline.js";
 export { validateAssets, resolveAssetPath } from "./assets.js";
 export { createImagenClient } from "./imagen.js";
 export type { ImagenClient } from "./imagen.js";
+export { cleanMarkdownForNarration, chunkText, narrateToAudio, estimateDuration } from "./narrate.js";
 
 /** How long to wait between status polls (ms) */
 const POLL_INTERVAL = 10_000;

@@ -18,7 +18,7 @@ Lumis is a CLI tool and MCP server that lives in an Obsidian vault. It helps cap
 
 ```
 src/
-  types/          ← TypeScript interfaces (moment, canvas, config, research, amplify, signal, memory, story, studio, director)
+  types/          ← TypeScript interfaces (moment, canvas, config, research, amplify, signal, memory, story, studio, director, diagram)
   vault/          ← Read/write Obsidian markdown files with gray-matter frontmatter
   cli/            ← CLI commands (moment, init, import-sparks)
   mcp/            ← MCP server (stdio transport, 11 tools)
@@ -27,6 +27,7 @@ src/
   pipeline/       ← Moment capture pipeline
   amplify/        ← Content amplification context builder
   studio/         ← Video production (HeyGen, ElevenLabs, Google Imagen, Remotion rendering, asset management)
+  diagram/        ← React Flow diagram generation (self-contained HTML output)
   config.ts       ← Loads .lumisrc config with fallbacks to env vars
   index.ts        ← Public API re-exports
 ```
@@ -54,6 +55,7 @@ Lumis has Claude Code skills in `.claude/skills/`:
 - **`/director-carousel`** — LinkedIn carousel from a crafted story. Builds card-by-card plan with copy and image direction.
 - **`/director-article`** — Long-form blog post from a crafted story. Writes the full article using the narrative arc.
 - **`/director-images`** — Generates AI images for any director format (video, carousel, article) using Google Imagen. Finds image slots, builds brand-aware prompts, generates images, and updates source files so images flow into rendering automatically.
+- **`/director-diagram`** — Creates interactive React Flow diagrams from crafted stories. Picks diagram type (flow, concept map, timeline, comparison), extracts nodes and edges from the story, renders a standalone HTML file with React Flow and a PNG screenshot.
 - **`/add-inspiration`** — Captures a person who inspires you. Researches their bio, work, and quotes on the web, then asks what you admire and what you've learned from them.
 - **`/challenge`** — Challenges an idea or belief through critical thinking prompts. Picks 2-3 prompts matched to the input, runs them one at a time, logs to Challenge Log, optionally promotes insights to the second brain.
 - **`/brand`** — Sets up your visual brand identity. Interview mode writes brand colors, fonts, and visual style to `.lumisrc` and Brand.md. Add mode (`/brand add [url]`) saves visual inspiration references.

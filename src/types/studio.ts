@@ -7,5 +7,7 @@ export interface StudioConfig {
   heygenVoiceId?: string;
   elevenlabsApiKey?: string;
   elevenlabsVoiceId?: string;
+  /** Voice ID for /listen narration (separate from video voiceovers). */
+  listenVoiceId?: string;
   googleApiKey?: string;
 }

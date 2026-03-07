@@ -17,7 +17,10 @@ export type SignalType =
   | "article_created"
   | "inspiration_added"
   | "challenge_completed"
-  | "images_generated";
+  | "images_generated"
+  | "diagram_created"
+  | "diagram_video_rendered"
+  | "audio_generated";
 
 interface BaseSignal {
   id: string;
@@ -181,6 +184,40 @@ export interface ImagesGeneratedSignal extends BaseSignal {
   };
 }
 
+export interface DiagramCreatedSignal extends BaseSignal {
+  type: "diagram_created";
+  data: {
+    slug: string;
+    diagramType: string;
+    storySource: string;
+    nodeCount: number;
+    edgeCount: number;
+    htmlPath: string;
+    pngPath: string;
+  };
+}
+
+export interface DiagramVideoRenderedSignal extends BaseSignal {
+  type: "diagram_video_rendered";
+  data: {
+    slug: string;
+    diagramType: string;
+    format: string;
+    outputPath: string;
+    nodeCount: number;
+    duration: number;
+  };
+}
+
+export interface AudioGeneratedSignal extends BaseSignal {
+  type: "audio_generated";
+  data: {
+    sourceNote: string;
+    audioFile: string;
+    durationEstimate: string;
+  };
+}
+
 export type Signal =
   | MomentCapturedSignal
   | LearningExtractedSignal
@@ -196,7 +233,10 @@ export type Signal =
   | ArticleCreatedSignal
   | InspirationAddedSignal
   | ChallengeCompletedSignal
-  | ImagesGeneratedSignal;
+  | ImagesGeneratedSignal
+  | DiagramCreatedSignal
+  | DiagramVideoRenderedSignal
+  | AudioGeneratedSignal;
 
 export interface SignalsFile {
   version: 1;

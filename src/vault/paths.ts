@@ -138,6 +138,11 @@ export function resolveDirectorCutPath(config: LumisConfig, slug: string, filena
   return join(resolveStoryDir(config, slug), filename);
 }
 
+/** Resolve the audio narrations directory */
+export function resolveAudioDir(config: LumisConfig): string {
+  return resolvePath(config, config.paths.audio);
+}
+
 /** Resolve the brand directory */
 export function resolveBrandDir(config: LumisConfig): string {
   return resolvePath(config, config.paths.brand);

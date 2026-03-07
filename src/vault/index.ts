@@ -27,6 +27,7 @@ export {
   resolveChallengeLogPath,
   resolveStoryDir,
   resolveDirectorCutPath,
+  resolveAudioDir,
 } from "./paths.js";
 
 // Re-export readCanvas for convenience
@@ -49,6 +50,9 @@ export { readCarousel, listCarousels } from "./carousel-reader.js";
 
 // Article (director)
 export { readArticle, listArticles } from "./article-reader.js";
+
+// Diagram (director)
+export { readDiagram, listDiagrams } from "./diagram-reader.js";
 
 // Memory
 export { formatSessionTime, appendSessionEntry, readSession, readRecentSessions, readPreferences, addPreference } from "./memory.js";
