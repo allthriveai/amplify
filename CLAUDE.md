@@ -60,6 +60,8 @@ Lumis has Claude Code skills in `.claude/skills/`:
 - **`/challenge`** — Challenges an idea or belief through critical thinking prompts. Picks 2-3 prompts matched to the input, runs them one at a time, logs to Challenge Log, optionally promotes insights to the second brain.
 - **`/brand`** — Sets up your visual brand identity. Interview mode writes brand colors, fonts, and visual style to `.lumisrc` and Brand.md. Add mode (`/brand add [url]`) saves visual inspiration references.
 - **`/humanizer`** — Removes signs of AI-generated writing. Detects and fixes AI vocabulary, significance inflation, em dash overuse, filler phrases, and structural tells.
+- **`/youtube-description`** — Writes YouTube video descriptions. Hook-first structure optimized for search and click-through. Keyword placement, timestamps, CTA strategy, humanizer rules baked in.
+- **`/linkedin-post`** — Writes LinkedIn posts optimized for saves and dwell time. Hook under 110 chars, multiple post structures (story, listicle, contrarian, before/after), links in first comment, humanizer rules baked in.
 
 All skills read `.lumisrc` for vault paths and write directly to the Obsidian vault.
 

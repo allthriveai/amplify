@@ -23,6 +23,8 @@ Tell Lumis about your life, share research you are interested in, and learn to c
 - **Generates images** for any director format using Google Imagen, with brand-aware prompts that update source files automatically
 - **Creates diagrams** from stories as interactive React Flow visualizations, with PNG export for embedding anywhere
 - **Cleans AI writing** by detecting and fixing AI vocabulary, filler phrases, em dash overuse, and structural tells
+- **Writes YouTube descriptions** optimized for search, click-through, and the first 150 characters above the fold
+- **Writes LinkedIn posts** optimized for saves and dwell time, with hooks under 110 characters and proven post structures
 
 This repo is the engine. Your [Obsidian](https://obsidian.md) vault is where your moments, stories, and research live. They stay separate so your personal content never ends up in a code repo. Your stories remain private to you.
 
@@ -126,6 +128,8 @@ claude
 /listen             Convert a research note to narrated audio
 /brand              Set up your visual brand identity
 /humanizer          Clean AI-generated writing patterns from text
+/youtube-description Write a YouTube video description
+/linkedin-post      Write a LinkedIn post
 
 lumis studio list           List all director cuts with status
 lumis studio render <slug>  Render a director cut to branded video
