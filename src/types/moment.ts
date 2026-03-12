@@ -23,6 +23,8 @@ export interface MomentFrontmatter {
   "story-potential": StoryPotential;
   themes: string[];
   tags: string[];
+  /** If true, moment is excluded from content pipelines but still included in pattern analysis */
+  private?: boolean;
 }
 
 export interface Moment {

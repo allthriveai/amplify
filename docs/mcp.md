@@ -9,15 +9,15 @@ Entry point: `src/mcp/index.ts` (compiles to `dist/mcp/index.js`). Runs on stdio
 | Tool | Description |
 |------|-------------|
 | `capture_moment` | Full pipeline: analyze, connect, write, humanize, regenerate canvas, emit signal |
-| `get_moments` | Read moments with optional theme filter and limit |
-| `get_patterns` | Pattern map theme clusters and connection summary |
+| `get_moments` | Read moments with optional theme filter and limit (excludes private) |
+| `get_patterns` | Pattern map theme clusters and connection summary (excludes private) |
 | `add_research` | Auto-categorize and save research to vault, emit signal |
-| `social_coach` | Recommend content based on stories and moments, reads signals + memory |
+| `social_coach` | Recommend content based on stories and moments, reads signals + memory (excludes private) |
 | `record_signal` | Record user feedback: rejected recommendations, posted content, engagement metrics |
 | `remember` | Save a user preference to preferences.md |
 | `recall` | Read preferences, recent sessions, and signal summary |
-| `story_craft_practice` | Surface a high-potential moment with a focused storytelling exercise |
-| `story_craft_develop` | Develop a moment into a full story through guided conversation |
+| `story_craft_practice` | Surface a high-potential moment with a focused storytelling exercise (excludes private) |
+| `story_craft_develop` | Develop a moment into a full story through guided conversation (excludes private) |
 
 ## Claude Desktop Config
 

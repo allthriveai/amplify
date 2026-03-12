@@ -16,19 +16,19 @@ If you set a password in OBS's WebSocket settings, add it to your `.lumisrc` (se
 ```bash
 # 1. Open OBS
 # 2. Run setup (creates scenes, sets resolution)
-lumis capture setup
+lumis obs setup
 
 # 3. Install keyboard shortcuts into OBS config (OBS must be closed)
-lumis capture hotkeys
+lumis obs hotkeys
 
 # 4. Reopen OBS, start recording for a story
-lumis capture start my-story
+lumis obs start my-story
 
 # 5. Record your screen/camera, then stop
-lumis capture stop
+lumis obs stop
 
 # 6. Check what was captured
-lumis capture list my-story
+lumis obs list my-story
 ```
 
 ## Architecture
@@ -46,12 +46,12 @@ Lumis talks to OBS over WebSocket (`obs-websocket-js`). OBS runs as a separate a
 ## Commands
 
 ```bash
-lumis capture setup          # Connect to OBS, create Lumis scenes, configure output
-lumis capture start <slug>   # Set output to stories/{slug}/assets/, start recording
-lumis capture stop           # Stop recording, print the saved file path
-lumis capture list <slug>    # Show captured assets for a story
-lumis capture scene <name>   # Switch OBS scene
-lumis capture hotkeys        # Install keyboard shortcuts into OBS config
+lumis obs setup          # Connect to OBS, create Lumis scenes, configure output
+lumis obs start <slug>   # Set output to stories/{slug}/assets/, start recording
+lumis obs stop           # Stop recording, print the saved file path
+lumis obs list <slug>    # Show captured assets for a story
+lumis obs scene <name>   # Switch OBS scene
+lumis obs hotkeys        # Install keyboard shortcuts into OBS config
 ```
 
 ### `capture setup`
@@ -66,9 +66,9 @@ Connects to OBS via WebSocket and does three things:
 | Lumis: Screen Only | Display capture | Clean screen recordings |
 | Lumis: Camera Only | Webcam (full frame) | Presenter footage (alternative to HeyGen avatars) |
 
-2. **Configures output** to match Studio specs: 1920x1080, 30fps, H.264 (MP4).
+2. **Configures output** for 4K YouTube-quality capture: 3840x2160, 60fps, Apple hardware H.264, lossless quality.
 
-3. **Prints recommended keyboard shortcuts** with a pointer to `lumis capture hotkeys`.
+3. **Prints recommended keyboard shortcuts** with a pointer to `lumis obs hotkeys`.
 
 ### `capture start <slug>`
 
@@ -102,7 +102,7 @@ Switches the active OBS scene. Accepts short aliases:
 | `screen` | Lumis: Screen Only |
 | `camera` | Lumis: Camera Only |
 
-Or pass the full scene name: `lumis capture scene "Lumis: Camera Only"`.
+Or pass the full scene name: `lumis obs scene "Lumis: Camera Only"`.
 
 ### `capture hotkeys`
 
@@ -148,7 +148,7 @@ OBS key identifiers follow the pattern `OBS_KEY_<keyname>`. Common ones: `OBS_KE
 
 ### Manual setup (alternative)
 
-If `lumis capture hotkeys` can't find the OBS config, set shortcuts manually:
+If `lumis obs hotkeys` can't find the OBS config, set shortcuts manually:
 
 1. Open OBS > Settings > Hotkeys
 2. Find "Start Recording" and assign F9
@@ -206,7 +206,7 @@ shots:
     voiceoverSource: elevenlabs
 ```
 
-- `asset` is the filename from `lumis capture list <slug>`
+- `asset` is the filename from `lumis obs list <slug>`
 - Video files play inline in the rendered output
 - Image files get a Ken Burns zoom effect
 - Add `voiceover` + `voiceoverSource: elevenlabs` to narrate over the clip
@@ -220,11 +220,25 @@ shots:
 ```
 /craft-content         → write your story
 /director-video        → build the timeline (mark screen-capture shots)
-lumis capture setup    → one-time OBS setup
-lumis capture start <slug>  → record the screen demo
-lumis capture stop     → stop recording
+lumis obs setup    → one-time OBS setup
+lumis obs start <slug>  → record the screen demo
+lumis obs stop     → stop recording
 lumis studio render <slug>  → assemble everything into final video
 ```
+
+## Lessons learned
+
+**4K is non-negotiable for YouTube.** 1080p screen recordings with text look soft after YouTube re-encodes. Always capture at 3840x2160. The file sizes are larger but the quality difference is obvious.
+
+**60fps matters for screen recordings.** Scrolling, cursor movement, and UI transitions look choppy at 30fps. Text-heavy content benefits the most.
+
+**Use Apple hardware encoding.** `apple_vt_h264_hw` handles 4K @ 60fps with no noticeable CPU load on Mac. Software encoding bogs down the machine during demos.
+
+**Capture lossless, compress later.** Set RecQuality to "Lossless" in OBS. You can always re-encode the final output, but you can't recover detail lost during capture.
+
+**Replace audio in post, don't capture it live.** For demo videos, the cleanest workflow is: capture screen silently, then replace audio with ElevenLabs voiceover using ffmpeg. The `obs-replace-audio.ts` script handles per-scene timing with leadIn/holdAfter delays. Speaker audio from screen recordings is almost never usable (room noise, mic pops, uneven levels).
+
+**Scale sources to fill the 4K canvas.** After changing resolution, existing OBS sources may not fill the frame. Use `boundsType: "OBS_BOUNDS_SCALE_OUTER"` with `boundsWidth: 3840, boundsHeight: 2160` to ensure screen captures fill the canvas.
 
 ## Troubleshooting
 
@@ -235,18 +249,18 @@ lumis studio render <slug>  → assemble everything into final video
 - If you set a password in OBS, add it to `obsWebsocketPassword` in `.lumisrc`.
 
 **"OBS is already recording"**
-- A recording is in progress. Run `lumis capture stop` first, or stop it from OBS directly.
+- A recording is in progress. Run `lumis obs stop` first, or stop it from OBS directly.
 
 **"OBS is not currently recording"**
 - No active recording to stop. You may have already stopped it, or it was stopped from OBS.
 
-**Hotkeys not working after `lumis capture hotkeys`**
+**Hotkeys not working after `lumis obs hotkeys`**
 - Did you close OBS before running the command? OBS overwrites config on exit.
 - Reopen OBS after running the command.
 - Check for conflicts: OBS > Settings > Hotkeys. Look for duplicate bindings.
 
-**Recordings not appearing in `lumis capture list`**
-- Did you run `lumis capture start <slug>` before recording? Without it, OBS saves to its default output folder, not the story assets folder.
+**Recordings not appearing in `lumis obs list`**
+- Did you run `lumis obs start <slug>` before recording? Without it, OBS saves to its default output folder, not the story assets folder.
 - Check OBS Settings > Output > Recording Path to see where files went.
 
 **Source not available on this platform**

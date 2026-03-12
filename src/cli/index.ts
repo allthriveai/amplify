@@ -37,14 +37,19 @@ async function main() {
       await studioCommand(args[0], args.slice(1));
       break;
     }
-    case "capture": {
-      const { captureCommand } = await import("./commands/capture.js");
-      await captureCommand(args[0], args.slice(1));
+    case "obs": {
+      const { obsCommand } = await import("./commands/obs.js");
+      await obsCommand(args[0], args.slice(1));
       break;
     }
     case "listen": {
       const { listenCommand } = await import("./commands/listen.js");
       await listenCommand(args);
+      break;
+    }
+    case "storyboard": {
+      const { storyboardCommand } = await import("./commands/storyboard.js");
+      await storyboardCommand(args);
       break;
     }
     case "story-craft": {
@@ -65,7 +70,8 @@ Commands:
   lumis studio <cmd>                 Video production (list, render, preview)
   lumis listen <note>                Convert a research note to audio narration
   lumis listen --voices              List available ElevenLabs voices
-  lumis capture <cmd>                OBS capture (setup, start, stop, list, scene)
+  lumis obs <cmd>                    OBS capture (setup, start, stop, status, scenes, etc.)
+  lumis storyboard <slug>            Visual storyboard editor (edits save to timeline)
   lumis story-craft                  Practice storytelling (pick a moment, one exercise)
   lumis story-craft develop [term]   Develop a moment into a full story
 

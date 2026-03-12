@@ -32,9 +32,10 @@ export async function storyCraftCommand(mode: string, args: string[]): Promise<v
       }
       console.log("\nUse the /story-craft skill in Claude Code for the full guided conversation.");
     } else {
-      // Pick highest-potential undeveloped moment
+      // Pick highest-potential undeveloped moment, excluding private
       const candidates = moments
         .filter((m) =>
+          !m.frontmatter.private &&
           (m.frontmatter["story-potential"] === "high" || m.frontmatter["story-potential"] === "medium") &&
           (m.frontmatter["story-status"] === "captured" || m.frontmatter["story-status"] === "exploring"),
         )
@@ -63,9 +64,10 @@ export async function storyCraftCommand(mode: string, args: string[]): Promise<v
     return;
   }
 
-  // Practice mode (default)
+  // Practice mode (default) — exclude private moments
   const candidates = moments
     .filter((m) =>
+      !m.frontmatter.private &&
       (m.frontmatter["story-potential"] === "high" || m.frontmatter["story-potential"] === "medium") &&
       (m.frontmatter["story-status"] === "captured" || m.frontmatter["story-status"] === "exploring"),
     )

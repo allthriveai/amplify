@@ -5,11 +5,17 @@ export {
   setOutputPath,
   switchScene,
   getLumisSceneNames,
+  listScenes,
+  setSourceVisibility,
+  toggleSourceVisibility,
 } from "./setup.js";
 
 export {
   startRecording,
   stopRecording,
+  pauseRecording,
+  resumeRecording,
+  getRecordingStatus,
   listCapturedAssets,
 } from "./record.js";
 

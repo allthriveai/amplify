@@ -48,6 +48,17 @@ Lumis/
   All Thrive/              ← strategy docs (content pillars, strategy, social plan)
 ```
 
+## Private Moments
+
+Moments can be marked private by adding `private: true` to their frontmatter (or using `/moment private ...`). Private moments:
+
+- Still get full analysis: 5-second moment, themes, connections, story potential
+- Still appear on the Pattern Map canvas and connect to other moments
+- Are excluded from all content pipelines: `get_moments`, `get_patterns`, `social_coach`, `story_craft_practice`, `story_craft_develop`, `/craft-content`, and all `/director-*` skills
+- Stay in the vault and can always be found directly in Obsidian
+
+This lets you journal deeply personal things with full pattern recognition without them ever surfacing as content candidates.
+
 ## Voice
 
 `Lumis/Voice.md` is the identity file. It captures who you are, what you're trying to accomplish, who you're talking to, what you believe, and how you talk. The coaching and content layers read it:

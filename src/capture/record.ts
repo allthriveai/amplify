@@ -40,6 +40,42 @@ export async function stopRecording(
   return { outputPath: result.outputPath };
 }
 
+/** Pause an active recording */
+export async function pauseRecording(obs: OBSWebSocket): Promise<void> {
+  const { outputActive, outputPaused } = await obs.call("GetRecordStatus");
+  if (!outputActive) {
+    throw new Error("OBS is not currently recording.");
+  }
+  if (outputPaused) {
+    throw new Error("Recording is already paused.");
+  }
+  await obs.call("PauseRecord");
+}
+
+/** Resume a paused recording */
+export async function resumeRecording(obs: OBSWebSocket): Promise<void> {
+  const { outputActive, outputPaused } = await obs.call("GetRecordStatus");
+  if (!outputActive) {
+    throw new Error("OBS is not currently recording.");
+  }
+  if (!outputPaused) {
+    throw new Error("Recording is not paused.");
+  }
+  await obs.call("ResumeRecord");
+}
+
+/** Get current recording status */
+export async function getRecordingStatus(
+  obs: OBSWebSocket,
+): Promise<{ active: boolean; paused: boolean; timecode: string }> {
+  const status = await obs.call("GetRecordStatus");
+  return {
+    active: status.outputActive,
+    paused: status.outputPaused,
+    timecode: status.outputTimecode,
+  };
+}
+
 /** List captured video/image assets for a story */
 export function listCapturedAssets(
   config: LumisConfig,

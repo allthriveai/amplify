@@ -47,7 +47,7 @@ Lumis has Claude Code skills in `.claude/skills/`:
 
 - **`/init`** — Interactive vault setup. Asks for vault path, scaffolds directories, writes `.lumisrc`, walks through voice interview to populate Voice.md, then copies and personalizes the Amplify toolkit (8 hook types, 18 structures, persuasion glossary).
 - **`/voice`** — Standalone voice interview. Fills in or redoes Voice.md through a guided conversation.
-- **`/moment`** — Captures a daily moment. Reads all existing moments, analyzes the input, finds connections, writes the note, regenerates the Pattern Map canvas, and reports back.
+- **`/moment`** — Captures a daily moment. Reads all existing moments, analyzes the input, finds connections, writes the note, regenerates the Pattern Map canvas, and reports back. Use `/moment private` to mark a moment as private: it still gets full pattern analysis and connections but is excluded from all content pipelines (`/craft-content`, `/director-*`, `social_coach`, `story_craft`).
 - **`/add-research`** — Saves a URL/PDF/article as research. Fetches content, categorizes it, writes a full note + TL;DR companion, extracts learnings, and reports topic clusters.
 - **`/craft-storytelling`** — Develops storytelling skill from captured moments. Practice mode or full story development.
 - **`/craft-content`** — Finds a story and shapes it into a clean narrative draft. Free write, find the 5-second moment, build the arc, write, review. The story is the asset; director skills remix it into formats.

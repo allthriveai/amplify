@@ -44,6 +44,15 @@ Read all files in `{vaultPath}/{paths.learnings}/` (excluding README.md). Extrac
 
 These will be used in Step 3 to cross-reference with the moment's themes.
 
+### Step 1c: Check for Private Flag
+
+If the user's input includes the word "private" at the beginning (e.g., `/moment private I realized today...`) or they say "this is private" or "keep this private", set `private: true` in the frontmatter. Private moments:
+- Still get full analysis, connections, and pattern mapping
+- Are excluded from content pipelines: they won't appear in `/craft-content`, `/director-*`, `social_coach`, `story_craft_practice`, or `story_craft_develop` recommendations
+- The user can always find them in the vault directly
+
+Strip the word "private" from the raw input before analyzing (it's a flag, not part of the moment).
+
 ### Step 2: Analyze the Raw Input
 
 From the user's raw input, identify:
@@ -85,6 +94,7 @@ story-status: captured
 story-potential: [high/medium/low]
 themes: [list]
 tags: [moment, moment/[type]]
+private: [true if the user said "private" or "/moment private", otherwise omit this field entirely]
 ---
 
 # [Evocative title]

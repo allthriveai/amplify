@@ -135,6 +135,9 @@ server.registerTool("get_moments", {
   try {
     let moments = readMoments(config);
 
+    // Exclude private moments from content pipeline
+    moments = moments.filter((m) => !m.frontmatter.private);
+
     // Filter by theme if provided
     if (theme) {
       const lowerTheme = theme.toLowerCase();
@@ -189,7 +192,9 @@ server.registerTool("get_patterns", {
 }, async () => {
   try {
     const canvas = readCanvas(config);
-    const moments = readMoments(config);
+    const allMoments = readMoments(config);
+    // Exclude private moments from pattern display
+    const moments = allMoments.filter((m) => !m.frontmatter.private);
 
     // Build theme clusters from moments
     const themeClusters: Record<string, string[]> = {};
@@ -361,9 +366,9 @@ server.registerTool("social_coach", {
 
     const moments = readMoments(config);
 
-    // Filter to high story-potential moments
+    // Filter to high story-potential moments, excluding private
     let candidates = moments.filter(
-      (m) => m.frontmatter["story-potential"] === "high" || m.frontmatter["story-potential"] === "medium",
+      (m) => !m.frontmatter.private && (m.frontmatter["story-potential"] === "high" || m.frontmatter["story-potential"] === "medium"),
     );
 
     // If a focus is provided, narrow further
@@ -712,8 +717,10 @@ server.registerTool("story_craft_practice", {
     const moments = readMoments(config);
 
     // Pick a moment: high potential + captured first, then medium, most recent first
+    // Exclude private moments from content practice
     const candidates = moments
       .filter((m) =>
+        !m.frontmatter.private &&
         (m.frontmatter["story-potential"] === "high" || m.frontmatter["story-potential"] === "medium") &&
         (m.frontmatter["story-status"] === "captured" || m.frontmatter["story-status"] === "exploring"),
       )
@@ -864,9 +871,10 @@ server.registerTool("story_craft_develop", {
         };
       }
     } else {
-      // Pick highest-potential undeveloped moment
+      // Pick highest-potential undeveloped moment, excluding private
       const candidates = moments
         .filter((m) =>
+          !m.frontmatter.private &&
           (m.frontmatter["story-potential"] === "high" || m.frontmatter["story-potential"] === "medium") &&
           (m.frontmatter["story-status"] === "captured" || m.frontmatter["story-status"] === "exploring"),
         )
