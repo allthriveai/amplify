@@ -5,7 +5,7 @@
 // To use custom brand colors from .lumisrc, pass them as props to compositions
 // or use Remotion's getInputProps() at render time.
 
-import { fontFamily } from './fonts.js';
+import { fontFamily } from './fonts';
 
 export const brand = {
   colors: {

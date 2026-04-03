@@ -7,7 +7,13 @@ import { DirectorCut, DirectorCutProps, calculateDirectorCutMetadata } from './D
 import { TextCard, TextCardProps } from './TextCard';
 import { BRollPlaceholder, BRollPlaceholderProps } from './BRollPlaceholder';
 import { ScreenCapture, ScreenCaptureProps } from './ScreenCapture';
+import { LinkedInVertical, LinkedInVerticalProps } from './LinkedInVertical';
 import { brand } from './brand';
+
+const NAVY = '#2d4059';
+const SAGE = '#7a9a6d';
+const TEAL = '#5b9ea6';
+const CORAL = '#e07a5f';
 
 const RemotionRoot: React.FC = () => {
   const { width, height } = brand.resolution;
@@ -84,6 +90,26 @@ const RemotionRoot: React.FC = () => {
           src: '',
           isVideo: false,
           direction: 'Screen recording placeholder',
+        }}
+      />
+
+      {/* LinkedIn vertical video */}
+      <Composition<LinkedInVerticalProps>
+        id="LinkedInVertical"
+        component={LinkedInVertical}
+        durationInFrames={1629}
+        fps={fps}
+        width={1080}
+        height={1350}
+        defaultProps={{
+          scenes: [
+            { id: 'hook', text: 'From fully controlled\nto fully autonomous.', subtext: 'How to pick the right pattern for your agent.', color: NAVY, audioFile: 'linkedin/audio/hook.mp3', diagram: 'all' as const, durationInFrames: 172 },
+            { id: 'workflow', text: 'Workflow', color: NAVY, audioFile: 'linkedin/audio/workflow.mp3', diagram: 'workflow' as const, card: { control: 'You', cost: 1, complexity: 1, benefits: ['Same cost every time you run it', 'You can trace exactly what happened', 'Full control over every step'], limitations: ['Struggles with ambiguous tasks', 'You have to map every path upfront'] }, durationInFrames: 330 },
+            { id: 'agentic', text: 'Agentic Workflow', color: SAGE, audioFile: 'linkedin/audio/agentic.mp3', diagram: 'agentic' as const, card: { control: 'Shared', cost: 2, complexity: 2, benefits: ['AI makes decisions inside guardrails', 'Can retry and self-correct', 'Structure with room to adapt'], limitations: ['Loops need careful bounds', 'Harder to reason about'] }, durationInFrames: 306 },
+            { id: 'agent', text: 'Agent', color: TEAL, audioFile: 'linkedin/audio/agent.mp3', diagram: 'agent' as const, card: { control: 'Model', cost: 3, complexity: 3, benefits: ['Figures out the path on its own', 'Adapts when things change', 'Quick to build a first version'], limitations: ['More steps means more room for error', 'Token costs are hard to predict'] }, durationInFrames: 331 },
+            { id: 'multi', text: 'Multi-Agent', color: CORAL, audioFile: 'linkedin/audio/multi.mp3', diagram: 'multi' as const, card: { control: 'Models', cost: 4, complexity: 4, benefits: ['Conflicting roles get their own agent', 'Parallel deep work across domains', 'Scales like a team'], limitations: ['Every handoff loses context', 'Hardest to debug when something breaks'] }, durationInFrames: 301 },
+            { id: 'closing', text: 'Start simple.', subtext: 'Full breakdown on example.com', color: NAVY, videoFile: 'linkedin/closing-avatar.mp4', overlayDiagrams: ['agentic', 'agent'] as const, durationInFrames: 189 },
+          ],
         }}
       />
 
