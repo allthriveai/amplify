@@ -78,6 +78,11 @@ export function resolveVoicePath(config: LumisConfig): string {
   return resolvePath(config, config.paths.voice);
 }
 
+/** Resolve the goals/north star file */
+export function resolveGoalsPath(config: LumisConfig): string {
+  return resolvePath(config, config.paths.goals);
+}
+
 /** Resolve the signals directory */
 export function resolveSignalsDir(config: LumisConfig): string {
   return resolvePath(config, config.paths.signals);

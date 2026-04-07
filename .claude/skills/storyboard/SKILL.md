@@ -79,27 +79,19 @@ Report back with:
 
 The generated HTML storyboard includes:
 
-- **Card grid**: one card per shot showing beat, type, duration, script/direction, asset reference
-- **Timeline bar**: proportional colored bar showing video pacing at a glance
-- **Inline editing**: contenteditable on all text fields (script, beat, duration, direction, notes)
-- **Drag-and-drop**: reorder shots by dragging cards
-- **Audio preview**: browser speech synthesis reads script lines (Play button per shot, Play All for full read-through)
-- **Add/delete shots**: add new avatar shots, delete any shot
+- **Transition table**: one row per beat with columns for words, images, music, and effects
+- **Beat column**: shows beat name, shot type badge, and duration (all editable)
+- **Words column**: the script or voiceover text (what you say)
+- **Images column**: direction, visual description, or asset reference (what viewers see)
+- **Music column**: music cues and transitions (what viewers hear)
+- **Effects column**: titles, text card types, visual effects (what appears on screen)
+- **Inline editing**: every cell is contenteditable, click to change anything
+- **Drag-and-drop**: grab the handle to reorder rows
+- **Audio preview**: play button per row reads the words column, Play All for full read-through
+- **Add/delete rows**: add new rows, delete any row
 - **Dirty indicator**: gold dot appears when you've made changes
 - **YAML export**: copies updated shots array to clipboard (Cmd+S or button)
-- **Director's notes**: editable section below the board
-- **Responsive**: works on smaller screens
-
-## Color coding
-
-| Shot type | Color | Icon |
-|-----------|-------|------|
-| avatar | Teal | 🎙 |
-| text-card | Gold | 📝 |
-| screen-capture | Blue | 🖥 |
-| b-roll-placeholder | Gray | 🎬 |
-| branded-intro | Navy | ▶ |
-| branded-outro | Navy | ◼ |
+- **Director's notes**: editable section below the table
 
 ## Keyboard shortcuts
 

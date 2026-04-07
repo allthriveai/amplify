@@ -52,9 +52,11 @@ export function loadConfig(overrides?: Partial<LumisConfig>): LumisConfig {
       challenges: overrides?.paths?.challenges ?? rcPaths?.challenges ?? DEFAULT_PATHS.challenges,
       brand: overrides?.paths?.brand ?? rcPaths?.brand ?? DEFAULT_PATHS.brand,
       audio: overrides?.paths?.audio ?? rcPaths?.audio ?? DEFAULT_PATHS.audio,
+      goals: overrides?.paths?.goals ?? rcPaths?.goals ?? DEFAULT_PATHS.goals,
     },
     researchCategories: overrides?.researchCategories ?? rc?.researchCategories ?? DEFAULT_RESEARCH_CATEGORIES,
     ...(overrides?.brand ?? rc?.brand ? { brand: overrides?.brand ?? rc?.brand } : {}),
+    ...(overrides?.brandProfiles ?? rc?.brandProfiles ? { brandProfiles: overrides?.brandProfiles ?? rc?.brandProfiles } : {}),
     ...(studio ? { studio } : {}),
     ...(capture ? { capture } : {}),
   };
@@ -91,6 +93,20 @@ function loadCaptureConfig(
 
   const hasValue = Object.values(capture).some(Boolean);
   return hasValue ? capture : undefined;
+}
+
+/**
+ * Get a brand profile by name, or the default brand if no name given.
+ * Returns undefined if neither the named profile nor default brand exists.
+ */
+export function getBrandProfile(
+  config: LumisConfig,
+  profileName?: string,
+): LumisConfig["brand"] | undefined {
+  if (profileName && config.brandProfiles?.[profileName]) {
+    return config.brandProfiles[profileName];
+  }
+  return config.brand;
 }
 
 function readLumisrc(): Partial<LumisConfig> | null {

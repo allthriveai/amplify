@@ -12,15 +12,6 @@ interface StoryboardOptions {
   serverUrl?: string;
 }
 
-const SHOT_TYPE_ICONS: Record<string, string> = {
-  avatar: "🎙",
-  "text-card": "📝",
-  "screen-capture": "🖥",
-  "b-roll-placeholder": "🎬",
-  "branded-intro": "▶",
-  "branded-outro": "◼",
-};
-
 const SHOT_TYPE_COLORS: Record<string, string> = {
   avatar: "#389590",
   "text-card": "#e0a53c",
@@ -38,45 +29,36 @@ function escapeHtml(str: string): string {
     .replace(/"/g, "&quot;");
 }
 
-function shotCardHtml(shot: Shot, index: number): string {
-  const icon = SHOT_TYPE_ICONS[shot.shotType] || "•";
+function shotRowHtml(shot: Shot, index: number): string {
+  const words = shot.script || shot.voiceover || "";
+  const images = shot.direction || shot.text || "";
   const color = SHOT_TYPE_COLORS[shot.shotType] || "#666";
-  const spokenText = shot.script || shot.voiceover || "";
-  const visualText = shot.text || shot.direction || "";
-  const hasAudio = !!(shot.script || shot.voiceover);
 
   return `
-    <div class="shot-card" data-index="${index}" data-id="${shot.id}" draggable="true">
-      <div class="shot-header" style="border-left: 4px solid ${color}">
-        <span class="shot-icon">${icon}</span>
-        <span class="shot-type">${shot.shotType}</span>
-        <span class="shot-beat" contenteditable="true" data-field="beat">${escapeHtml(shot.beat)}</span>
-        <span class="shot-duration" contenteditable="true" data-field="duration">${shot.duration}s</span>
-        <span class="shot-id">#${shot.id}</span>
-      </div>
-      ${shot.asset ? `<div class="shot-asset">${escapeHtml(shot.asset)}</div>` : ""}
-      ${shot.textCardType ? `<div class="shot-card-type">${shot.textCardType}</div>` : ""}
-      ${visualText ? `<div class="shot-visual" contenteditable="true" data-field="${shot.text ? "text" : "direction"}">${escapeHtml(visualText)}</div>` : ""}
-      ${spokenText ? `
-        <div class="shot-script-row">
-          <div class="shot-script" contenteditable="true" data-field="${shot.script ? "script" : "voiceover"}">${escapeHtml(spokenText)}</div>
-          ${hasAudio ? `<button class="play-btn" data-index="${index}" title="Preview voiceover">&#9654;</button>` : ""}
-        </div>
-      ` : ""}
-      ${!spokenText && !visualText && shot.shotType !== "branded-intro" && shot.shotType !== "branded-outro" ? `
-        <div class="shot-script" contenteditable="true" data-field="direction" placeholder="Add direction..."></div>
-      ` : ""}
-      <div class="shot-actions">
-        <button class="action-btn delete-btn" data-index="${index}" title="Delete shot">&times;</button>
-      </div>
-    </div>`;
+    <tr class="shot-row" data-index="${index}" data-id="${shot.id}" data-shot-type="${shot.shotType}" draggable="true">
+      <td class="row-handle" title="Drag to reorder">⠿</td>
+      <td class="cell-beat">
+        <span class="beat-label" contenteditable="true" data-field="beat">${escapeHtml(shot.beat)}</span>
+        <span class="beat-meta">
+          <span class="shot-duration" contenteditable="true" data-field="duration">${shot.duration}s</span>
+        </span>
+      </td>
+      <td class="cell-words" contenteditable="true" data-field="${shot.script ? "script" : "voiceover"}">${escapeHtml(words)}</td>
+      <td class="cell-images" contenteditable="true" data-field="${shot.text ? "text" : "direction"}">${escapeHtml(images)}${shot.asset ? `<div class="asset-ref">${escapeHtml(shot.asset)}</div>` : ""}</td>
+      <td class="cell-music" contenteditable="true" data-field="music"></td>
+      <td class="cell-effects" contenteditable="true" data-field="effects">${shot.textCardType ? escapeHtml(shot.textCardType) : ""}</td>
+      <td class="cell-actions">
+        <button class="play-btn" data-index="${index}" title="Preview">&#9654;</button>
+        <button class="delete-btn" data-index="${index}" title="Delete">&times;</button>
+      </td>
+    </tr>`;
 }
 
 export function generateStoryboardHtml(options: StoryboardOptions): string {
   const { timeline, directorsNotes, timelinePath, serverUrl } = options;
   const shots = timeline.shots;
   const totalDuration = shots.reduce((sum, s) => sum + s.duration, 0);
-  const shotCards = shots.map((s, i) => shotCardHtml(s, i)).join("\n");
+  const shotRows = shots.map((s, i) => shotRowHtml(s, i)).join("\n");
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -86,320 +68,73 @@ export function generateStoryboardHtml(options: StoryboardOptions): string {
 <title>Storyboard: ${escapeHtml(timeline.title)}</title>
 <style>
   :root {
-    --navy: #2e4a6e;
-    --teal: #389590;
-    --gold: #e0a53c;
-    --charcoal: #1a2538;
-    --cream: #ece6de;
-    --sand: #d1c9be;
     --bg: #ffffff;
-    --card-bg: #f8f8f8;
-    --card-hover: #f0f0f0;
-    --border: #e0e0e0;
+    --border: #1a1a1a;
+    --border-light: #d0d0d0;
     --text: #1a1a1a;
     --text-muted: #666666;
+    --teal: #389590;
+    --gold: #e0a53c;
+    --navy: #2e4a6e;
     --danger: #c0392b;
+    --row-hover: #fafafa;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
   body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     background: var(--bg);
     color: var(--text);
-    padding: 24px;
+    padding: 32px;
     line-height: 1.5;
   }
 
   .header {
-    max-width: 1400px;
-    margin: 0 auto 32px;
+    max-width: 1200px;
+    margin: 0 auto 24px;
   }
 
   .header h1 {
-    font-size: 28px;
+    font-size: 24px;
     font-weight: 700;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
   }
 
   .header-meta {
     display: flex;
-    gap: 24px;
+    gap: 20px;
     color: var(--text-muted);
-    font-size: 14px;
+    font-size: 13px;
     flex-wrap: wrap;
   }
 
-  .header-meta span { display: flex; align-items: center; gap: 6px; }
-  .meta-label { color: var(--text-muted); }
-  .meta-value { color: var(--teal); font-weight: 600; }
+  .meta-label { font-weight: 600; }
 
   .toolbar {
-    max-width: 1400px;
-    margin: 0 auto 24px;
+    max-width: 1200px;
+    margin: 0 auto 20px;
     display: flex;
-    gap: 12px;
+    gap: 10px;
     flex-wrap: wrap;
     align-items: center;
   }
 
   .toolbar button {
-    background: var(--card-bg);
+    background: #fff;
     color: var(--text);
-    border: 1px solid var(--border);
-    padding: 8px 16px;
-    border-radius: 6px;
+    border: 1px solid var(--border-light);
+    padding: 6px 14px;
+    border-radius: 4px;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 500;
-    transition: background 0.15s;
   }
-  .toolbar button:hover { background: var(--card-hover); }
+  .toolbar button:hover { background: #f5f5f5; }
   .toolbar .btn-primary { background: var(--teal); border-color: var(--teal); color: #fff; }
   .toolbar .btn-primary:hover { background: #2e807c; }
-  .toolbar .btn-warn { background: var(--gold); color: var(--charcoal); border-color: var(--gold); }
-  .toolbar .btn-warn:hover { background: #c99030; }
-
   .toolbar .spacer { flex: 1; }
-  .toolbar .total-duration { color: var(--text-muted); font-size: 14px; font-weight: 600; }
-
-  .timeline-bar {
-    max-width: 1400px;
-    margin: 0 auto 32px;
-    display: flex;
-    height: 8px;
-    border-radius: 4px;
-    overflow: hidden;
-    gap: 2px;
-  }
-
-  .timeline-segment {
-    height: 100%;
-    transition: flex 0.3s;
-    border-radius: 2px;
-    cursor: pointer;
-    position: relative;
-  }
-  .timeline-segment:hover { opacity: 0.8; }
-  .timeline-segment .tooltip {
-    display: none;
-    position: absolute;
-    bottom: 14px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: var(--charcoal);
-    color: #fff;
-    font-size: 11px;
-    padding: 3px 8px;
-    border-radius: 4px;
-    white-space: nowrap;
-    z-index: 10;
-  }
-  .timeline-segment:hover .tooltip { display: block; }
-
-  .board {
-    max-width: 1400px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 16px;
-  }
-
-  .shot-card {
-    background: var(--card-bg);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 16px;
-    cursor: grab;
-    transition: transform 0.15s, box-shadow 0.15s;
-    position: relative;
-  }
-  .shot-card:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
-  .shot-card.dragging { opacity: 0.4; }
-  .shot-card.drag-over { border-color: var(--teal); box-shadow: 0 0 0 2px var(--teal); }
-
-  .shot-header {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 12px;
-    padding-left: 8px;
-    font-size: 13px;
-  }
-
-  .shot-icon { font-size: 16px; }
-  .shot-type { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px; }
-  .shot-beat {
-    color: var(--teal);
-    font-weight: 600;
-    font-size: 13px;
-    outline: none;
-    border-bottom: 1px dashed transparent;
-    padding: 0 2px;
-  }
-  .shot-beat:hover { border-bottom-color: var(--teal); }
-  .shot-beat:focus { border-bottom-color: var(--gold); }
-  .shot-duration {
-    margin-left: auto;
-    color: var(--gold);
-    font-weight: 700;
-    font-size: 14px;
-    font-variant-numeric: tabular-nums;
-    outline: none;
-    border-bottom: 1px dashed transparent;
-    padding: 0 2px;
-    min-width: 28px;
-    text-align: right;
-  }
-  .shot-duration:hover { border-bottom-color: var(--gold); }
-  .shot-duration:focus { border-bottom-color: var(--gold); }
-  .shot-id { color: var(--text-muted); font-size: 11px; }
-
-  .shot-asset {
-    font-size: 11px;
-    color: var(--text-muted);
-    background: rgba(0,0,0,0.04);
-    padding: 3px 8px;
-    border-radius: 4px;
-    margin-bottom: 8px;
-    display: inline-block;
-  }
-
-  .shot-card-type {
-    font-size: 11px;
-    color: var(--gold);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    font-weight: 600;
-    margin-bottom: 6px;
-  }
-
-  .shot-visual {
-    font-size: 13px;
-    color: var(--sand);
-    font-style: italic;
-    margin-bottom: 8px;
-    outline: none;
-    border-bottom: 1px dashed transparent;
-    padding: 2px 0;
-    min-height: 20px;
-  }
-  .shot-visual:hover { border-bottom-color: var(--sand); }
-  .shot-visual:focus { border-bottom-color: var(--gold); background: rgba(0,0,0,0.03); }
-
-  .shot-script-row {
-    display: flex;
-    gap: 8px;
-    align-items: flex-start;
-  }
-
-  .shot-script {
-    flex: 1;
-    font-size: 14px;
-    color: var(--text);
-    line-height: 1.5;
-    outline: none;
-    border-bottom: 1px dashed transparent;
-    padding: 2px 0;
-    min-height: 20px;
-  }
-  .shot-script:hover { border-bottom-color: var(--text-muted); }
-  .shot-script:focus { border-bottom-color: var(--gold); background: rgba(0,0,0,0.03); }
-  .shot-script[placeholder]:empty::before {
-    content: attr(placeholder);
-    color: var(--text-muted);
-    font-style: italic;
-  }
-
-  .play-btn {
-    background: var(--teal);
-    color: white;
-    border: none;
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    cursor: pointer;
-    font-size: 12px;
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background 0.15s;
-  }
-  .play-btn:hover { background: #2e807c; }
-  .play-btn.playing { background: var(--gold); color: var(--charcoal); }
-
-  .shot-actions {
-    position: absolute;
-    top: 8px;
-    right: 8px;
-    opacity: 0;
-    transition: opacity 0.15s;
-  }
-  .shot-card:hover .shot-actions { opacity: 1; }
-
-  .action-btn {
-    background: none;
-    border: none;
-    color: var(--text-muted);
-    cursor: pointer;
-    font-size: 18px;
-    padding: 2px 6px;
-    border-radius: 4px;
-  }
-  .action-btn:hover { color: var(--danger); background: rgba(192,57,43,0.1); }
-
-  .add-shot-card {
-    background: transparent;
-    border: 2px dashed var(--border);
-    border-radius: 8px;
-    padding: 32px 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    color: var(--text-muted);
-    font-size: 14px;
-    transition: border-color 0.15s, color 0.15s;
-    min-height: 120px;
-  }
-  .add-shot-card:hover { border-color: var(--teal); color: var(--teal); }
-
-  .notes {
-    max-width: 1400px;
-    margin: 48px auto 0;
-    padding: 24px;
-    background: var(--card-bg);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-  }
-  .notes h2 { font-size: 16px; color: var(--text-muted); margin-bottom: 12px; }
-  .notes-content {
-    font-size: 14px;
-    color: var(--text);
-    line-height: 1.7;
-    white-space: pre-wrap;
-    outline: none;
-    min-height: 60px;
-  }
-  .notes-content:focus { background: rgba(0,0,0,0.02); }
-
-  .save-toast {
-    position: fixed;
-    bottom: 24px;
-    right: 24px;
-    background: var(--teal);
-    color: white;
-    padding: 12px 24px;
-    border-radius: 8px;
-    font-weight: 600;
-    font-size: 14px;
-    opacity: 0;
-    transform: translateY(8px);
-    transition: opacity 0.2s, transform 0.2s;
-    z-index: 100;
-  }
-  .save-toast.visible { opacity: 1; transform: translateY(0); }
+  .toolbar .total-duration { color: var(--text-muted); font-size: 13px; font-weight: 600; }
 
   .dirty-indicator {
     display: none;
@@ -407,14 +142,278 @@ export function generateStoryboardHtml(options: StoryboardOptions): string {
     height: 8px;
     background: var(--gold);
     border-radius: 50%;
-    margin-left: 8px;
+    margin-left: 6px;
   }
   .dirty-indicator.visible { display: inline-block; }
 
-  @media (max-width: 640px) {
-    body { padding: 12px; }
-    .board { grid-template-columns: 1fr; }
+  /* ---- Table storyboard ---- */
+  .storyboard-wrap {
+    max-width: 1200px;
+    margin: 0 auto;
   }
+
+  table.storyboard {
+    width: 100%;
+    border-collapse: collapse;
+    border: 2px solid var(--border);
+    table-layout: fixed;
+  }
+
+  table.storyboard thead th {
+    background: #fff;
+    font-weight: 700;
+    font-size: 15px;
+    text-align: left;
+    padding: 10px 14px;
+    border: 2px solid var(--border);
+    text-transform: lowercase;
+  }
+
+  table.storyboard tbody tr {
+    border-bottom: 1px solid var(--border);
+  }
+  table.storyboard tbody tr:hover {
+    background: var(--row-hover);
+  }
+  table.storyboard tbody tr.dragging { opacity: 0.3; }
+  table.storyboard tbody tr.drag-over td { box-shadow: inset 0 -3px 0 var(--teal); }
+
+  table.storyboard td {
+    padding: 10px 14px;
+    border-right: 1px solid var(--border);
+    vertical-align: top;
+    font-size: 14px;
+    line-height: 1.6;
+    min-height: 48px;
+  }
+  table.storyboard td:last-child { border-right: 2px solid var(--border); }
+
+  table.storyboard td[contenteditable="true"] {
+    outline: none;
+    cursor: text;
+  }
+  table.storyboard td[contenteditable="true"]:focus {
+    background: #fffde7;
+  }
+  table.storyboard td[contenteditable="true"]:empty::before {
+    content: "\\00a0";
+    color: var(--text-muted);
+  }
+
+  /* Column widths */
+  col.col-handle  { width: 32px; }
+  col.col-beat    { width: 14%; }
+  col.col-words   { width: 30%; }
+  col.col-images  { width: 24%; }
+  col.col-music   { width: 12%; }
+  col.col-effects { width: 14%; }
+  col.col-actions { width: 64px; }
+
+  .row-handle {
+    text-align: center;
+    cursor: grab;
+    color: var(--text-muted);
+    font-size: 14px;
+    user-select: none;
+    padding: 10px 4px !important;
+  }
+  .row-handle:active { cursor: grabbing; }
+
+  .cell-beat {
+    font-weight: 600;
+  }
+
+  .beat-label {
+    display: block;
+    outline: none;
+    color: var(--text);
+    font-size: 14px;
+    border-bottom: 1px dashed transparent;
+    padding: 0 2px;
+  }
+  .beat-label:hover { border-bottom-color: var(--teal); }
+  .beat-label:focus { border-bottom-color: var(--gold); }
+
+  .beat-meta {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 4px;
+  }
+
+  .shot-type-badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #fff;
+    padding: 1px 6px;
+    border-radius: 3px;
+  }
+
+  .shot-duration {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--gold);
+    font-variant-numeric: tabular-nums;
+    outline: none;
+    border-bottom: 1px dashed transparent;
+    padding: 0 2px;
+  }
+  .shot-duration:hover { border-bottom-color: var(--gold); }
+  .shot-duration:focus { border-bottom-color: var(--gold); }
+
+  .asset-ref {
+    font-size: 11px;
+    color: var(--text-muted);
+    background: rgba(0,0,0,0.05);
+    padding: 2px 6px;
+    border-radius: 3px;
+    margin-top: 6px;
+    display: inline-block;
+  }
+
+  .cell-actions {
+    text-align: center;
+    white-space: nowrap;
+    padding: 10px 6px !important;
+  }
+
+  .play-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 13px;
+    color: var(--teal);
+    padding: 2px 4px;
+  }
+  .play-btn:hover { color: #2e807c; }
+  .play-btn.playing { color: var(--gold); }
+
+  .delete-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    color: var(--text-muted);
+    padding: 2px 4px;
+  }
+  .delete-btn:hover { color: var(--danger); }
+
+  /* Add row */
+  .add-row td {
+    text-align: center;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 12px !important;
+    font-size: 13px;
+    border-right: none !important;
+  }
+  .add-row:hover td { color: var(--teal); background: var(--row-hover); }
+
+  /* Reference panels */
+  .reference-panels {
+    max-width: 1200px;
+    margin: 0 auto 20px;
+    display: flex;
+    gap: 16px;
+  }
+
+  .ref-panel {
+    flex: 1;
+    border: 1px solid var(--border-light);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
+  .ref-panel summary {
+    padding: 10px 16px;
+    font-weight: 700;
+    font-size: 13px;
+    cursor: pointer;
+    user-select: none;
+    background: #fafafa;
+    border-bottom: 1px solid var(--border-light);
+    list-style: none;
+  }
+  .ref-panel summary::-webkit-details-marker { display: none; }
+  .ref-panel summary::before {
+    content: "\\25B8";
+    margin-right: 8px;
+    display: inline-block;
+    transition: transform 0.15s;
+  }
+  .ref-panel[open] summary::before { transform: rotate(90deg); }
+  .ref-panel[open] summary { border-bottom: 1px solid var(--border-light); }
+
+  .ref-list {
+    padding: 8px 0;
+    max-height: 320px;
+    overflow-y: auto;
+  }
+
+  .ref-item {
+    padding: 8px 16px;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  .ref-item:last-child { border-bottom: none; }
+
+  .ref-item-name {
+    font-weight: 600;
+    font-size: 13px;
+    color: var(--text);
+  }
+
+  .ref-item-desc {
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.5;
+    margin-top: 2px;
+  }
+
+  .ref-item-example {
+    font-size: 11px;
+    color: var(--teal);
+    font-style: italic;
+    margin-top: 3px;
+    line-height: 1.4;
+  }
+
+  /* Notes */
+  .notes {
+    max-width: 1200px;
+    margin: 32px auto 0;
+    padding: 20px;
+    border: 1px solid var(--border-light);
+    border-radius: 4px;
+  }
+  .notes h2 { font-size: 14px; color: var(--text-muted); margin-bottom: 8px; }
+  .notes-content {
+    font-size: 14px;
+    line-height: 1.7;
+    white-space: pre-wrap;
+    outline: none;
+    min-height: 40px;
+  }
+  .notes-content:focus { background: #fffde7; }
+
+  .save-toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: var(--teal);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 13px;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.2s, transform 0.2s;
+    z-index: 100;
+  }
+  .save-toast.visible { opacity: 1; transform: translateY(0); }
 </style>
 </head>
 <body>
@@ -422,32 +421,166 @@ export function generateStoryboardHtml(options: StoryboardOptions): string {
 <div class="header">
   <h1>${escapeHtml(timeline.title)}</h1>
   <div class="header-meta">
-    <span><span class="meta-label">Hook:</span> <span class="meta-value">${escapeHtml(timeline.hook)}</span></span>
-    <span><span class="meta-label">Structure:</span> <span class="meta-value">${escapeHtml(timeline.structure)}</span></span>
-    <span><span class="meta-label">Platform:</span> <span class="meta-value">${escapeHtml(timeline.platform)}</span></span>
-    <span><span class="meta-label">Target:</span> <span class="meta-value">${timeline.targetDuration}s</span></span>
-    <span><span class="meta-label">Actual:</span> <span class="meta-value total-duration">${totalDuration}s</span></span>
+    <span><span class="meta-label">Hook:</span> ${escapeHtml(timeline.hook)}</span>
+    <span><span class="meta-label">Structure:</span> ${escapeHtml(timeline.structure)}</span>
+    <span><span class="meta-label">Platform:</span> ${escapeHtml(timeline.platform)}</span>
+    <span><span class="meta-label">Target:</span> ${timeline.targetDuration}s</span>
+    <span><span class="meta-label">Actual:</span> <span class="total-duration">${totalDuration}s</span></span>
   </div>
 </div>
 
 <div class="toolbar">
-  <button class="btn-primary" onclick="playAll()">&#9654; Play All Audio</button>
+  <button class="btn-primary" onclick="playAll()">&#9654; Play All</button>
   <button onclick="stopAll()">&#9724; Stop</button>
-  <button onclick="addShot()">+ Add Shot</button>
+  <button onclick="addRow()">+ Add Row</button>
   <span class="spacer"></span>
   <span class="total-duration" id="running-total">${shots.length} shots &middot; ${totalDuration}s</span>
   <span class="dirty-indicator" id="dirty-dot"></span>
-  <button class="btn-warn" onclick="saveStoryboard()">Save</button>
+  <button onclick="saveStoryboard()">Save</button>
   <button onclick="exportYaml()">Copy YAML</button>
 </div>
 
-<div class="timeline-bar" id="timeline-bar">
-  ${shots.map((s, i) => `<div class="timeline-segment" style="flex:${s.duration};background:${SHOT_TYPE_COLORS[s.shotType] || "#666"}" data-index="${i}"><span class="tooltip">#${s.id} ${escapeHtml(s.beat)} (${s.duration}s)</span></div>`).join("")}
+<div class="reference-panels">
+  <details class="ref-panel">
+    <summary>Storytelling Principles (Matthew Dicks)</summary>
+    <div class="ref-list">
+      <div class="ref-item">
+        <div class="ref-item-name">Stakes</div>
+        <div class="ref-item-desc">The audience needs to want something for you. What could be won or lost? Without stakes, there's no reason to keep listening.</div>
+      </div>
+      <div class="ref-item">
+        <div class="ref-item-name">Five-Second Moment</div>
+        <div class="ref-item-desc">Every story is about one moment of transformation. The instant something changed forever. Find the five seconds when it all shifted.</div>
+      </div>
+      <div class="ref-item">
+        <div class="ref-item-name">Elephant</div>
+        <div class="ref-item-desc">Tell the audience what they should be waiting for early. The big thing hanging over the story that creates anticipation.</div>
+      </div>
+      <div class="ref-item">
+        <div class="ref-item-name">Backpack</div>
+        <div class="ref-item-desc">Load the audience with your plan before you execute it. When they know what you're about to try, they feel every obstacle with you.</div>
+      </div>
+      <div class="ref-item">
+        <div class="ref-item-name">Breadcrumbs</div>
+        <div class="ref-item-desc">Drop small hints of what's coming so the audience leans forward. Not spoilers. Promises.</div>
+      </div>
+      <div class="ref-item">
+        <div class="ref-item-name">Hourglass</div>
+        <div class="ref-item-desc">When you reach the most important part, slow down. Expand the moment. Add detail. Make the audience feel every second.</div>
+      </div>
+      <div class="ref-item">
+        <div class="ref-item-name">Crystal Ball</div>
+        <div class="ref-item-desc">Tell the audience what you think will happen next. If you're right, they feel smart. If you're wrong, they feel the surprise with you.</div>
+      </div>
+      <div class="ref-item">
+        <div class="ref-item-name">But &amp; Therefore</div>
+        <div class="ref-item-desc">Replace "and then" with "but" and "therefore." Every scene should cause the next one through conflict or consequence, not sequence.</div>
+      </div>
+      <div class="ref-item">
+        <div class="ref-item-name">Beginning &#x2260; End</div>
+        <div class="ref-item-desc">Your character at the start must be different from your character at the end. That gap is the story.</div>
+      </div>
+      <div class="ref-item">
+        <div class="ref-item-name">Present Tense</div>
+        <div class="ref-item-desc">Describe scenes as if they're happening right now. "I'm standing in the doorway" beats "I stood in the doorway."</div>
+      </div>
+      <div class="ref-item">
+        <div class="ref-item-name">Location</div>
+        <div class="ref-item-desc">Every scene needs a physical place. Ground the audience somewhere real. A parking lot. A kitchen. A specific chair.</div>
+      </div>
+      <div class="ref-item">
+        <div class="ref-item-name">Heart of the Story</div>
+        <div class="ref-item-desc">What is this story really about? Not the events. The deeper theme. The thing that makes a stranger care.</div>
+      </div>
+      <div class="ref-item">
+        <div class="ref-item-name">Humor</div>
+        <div class="ref-item-desc">Contrast creates comedy. The gap between expectation and reality. You don't need jokes. You need honest surprises.</div>
+      </div>
+      <div class="ref-item">
+        <div class="ref-item-name">Surprise</div>
+        <div class="ref-item-desc">Hide information strategically so you can reveal it at the right moment. The audience should never see the turn coming.</div>
+      </div>
+      <div class="ref-item">
+        <div class="ref-item-name">Vulnerability</div>
+        <div class="ref-item-desc">Say the thing you're afraid to say. The moments you want to skip are usually the ones that matter most.</div>
+      </div>
+    </div>
+  </details>
+
+  <details class="ref-panel">
+    <summary>Hook Types</summary>
+    <div class="ref-list">
+      <div class="ref-item">
+        <div class="ref-item-name">Contrarian</div>
+        <div class="ref-item-desc">Challenge a belief the audience holds as true. Creates cognitive dissonance that keeps them engaged.</div>
+        <div class="ref-item-example">"The days of prompt engineering are over."</div>
+      </div>
+      <div class="ref-item">
+        <div class="ref-item-name">Credibility</div>
+        <div class="ref-item-desc">Lead with proof, experience, or authority. Establish trust before the audience asks "why should I listen?"</div>
+        <div class="ref-item-example">"I spent 6 months building AI agent evaluation systems so you don't have to."</div>
+      </div>
+      <div class="ref-item">
+        <div class="ref-item-name">Curiosity Gap</div>
+        <div class="ref-item-desc">Open a gap between what someone knows and what they want to know. An open loop the brain needs to close.</div>
+        <div class="ref-item-example">"I changed one line in my agent's system prompt. Its evaluation scores tripled."</div>
+      </div>
+      <div class="ref-item">
+        <div class="ref-item-name">Empathy</div>
+        <div class="ref-item-desc">Name the audience's specific pain before offering anything. Make them feel understood.</div>
+        <div class="ref-item-example">"You've done the work. And your agent still hallucinates. I know that feeling."</div>
+      </div>
+      <div class="ref-item">
+        <div class="ref-item-name">Pattern Interrupt</div>
+        <div class="ref-item-desc">Say something unexpected for the context. Breaks the brain's predictive pattern-matching and forces attention.</div>
+        <div class="ref-item-example">"I deleted my entire agent architecture last Tuesday."</div>
+      </div>
+      <div class="ref-item">
+        <div class="ref-item-name">Question</div>
+        <div class="ref-item-desc">Ask something the audience can't ignore. Activates the brain and demands an internal response.</div>
+        <div class="ref-item-example">"How do you know if your AI agent is safe to deploy?"</div>
+      </div>
+      <div class="ref-item">
+        <div class="ref-item-name">Shock Data</div>
+        <div class="ref-item-desc">Lead with a surprising fact or stat that violates expectations and demands an explanation.</div>
+        <div class="ref-item-example">"92% of AI agents deployed today have no ethics evaluation at all."</div>
+      </div>
+      <div class="ref-item">
+        <div class="ref-item-name">Story Entry</div>
+        <div class="ref-item-desc">Drop into the middle of a scene. Skip boring setup and land the audience in a moment with stakes already in play.</div>
+        <div class="ref-item-example">"I was staring at agent logs full of manipulation attempts when I decided to change everything."</div>
+      </div>
+    </div>
+  </details>
 </div>
 
-<div class="board" id="board">
-  ${shotCards}
-  <div class="add-shot-card" onclick="addShot()">+ Add shot</div>
+<div class="storyboard-wrap">
+  <table class="storyboard" id="board">
+    <colgroup>
+      <col class="col-handle">
+      <col class="col-beat">
+      <col class="col-words">
+      <col class="col-images">
+      <col class="col-music">
+      <col class="col-effects">
+      <col class="col-actions">
+    </colgroup>
+    <thead>
+      <tr>
+        <th></th>
+        <th>beat</th>
+        <th>words</th>
+        <th>images</th>
+        <th>music</th>
+        <th>effects</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody id="board-body">
+      ${shotRows}
+      <tr class="add-row" onclick="addRow()"><td colspan="7">+ add row</td></tr>
+    </tbody>
+  </table>
 </div>
 
 <div class="notes">
@@ -461,9 +594,7 @@ export function generateStoryboardHtml(options: StoryboardOptions): string {
 const TIMELINE_PATH = ${JSON.stringify(timelinePath)};
 const SERVER_URL = ${JSON.stringify(serverUrl || "")};
 const SHOT_TYPES = ["avatar","text-card","screen-capture","b-roll-placeholder","branded-intro","branded-outro"];
-const SHOT_TYPE_ICONS = ${JSON.stringify(SHOT_TYPE_ICONS)};
 const SHOT_TYPE_COLORS = ${JSON.stringify(SHOT_TYPE_COLORS)};
-
 let dirty = false;
 let currentAudio = null;
 let playAllQueue = [];
@@ -476,132 +607,126 @@ function markDirty() {
 }
 
 // --- Editable fields ---
-document.getElementById("board").addEventListener("input", (e) => {
-  if (e.target.hasAttribute("contenteditable")) markDirty();
+document.getElementById("board-body").addEventListener("input", (e) => {
+  if (e.target.hasAttribute("contenteditable") || e.target.closest("[contenteditable]")) markDirty();
 });
 document.getElementById("directors-notes").addEventListener("input", markDirty);
 
 // --- Duration field: strip non-numeric on blur ---
-document.getElementById("board").addEventListener("blur", (e) => {
-  if (e.target.dataset.field === "duration") {
+document.getElementById("board-body").addEventListener("blur", (e) => {
+  if (e.target.dataset && e.target.dataset.field === "duration") {
     const num = parseInt(e.target.textContent.replace(/[^0-9]/g, ""), 10);
     e.target.textContent = (num || 3) + "s";
     updateTotals();
   }
 }, true);
 
-// --- Drag and drop ---
+// --- Drag and drop rows ---
 let dragIndex = null;
 
-document.getElementById("board").addEventListener("dragstart", (e) => {
-  const card = e.target.closest(".shot-card");
-  if (!card) return;
-  dragIndex = parseInt(card.dataset.index);
-  card.classList.add("dragging");
+document.getElementById("board-body").addEventListener("dragstart", (e) => {
+  const row = e.target.closest(".shot-row");
+  if (!row) return;
+  dragIndex = parseInt(row.dataset.index);
+  row.classList.add("dragging");
   e.dataTransfer.effectAllowed = "move";
 });
 
-document.getElementById("board").addEventListener("dragend", (e) => {
-  const card = e.target.closest(".shot-card");
-  if (card) card.classList.remove("dragging");
-  document.querySelectorAll(".shot-card").forEach(c => c.classList.remove("drag-over"));
+document.getElementById("board-body").addEventListener("dragend", (e) => {
+  const row = e.target.closest(".shot-row");
+  if (row) row.classList.remove("dragging");
+  document.querySelectorAll(".shot-row").forEach(r => r.classList.remove("drag-over"));
 });
 
-document.getElementById("board").addEventListener("dragover", (e) => {
+document.getElementById("board-body").addEventListener("dragover", (e) => {
   e.preventDefault();
-  const card = e.target.closest(".shot-card");
-  if (card) card.classList.add("drag-over");
+  const row = e.target.closest(".shot-row");
+  if (row) row.classList.add("drag-over");
 });
 
-document.getElementById("board").addEventListener("dragleave", (e) => {
-  const card = e.target.closest(".shot-card");
-  if (card) card.classList.remove("drag-over");
+document.getElementById("board-body").addEventListener("dragleave", (e) => {
+  const row = e.target.closest(".shot-row");
+  if (row) row.classList.remove("drag-over");
 });
 
-document.getElementById("board").addEventListener("drop", (e) => {
+document.getElementById("board-body").addEventListener("drop", (e) => {
   e.preventDefault();
-  const targetCard = e.target.closest(".shot-card");
-  if (!targetCard) return;
-  const targetIndex = parseInt(targetCard.dataset.index);
+  const targetRow = e.target.closest(".shot-row");
+  if (!targetRow) return;
+  const targetIndex = parseInt(targetRow.dataset.index);
   if (dragIndex === null || dragIndex === targetIndex) return;
 
-  const board = document.getElementById("board");
-  const cards = [...board.querySelectorAll(".shot-card")];
-  const addBtn = board.querySelector(".add-shot-card");
-  const dragCard = cards[dragIndex];
+  const body = document.getElementById("board-body");
+  const rows = [...body.querySelectorAll(".shot-row")];
+  const dragRow = rows[dragIndex];
 
   if (dragIndex < targetIndex) {
-    board.insertBefore(dragCard, targetCard.nextSibling);
+    body.insertBefore(dragRow, targetRow.nextSibling);
   } else {
-    board.insertBefore(dragCard, targetCard);
+    body.insertBefore(dragRow, targetRow);
   }
 
-  // Re-index
-  board.querySelectorAll(".shot-card").forEach((c, i) => {
-    c.dataset.index = i;
-    c.querySelector(".shot-id").textContent = "#" + (i + 1);
-    c.querySelectorAll("[data-index]").forEach(el => el.dataset.index = i);
-  });
-
+  reIndex();
   markDirty();
-  updateTimelineBar();
 });
 
-// --- Delete shot ---
-document.getElementById("board").addEventListener("click", (e) => {
-  const btn = e.target.closest(".delete-btn");
-  if (!btn) return;
-  const card = btn.closest(".shot-card");
-  card.remove();
-  // Re-index
-  document.querySelectorAll(".shot-card").forEach((c, i) => {
-    c.dataset.index = i;
-    c.querySelector(".shot-id").textContent = "#" + (i + 1);
-    c.querySelectorAll("[data-index]").forEach(el => el.dataset.index = i);
+function reIndex() {
+  document.querySelectorAll(".shot-row").forEach((row, i) => {
+    row.dataset.index = i;
+    row.querySelectorAll("[data-index]").forEach(el => el.dataset.index = i);
   });
-  markDirty();
-  updateTimelineBar();
-});
-
-// --- Add shot ---
-function addShot() {
-  const board = document.getElementById("board");
-  const addBtn = board.querySelector(".add-shot-card");
-  const count = board.querySelectorAll(".shot-card").length;
-  const idx = count;
-  const html = \`
-    <div class="shot-card" data-index="\${idx}" data-id="\${idx + 1}" draggable="true">
-      <div class="shot-header" style="border-left: 4px solid \${SHOT_TYPE_COLORS.avatar}">
-        <span class="shot-icon">\${SHOT_TYPE_ICONS.avatar}</span>
-        <span class="shot-type">avatar</span>
-        <span class="shot-beat" contenteditable="true" data-field="beat">new-beat</span>
-        <span class="shot-duration" contenteditable="true" data-field="duration">5s</span>
-        <span class="shot-id">#\${idx + 1}</span>
-      </div>
-      <div class="shot-script-row">
-        <div class="shot-script" contenteditable="true" data-field="script" placeholder="Write your script..."></div>
-        <button class="play-btn" data-index="\${idx}" title="Preview voiceover">&#9654;</button>
-      </div>
-      <div class="shot-actions">
-        <button class="action-btn delete-btn" data-index="\${idx}" title="Delete shot">&times;</button>
-      </div>
-    </div>\`;
-  const temp = document.createElement("div");
-  temp.innerHTML = html;
-  board.insertBefore(temp.firstElementChild, addBtn);
-  markDirty();
-  updateTimelineBar();
 }
 
-// --- Audio preview (ElevenLabs via browser SpeechSynthesis fallback) ---
-document.getElementById("board").addEventListener("click", (e) => {
+// --- Delete row ---
+document.getElementById("board-body").addEventListener("click", (e) => {
+  const btn = e.target.closest(".delete-btn");
+  if (!btn) return;
+  const row = btn.closest(".shot-row");
+  row.remove();
+  reIndex();
+  markDirty();
+});
+
+// --- Add row ---
+function addRow() {
+  const body = document.getElementById("board-body");
+  const addRow = body.querySelector(".add-row");
+  const count = body.querySelectorAll(".shot-row").length;
+  const idx = count;
+  const color = SHOT_TYPE_COLORS.avatar;
+  const html = \`
+    <tr class="shot-row" data-index="\${idx}" data-id="\${idx + 1}" data-shot-type="avatar" draggable="true">
+      <td class="row-handle" title="Drag to reorder">&#x2807;</td>
+      <td class="cell-beat">
+        <span class="beat-label" contenteditable="true" data-field="beat">new-beat</span>
+        <span class="beat-meta">
+          <span class="shot-duration" contenteditable="true" data-field="duration">5s</span>
+        </span>
+      </td>
+      <td class="cell-words" contenteditable="true" data-field="script"></td>
+      <td class="cell-images" contenteditable="true" data-field="direction"></td>
+      <td class="cell-music" contenteditable="true" data-field="music"></td>
+      <td class="cell-effects" contenteditable="true" data-field="effects"></td>
+      <td class="cell-actions">
+        <button class="play-btn" data-index="\${idx}" title="Preview">&#9654;</button>
+        <button class="delete-btn" data-index="\${idx}" title="Delete">&times;</button>
+      </td>
+    </tr>\`;
+  const temp = document.createElement("tbody");
+  temp.innerHTML = html;
+  body.insertBefore(temp.firstElementChild, addRow);
+  markDirty();
+}
+
+// --- Audio preview ---
+document.getElementById("board-body").addEventListener("click", (e) => {
   const btn = e.target.closest(".play-btn");
   if (!btn) return;
   e.stopPropagation();
-  const card = btn.closest(".shot-card");
-  const scriptEl = card.querySelector(".shot-script");
-  if (!scriptEl) return;
-  const text = scriptEl.textContent.trim();
+  const row = btn.closest(".shot-row");
+  const wordsCell = row.querySelector(".cell-words");
+  if (!wordsCell) return;
+  const text = wordsCell.textContent.trim();
   if (!text) return;
   playVoice(text, btn);
 });
@@ -623,13 +748,13 @@ function playVoice(text, btn) {
 
 function playAll() {
   stopAll();
-  const cards = document.querySelectorAll(".shot-card");
+  const rows = document.querySelectorAll(".shot-row");
   playAllQueue = [];
-  cards.forEach(card => {
-    const scriptEl = card.querySelector(".shot-script");
-    const btn = card.querySelector(".play-btn");
-    if (scriptEl && scriptEl.textContent.trim()) {
-      playAllQueue.push({ text: scriptEl.textContent.trim(), btn });
+  rows.forEach(row => {
+    const wordsCell = row.querySelector(".cell-words");
+    const btn = row.querySelector(".play-btn");
+    if (wordsCell && wordsCell.textContent.trim()) {
+      playAllQueue.push({ text: wordsCell.textContent.trim(), btn });
     }
   });
   if (playAllQueue.length === 0) return;
@@ -653,57 +778,42 @@ function stopAll() {
   document.querySelectorAll(".play-btn.playing").forEach(b => b.classList.remove("playing"));
 }
 
-// --- Update totals and timeline bar ---
+// --- Update totals ---
 function updateTotals() {
-  const cards = document.querySelectorAll(".shot-card");
+  const rows = document.querySelectorAll(".shot-row");
   let total = 0;
-  cards.forEach(card => {
-    const durEl = card.querySelector(".shot-duration");
+  rows.forEach(row => {
+    const durEl = row.querySelector(".shot-duration");
     total += parseInt(durEl.textContent.replace(/[^0-9]/g, ""), 10) || 0;
   });
-  document.getElementById("running-total").textContent = cards.length + " shots \\u00b7 " + total + "s";
+  document.getElementById("running-total").textContent = rows.length + " shots \\u00b7 " + total + "s";
   document.querySelectorAll(".header-meta .total-duration").forEach(el => el.textContent = total + "s");
-}
-
-function updateTimelineBar() {
-  const bar = document.getElementById("timeline-bar");
-  const cards = document.querySelectorAll(".shot-card");
-  let html = "";
-  cards.forEach((card, i) => {
-    const dur = parseInt(card.querySelector(".shot-duration").textContent) || 3;
-    const type = card.querySelector(".shot-type").textContent.trim().toLowerCase();
-    const beat = card.querySelector(".shot-beat").textContent.trim();
-    const color = SHOT_TYPE_COLORS[type] || "#666";
-    html += \`<div class="timeline-segment" style="flex:\${dur};background:\${color}" data-index="\${i}"><span class="tooltip">#\${i+1} \${beat} (\${dur}s)</span></div>\`;
-  });
-  bar.innerHTML = html;
 }
 
 // --- Build shots array from DOM ---
 function buildShotsArray() {
-  const cards = document.querySelectorAll(".shot-card");
+  const rows = document.querySelectorAll(".shot-row");
   const shots = [];
-  cards.forEach((card, i) => {
-    const beat = card.querySelector(".shot-beat")?.textContent.trim() || "beat";
-    const type = card.querySelector(".shot-type")?.textContent.trim().toLowerCase() || "avatar";
-    const dur = parseInt(card.querySelector(".shot-duration")?.textContent) || 3;
-    const cardType = card.querySelector(".shot-card-type")?.textContent.trim();
-    const asset = card.querySelector(".shot-asset")?.textContent.trim();
-    const visual = card.querySelector(".shot-visual")?.textContent.trim();
-    const script = card.querySelector(".shot-script")?.textContent.trim();
-    const field = card.querySelector(".shot-script")?.dataset.field;
+  rows.forEach((row, i) => {
+    const beat = row.querySelector("[data-field=beat]")?.textContent.trim() || "beat";
+    const type = row.dataset.shotType || "avatar";
+    const dur = parseInt(row.querySelector(".shot-duration")?.textContent) || 3;
+    const words = row.querySelector(".cell-words")?.textContent.trim();
+    const wordsField = row.querySelector(".cell-words")?.dataset.field || "script";
+    const images = row.querySelector(".cell-images")?.textContent.trim();
+    const imagesField = row.querySelector(".cell-images")?.dataset.field || "direction";
+    const effects = row.querySelector(".cell-effects")?.textContent.trim();
+    const assetEl = row.querySelector(".asset-ref");
+    const asset = assetEl ? assetEl.textContent.trim() : "";
 
-    const shot = { id: i + 1, beat: beat, shotType: type, duration: dur };
-    if (script && field === "script") shot.script = script;
-    if (script && field === "voiceover") {
-      shot.voiceover = script;
+    const shot = { id: i + 1, beat, shotType: type, duration: dur };
+    if (words && wordsField === "script") shot.script = words;
+    if (words && wordsField === "voiceover") {
+      shot.voiceover = words;
       shot.voiceoverSource = "elevenlabs";
     }
-    if (visual) {
-      const vField = card.querySelector(".shot-visual")?.dataset.field || "direction";
-      shot[vField] = visual;
-    }
-    if (cardType) shot.textCardType = cardType;
+    if (images) shot[imagesField] = images;
+    if (effects) shot.textCardType = effects;
     if (asset) shot.asset = asset;
     shots.push(shot);
   });

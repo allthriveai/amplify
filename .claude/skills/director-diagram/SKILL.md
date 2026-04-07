@@ -7,7 +7,9 @@ description: Creates interactive React Flow diagrams from crafted stories. Outpu
 
 ## Instructions
 
-When the user runs `/director-diagram`, optionally followed by a story slug:
+When the user runs `/director-diagram`, optionally followed by a story slug and/or a brand flag:
+
+**Brand flag**: If the user passes `--{profile}` (e.g., `--go1`), use that brand profile from `.lumisrc` `brandProfiles.{profile}` instead of the default `brand` section. Example: `/director-diagram --go1 my-story-slug`
 
 ### Step 0: Load Context
 
@@ -18,15 +20,21 @@ Find the `.lumisrc` config file. Check these locations in order:
 
 Read the config and resolve the vault path.
 
-Read `{vaultPath}/{paths.brand}/Brand.md` if it exists. Read the brand config from `.lumisrc` (brand section). Build a brand context:
+Resolve the brand:
+- If the user passed a `--{profile}` flag, look up `brandProfiles.{profile}` in `.lumisrc`. If it exists, use that profile. Also read `{vaultPath}/{paths.brand}/{profile}-Brand.md` if it exists (e.g., `Go1-Brand.md`).
+- Otherwise, fall back to the default `brand` section in `.lumisrc` and read `{vaultPath}/{paths.brand}/Brand.md`.
+
+Build a brand context from the resolved profile:
 
 ```
-primary: {brand.colors.primary or #35656e}
-secondary: {brand.colors.secondary or #394646}
-accent: {brand.colors.accent or #fee19a}
-background: {brand.colors.background or #f8f9fa}
-fontFamily: {brand.fonts.body or "Inter, system-ui, sans-serif"}
+primary: {brand.primary or #35656e}
+secondary: {brand.secondary or brand.charcoal or #394646}
+accent: {brand.accent or brand.lemon or #fee19a}
+background: {brand.background or brand.ivory or #f8f9fa}
+fontFamily: {brand.fontBody or "Inter, system-ui, sans-serif"}
 ```
+
+The brand profile may include extended color tokens beyond primary/secondary/accent (e.g., `teal`, `sky`, `evergreen`, `marigold`). Use these for richer diagrams when appropriate — data viz nodes, category colors, status indicators.
 
 Read `{vaultPath}/Voice.md` if it exists for tone context.
 

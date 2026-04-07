@@ -47,6 +47,7 @@ Lumis has Claude Code skills in `.claude/skills/`:
 
 - **`/init`** — Interactive vault setup. Asks for vault path, scaffolds directories, writes `.lumisrc`, walks through voice interview to populate Voice.md, then copies and personalizes the Amplify toolkit (8 hook types, 18 structures, persuasion glossary).
 - **`/voice`** — Standalone voice interview. Fills in or redoes Voice.md through a guided conversation.
+- **`/goals`** — Sets up Goals.md through a guided conversation. Asks about the job you want, what you're building, what's in the way, concrete targets, and how you'll know it's working. Goals.md is your north star — every content skill reads it alongside Voice.md to keep output aligned with what you're building toward.
 - **`/moment`** — Captures a daily moment. Reads all existing moments, analyzes the input, finds connections, writes the note, regenerates the Pattern Map canvas, and reports back. Use `/moment private` to mark a moment as private: it still gets full pattern analysis and connections but is excluded from all content pipelines (`/craft-content`, `/director-*`, `social_coach`, `story_craft`).
 - **`/add-research`** — Saves a URL/PDF/article as research. Fetches content, categorizes it, writes a full note + TL;DR companion, extracts learnings, and reports topic clusters.
 - **`/craft-storytelling`** — Develops storytelling skill from captured moments. Practice mode or full story development.
@@ -64,6 +65,13 @@ Lumis has Claude Code skills in `.claude/skills/`:
 - **`/linkedin-post`** — Writes LinkedIn posts optimized for saves and dwell time. Hook under 110 chars, multiple post structures (story, listicle, contrarian, before/after), links in first comment, humanizer rules baked in.
 
 All skills read `.lumisrc` for vault paths and write directly to the Obsidian vault.
+
+### Identity files
+
+Skills read three identity files that shape all output:
+- **Voice.md** (`paths.voice`) — Who you are and how you sound
+- **Goals.md** (`paths.goals`) — What you're building toward and why. Every content-creating skill should read Goals.md to keep output aligned with career goals, target audience, and professional trajectory.
+- **Brand.md** (`paths.brand/Brand.md`) — How you look visually
 
 ## Writing style
 

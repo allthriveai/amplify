@@ -1,4 +1,5 @@
 import React from 'react';
+import { useCurrentFrame } from 'remotion';
 
 const NAVY = '#2d4059';
 const SAGE = '#7a9a6d';
@@ -7,15 +8,10 @@ const CORAL = '#e07a5f';
 const MARBLE = '#e2e0db';
 const mono = "'Inter', sans-serif";
 
-const flowStyle = `
-@keyframes flowDash {
-  to { stroke-dashoffset: -20; }
+function useFlowOffset() {
+  const frame = useCurrentFrame();
+  return -(frame % 20);
 }
-.flow-line {
-  stroke-dasharray: 8 12;
-  animation: flowDash 0.8s linear infinite;
-}
-`;
 
 function Box({ x, y, w, h, label, fill = '#fff', stroke = MARBLE, textColor = NAVY, fontSize = 14 }: any) {
   return (
@@ -39,17 +35,18 @@ function Markers({ prefix, colors }: { prefix: string; colors: string[] }) {
 }
 
 function FlowLine({ x1, y1, x2, y2, stroke, markerEnd }: any) {
+  const offset = useFlowOffset();
   return (
-    <line x1={x1} y1={y1} x2={x2} y2={y2} stroke={stroke} strokeWidth={1.5} markerEnd={markerEnd} className="flow-line" />
+    <line x1={x1} y1={y1} x2={x2} y2={y2} stroke={stroke} strokeWidth={1.5} markerEnd={markerEnd}
+      strokeDasharray="8 12" strokeDashoffset={offset} />
   );
 }
 
 function FlowPath({ d, stroke, markerEnd, dashed }: any) {
+  const offset = useFlowOffset();
   return (
     <path d={d} fill="none" stroke={stroke} strokeWidth={1.5} markerEnd={markerEnd}
-      className="flow-line"
-      style={dashed ? { strokeDasharray: '6 4', animation: 'flowDash 1.2s linear infinite' } : undefined}
-    />
+      strokeDasharray={dashed ? '6 4' : '8 12'} strokeDashoffset={dashed ? 0 : offset} />
   );
 }
 
@@ -57,13 +54,13 @@ export function WorkflowSVG() {
   const m = `url(#wf-${NAVY.slice(1)})`;
   return (
     <svg viewBox="10 10 590 60" style={{ width: '100%', display: 'block' }}>
-      <style>{flowStyle}</style>
+
       <Markers prefix="wf" colors={[NAVY]} />
       <Box x={20} y={20} w={90} h={36} label="Input" fill={NAVY} stroke={NAVY} textColor="#fff" />
       <FlowLine x1={110} y1={38} x2={140} y2={38} stroke={NAVY} markerEnd={m} />
       <Box x={140} y={20} w={90} h={36} label="Step 1" />
       <FlowLine x1={230} y1={38} x2={260} y2={38} stroke={NAVY} markerEnd={m} />
-      <Box x={260} y={20} w={90} h={36} label="Step 2" />
+      <Box x={260} y={20} w={90} h={36} label="LLM" />
       <FlowLine x1={350} y1={38} x2={380} y2={38} stroke={NAVY} markerEnd={m} />
       <Box x={380} y={20} w={90} h={36} label="Step 3" />
       <FlowLine x1={470} y1={38} x2={500} y2={38} stroke={NAVY} markerEnd={m} />
@@ -76,7 +73,7 @@ export function AgenticSVG() {
   const m = `url(#ag-${SAGE.slice(1)})`;
   return (
     <svg viewBox="20 10 590 110" style={{ width: '100%', display: 'block' }}>
-      <style>{flowStyle}</style>
+
       <Markers prefix="ag" colors={[SAGE]} />
       <Box x={30} y={20} w={90} h={36} label="Input" fill={SAGE} stroke={SAGE} textColor="#fff" />
       <FlowLine x1={120} y1={38} x2={150} y2={38} stroke={SAGE} markerEnd={m} />
@@ -88,7 +85,7 @@ export function AgenticSVG() {
       <FlowLine x1={480} y1={38} x2={510} y2={38} stroke={SAGE} markerEnd={m} />
       <Box x={510} y={20} w={90} h={36} label="Output" fill={SAGE} stroke={SAGE} textColor="#fff" />
       <FlowPath d="M 435,56 Q 435,90 310,90 Q 190,90 190,60" stroke={SAGE} markerEnd={m} dashed />
-      <text x={310} y={106} textAnchor="middle" fontFamily={mono} fontSize={12} fill={SAGE}>retry if needed</text>
+      <text x={310} y={106} textAnchor="middle" fontFamily={mono} fontSize={12} fill={SAGE}>LLM loop — retry if needed</text>
     </svg>
   );
 }
@@ -97,7 +94,7 @@ export function AgentSVG() {
   const m = `url(#at-${TEAL.slice(1)})`;
   return (
     <svg viewBox="20 0 570 145" style={{ width: '100%', display: 'block' }}>
-      <style>{flowStyle}</style>
+
       <Markers prefix="at" colors={[TEAL]} />
       <Box x={30} y={45} w={90} h={36} label="Query" fill={TEAL} stroke={TEAL} textColor="#fff" />
       <FlowLine x1={120} y1={63} x2={160} y2={63} stroke={TEAL} markerEnd={m} />
@@ -121,7 +118,7 @@ export function MultiAgentSVG() {
   const m = `url(#ma-${CORAL.slice(1)})`;
   return (
     <svg viewBox="20 -5 590 115" style={{ width: '100%', display: 'block' }}>
-      <style>{flowStyle}</style>
+
       <Markers prefix="ma" colors={[CORAL]} />
       <Box x={30} y={30} w={90} h={36} label="Task" fill={CORAL} stroke={CORAL} textColor="#fff" />
       <FlowLine x1={120} y1={48} x2={160} y2={48} stroke={CORAL} markerEnd={m} />

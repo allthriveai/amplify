@@ -71,13 +71,18 @@ export interface LumisConfig {
     brand: string;
     /** Where audio narrations are stored. Default: "3 - Resources/Research/Audio" */
     audio: string;
+    /** Your goals/north star file. Default: "Lumis/Goals.md" */
+    goals: string;
   };
 
   /** Categories for auto-classifying research notes */
   researchCategories: ResearchCategory[];
 
-  /** Optional brand config for visual identity */
+  /** Optional brand config for visual identity (active/default brand) */
   brand?: BrandConfig;
+
+  /** Named brand profiles for multi-brand support (e.g. "go1", "personal") */
+  brandProfiles?: Record<string, BrandConfig>;
 
   /** Optional studio config for video production (HeyGen, ElevenLabs) */
   studio?: StudioConfig;
@@ -105,6 +110,7 @@ export const DEFAULT_PATHS: LumisConfig["paths"] = {
   challenges: "Challenges",
   brand: "Lumis/Brand",
   audio: "Research/Audio",
+  goals: "Lumis/Goals.md",
 };
 
 export const DEFAULT_RESEARCH_CATEGORIES: ResearchCategory[] = [];

@@ -167,6 +167,7 @@ export {
   resolveStoryAssetsDir,
   resolveStrategyDocsDir,
   resolveVoicePath,
+  resolveGoalsPath,
   resolveSignalsDir,
   resolveSignalsPath,
   resolveMemoryDir,
