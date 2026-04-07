@@ -84,17 +84,15 @@ export async function produceVideo(
     );
   }
 
-  // 4. Download raw video to public/raw/
-  const rawDir = join(process.cwd(), "public", "raw");
-  await mkdir(rawDir, { recursive: true });
+  // 4. Download raw video to story assets folder in vault
+  const outputDir = resolveStoryDir(config, script.filename);
+  await mkdir(outputDir, { recursive: true });
 
-  const rawFilename = `${script.filename}.mp4`;
-  const rawPath = join(rawDir, rawFilename);
+  const rawFilename = `${script.filename}-raw.mp4`;
+  const rawPath = join(outputDir, rawFilename);
   await heygen.downloadVideo(videoUrl, rawPath);
 
   // 5. Render branded video to story folder
-  const outputDir = resolveStoryDir(config, script.filename);
-  await mkdir(outputDir, { recursive: true });
 
   const outputFilename = `${script.filename}.mp4`;
   const outputPath = join(outputDir, outputFilename);

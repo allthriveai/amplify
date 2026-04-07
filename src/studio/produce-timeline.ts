@@ -150,7 +150,8 @@ async function produceFromTimeline(
   const studio = config.studio;
 
   // 3. Generate avatar clips via HeyGen in parallel (max 3 concurrent)
-  const rawDir = join(process.cwd(), "public", "raw", slug);
+  // Stage intermediate files in the vault's story folder, not in the lumis repo
+  const rawDir = join(resolveStoryDir(config, slug), "raw");
   await mkdir(rawDir, { recursive: true });
 
   const videoMap = new Map<number, string>(); // shot id -> local path
@@ -316,11 +317,8 @@ async function produceFromTimeline(
   // 6. Build ResolvedShot[] with cumulative startFrame offsets
   report("resolve", "Building shot sequence...");
 
-  // Remotion serves files from public/ — convert absolute paths to relative
-  const publicDir = join(process.cwd(), "public");
-  const toStaticPath = (absPath: string) => absPath.startsWith(publicDir)
-    ? absPath.slice(publicDir.length + 1)
-    : absPath;
+  // Pass absolute paths directly — resolveMediaSrc handles them
+  const toStaticPath = (absPath: string) => absPath;
 
   const fps = brand.timing.fps;
   let currentFrame = 0;

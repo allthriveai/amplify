@@ -7,9 +7,9 @@ interface AvatarClipProps {
   muted?: boolean;
 }
 
-/** Wrap a path in staticFile() unless it's already a URL */
+/** Wrap a path in staticFile() unless it's already a URL or absolute path */
 const resolveMediaSrc = (src: string) =>
-  src.startsWith('http://') || src.startsWith('https://') || src.startsWith('data:')
+  src.startsWith('http://') || src.startsWith('https://') || src.startsWith('data:') || src.startsWith('/')
     ? src
     : staticFile(src);
 

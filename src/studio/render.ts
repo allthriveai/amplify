@@ -26,7 +26,7 @@ export async function renderVideo(
 
   try {
     execSync(
-      `npx remotion render BrandedVideo --props "${propsFile}" --output "${outputPath}"`,
+      `npx remotion render BrandedVideo --codec h264 --crf 18 --props "${propsFile}" --output "${outputPath}"`,
       { stdio: "inherit" },
     );
   } catch (error) {
@@ -59,7 +59,7 @@ export async function renderDirectorCut(
 
   try {
     execSync(
-      `npx remotion render DirectorCut --props "${propsFile}" --output "${outputPath}"`,
+      `npx remotion render DirectorCut --codec h264 --crf 18 --props "${propsFile}" --output "${outputPath}"`,
       { stdio: "inherit" },
     );
   } catch (error) {

@@ -9,10 +9,29 @@ dist/
 creator-blueprint/
 *.pdf
 
-# Studio outputs and media files
+# Studio outputs and media files — all content belongs in the vault, not here
 public/raw/
+public/linkedin/
 out/
 *.mp4
 *.mp3
 *.wav
 *.srt
+*.gif
+*.png
+*.jpeg
+*.jpg
+*.webp
+
+# Mockups and one-off HTML files
+slide-mock*.html
+demo-*
+
+# Playwright MCP logs and screenshots
+.playwright-mcp/
+
+# Claude worktrees
+.claude/worktrees/
+
+# IDE
+.trae/
