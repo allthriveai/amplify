@@ -1,6 +1,6 @@
 ---
 name: director-article
-description: Takes a crafted story and writes a long-form blog post. Reads the vault, picks hook + structure from Amplify, writes the full article using the narrative arc, and saves an article.md to the story folder.
+description: Takes a crafted story and writes a long-form blog post. Reads the vault, picks hook + structure from Amplify, writes the full article using the narrative arc, and saves an article.md to the story folder. Use when the user asks to write a blog post, article, or long-form piece from a story, or says "turn this into an article", "write the blog post", or "make this a long-form post".
 ---
 
 # Director Article

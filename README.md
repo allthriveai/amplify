@@ -22,6 +22,8 @@ Tell Lumis about your life, share research you are interested in, and learn to c
 - **Writes articles** from stories into full long-form blog posts ready to publish
 - **Generates images** for any director format using Google Imagen, with brand-aware prompts that update source files automatically
 - **Creates diagrams** from stories as interactive React Flow visualizations, with PNG export for embedding anywhere
+- **Sets your goals** through a guided conversation that writes Goals.md, your north star for all content output
+- **Storyboards video** with an editable HTML board so you can see, hear, and rearrange shots before rendering
 - **Cleans AI writing** by detecting and fixing AI vocabulary, filler phrases, em dash overuse, and structural tells
 - **Writes YouTube descriptions** optimized for search, click-through, and the first 150 characters above the fold
 - **Writes LinkedIn posts** optimized for saves and dwell time, with hooks under 110 characters and proven post structures
@@ -125,8 +127,10 @@ claude
 /director-images    Generate AI images for any director format
 /director-diagram   Create interactive diagram from a story
 /challenge          Pressure-test an idea with critical thinking prompts
+/goals              Set up Goals.md through guided conversation
 /listen             Convert a research note to narrated audio
 /brand              Set up your visual brand identity
+/storyboard         Visual storyboard for pre-production review
 /humanizer          Clean AI-generated writing patterns from text
 /youtube-description Write a YouTube video description
 /linkedin-post      Write a LinkedIn post

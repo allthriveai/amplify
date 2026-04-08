@@ -1,6 +1,6 @@
 ---
 name: director-diagram
-description: Creates interactive React Flow diagrams from crafted stories. Outputs a standalone HTML file (interactive) and a PNG export for embedding in articles, carousels, or sharing.
+description: Creates interactive React Flow diagrams from crafted stories. Outputs a standalone HTML file (interactive) and a PNG export for embedding in articles, carousels, or sharing. Use when the user asks to make a diagram, flowchart, concept map, or visual from a story, or says "turn this into a diagram", "make a flowchart", "visualize this", or "create a concept map".
 ---
 
 # Director Diagram

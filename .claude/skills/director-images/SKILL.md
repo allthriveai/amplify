@@ -1,6 +1,6 @@
 ---
 name: director-images
-description: Generates AI images for director formats (video, carousel, article) using Google Imagen. Finds image slots, builds brand-aware prompts, generates images, and updates source files so images flow into rendering automatically.
+description: Generates AI images for director formats (video, carousel, article) using Google Imagen. Finds image slots, builds brand-aware prompts, generates images, and updates source files so images flow into rendering automatically. Use when the user asks to generate images for a story's video, carousel, or article, or says "make the images", "generate images", or "add images to this".
 ---
 
 # Director Images

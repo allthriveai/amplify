@@ -1,6 +1,6 @@
 ---
 name: director-video
-description: Takes a crafted story and produces a shot-by-shot video timeline. Reads the vault, picks hook + structure from Amplify, builds a Director Cut timeline, and optionally produces avatar clips via HeyGen and assembles with Remotion.
+description: Takes a crafted story and produces a shot-by-shot video timeline. Reads the vault, picks hook + structure from Amplify, builds a Director Cut timeline, and optionally produces avatar clips via HeyGen and assembles with Remotion. Use when the user asks to make a video from a story, or says "turn this into a video", "create a video", "make a video", or "build the video timeline".
 ---
 
 # Director Video

@@ -1,6 +1,6 @@
 ---
 name: director-carousel
-description: Takes a crafted story and produces a LinkedIn carousel plan. Reads the vault, picks hook + structure from Amplify, builds card-by-card copy with image direction, and saves a carousel.md to the story folder.
+description: Takes a crafted story and produces a LinkedIn carousel plan. Reads the vault, picks hook + structure from Amplify, builds card-by-card copy with image direction, and saves a carousel.md to the story folder. Use when the user asks to make a carousel, slide deck for LinkedIn, or says "turn this into a carousel", "make carousel slides", or "create a LinkedIn carousel".
 ---
 
 # Director Carousel
