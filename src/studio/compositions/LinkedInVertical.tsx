@@ -778,7 +778,7 @@ export const LinkedInVertical: React.FC<LinkedInVerticalProps> = ({ scenes, layo
   return (
     <AbsoluteFill style={{ backgroundColor: BG }}>
       {bgMusic && <Audio src={staticFile(bgMusic)} volume={0.06} loop />}
-      <Series>
+      <Series {...{}}>
         {scenes.map((scene) => (
           <Series.Sequence key={scene.id} durationInFrames={scene.durationInFrames}>
             <Scene

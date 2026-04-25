@@ -2,10 +2,11 @@ import { writeFileSync, mkdirSync, existsSync, appendFileSync } from "node:fs";
 import { join, dirname } from "node:path";
 import type { LumisConfig } from "../types/config.js";
 import type { MomentFrontmatter } from "../types/moment.js";
+import type { MeetingFrontmatter } from "../types/meeting.js";
 import type { ResearchFrontmatter, TldrFrontmatter, ResearchCategory } from "../types/research.js";
 import type { StoryFrontmatter } from "../types/story.js";
 import type { CanvasFile } from "../types/canvas.js";
-import { resolveMomentsDir, resolveCanvasPath, resolveResearchDir, resolveTldrDir, resolveResearchCategoryDir, resolveStoriesDir, resolvePracticeLogPath } from "./paths.js";
+import { resolveMomentsDir, resolveMeetingsDir, resolveCanvasPath, resolveResearchDir, resolveTldrDir, resolveResearchCategoryDir, resolveStoriesDir, resolvePracticeLogPath } from "./paths.js";
 import { serializeFrontmatter } from "./frontmatter.js";
 
 /** Write a moment file to the vault */
@@ -16,6 +17,23 @@ export function writeMoment(
   content: string,
 ): string {
   const dir = resolveMomentsDir(config);
+  mkdirSync(dir, { recursive: true });
+
+  const filepath = join(dir, filename);
+  const markdown = serializeFrontmatter(frontmatter, content);
+  writeFileSync(filepath, markdown, "utf-8");
+
+  return filepath;
+}
+
+/** Write a meeting note to the vault */
+export function writeMeeting(
+  config: LumisConfig,
+  filename: string,
+  frontmatter: MeetingFrontmatter,
+  content: string,
+): string {
+  const dir = resolveMeetingsDir(config);
   mkdirSync(dir, { recursive: true });
 
   const filepath = join(dir, filename);

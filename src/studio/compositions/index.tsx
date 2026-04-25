@@ -1,5 +1,5 @@
 import React from 'react';
-import { Composition, registerRoot } from 'remotion';
+import { Composition, getRemotionEnvironment, registerRoot } from 'remotion';
 import { BrandedVideo, BrandedVideoProps } from './BrandedVideo';
 import { BrandedIntro } from './BrandedIntro';
 import { BrandedOutro } from './BrandedOutro';
@@ -9,12 +9,23 @@ import { BRollPlaceholder, BRollPlaceholderProps } from './BRollPlaceholder';
 import { ScreenCapture, ScreenCaptureProps } from './ScreenCapture';
 import { LinkedInVertical, LinkedInVerticalProps } from './LinkedInVertical';
 import { DecisionFramework, DecisionFrameworkProps } from './DecisionFramework';
+import { DebuggingTechniques, DebuggingTechniquesProps, calculateDebuggingDuration, DebuggingShort, DebuggingShortProps, calculateShortDuration } from './debugging';
 import { brand } from './brand';
 
 const NAVY = '#2d4059';
 const SAGE = '#7a9a6d';
 const TEAL = '#5b9ea6';
 const CORAL = '#e07a5f';
+
+/** Use 720p proxies in studio preview, 4K originals for render */
+const debugAvatar = (name: string) => {
+  try {
+    const isPreview = getRemotionEnvironment().isPreview;
+    return isPreview ? `debugging/${name}-proxy.mp4` : `debugging/${name}.mp4`;
+  } catch {
+    return `debugging/${name}.mp4`;
+  }
+};
 
 const RemotionRoot: React.FC = () => {
   const { width, height } = brand.resolution;
@@ -194,6 +205,62 @@ const RemotionRoot: React.FC = () => {
         height={1350}
         defaultProps={{ layout: 'vertical' }}
       />
+
+      {/* Debugging Techniques — LinkedIn Vertical (1080x1350) */}
+      <Composition<DebuggingTechniquesProps>
+        id="DebuggingTechniquesVertical"
+        component={DebuggingTechniques}
+        durationInFrames={calculateDebuggingDuration()}
+        fps={fps}
+        width={1080}
+        height={1350}
+        defaultProps={{
+          layout: 'vertical',
+          avatarSources: {
+            bridge: { videoSrc: debugAvatar('bridge-v3') },
+            setup: { videoSrc: debugAvatar('setup-v3') },
+            'technique-1': { videoSrc: debugAvatar('technique-1-new') },
+            thesis: { videoSrc: debugAvatar('thesis-v3') },
+            cta: { videoSrc: debugAvatar('cta-v3') },
+          },
+        }}
+      />
+
+      {/* Debugging Techniques — YouTube Landscape (1920x1080) */}
+      <Composition<DebuggingTechniquesProps>
+        id="DebuggingTechniques"
+        component={DebuggingTechniques}
+        durationInFrames={calculateDebuggingDuration()}
+        fps={fps}
+        width={width}
+        height={height}
+        defaultProps={{
+          avatarSources: {
+            bridge: { videoSrc: debugAvatar('bridge-v3') },
+            setup: { videoSrc: debugAvatar('setup-v3') },
+            'technique-1': { videoSrc: debugAvatar('technique-1-new') },
+            thesis: { videoSrc: debugAvatar('thesis-v3') },
+            cta: { videoSrc: debugAvatar('cta-v3') },
+          },
+        }}
+      />
+
+      {/* YouTube Shorts — one per technique (1080x1920) */}
+      {[1, 2, 3, 4, 5, 6, 7].map((num) => (
+        <Composition<DebuggingShortProps>
+          key={`short-${num}`}
+          id={`DebuggingShort${num}`}
+          component={DebuggingShort}
+          durationInFrames={calculateShortDuration(num)}
+          fps={fps}
+          width={1080}
+          height={1920}
+          defaultProps={{
+            techniqueNum: num,
+            avatarSources: {},
+          }}
+        />
+      ))}
 
       {/* Standalone intro for preview */}
       <Composition

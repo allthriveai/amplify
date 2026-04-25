@@ -35,3 +35,5 @@ demo-*
 
 # IDE
 .trae/
+youtube-credentials.json
+whisper.cpp/

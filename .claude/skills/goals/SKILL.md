@@ -114,6 +114,6 @@ Every content-creating skill should read Goals.md alongside Voice.md. Goals.md a
 When Goals.md exists, skills should:
 - **`/craft-content`** — Surface story angles that serve the goals, not just what's interesting
 - **`/linkedin-post`** — Frame posts to build visibility with the target audience (hiring managers, team leads at target companies)
-- **`/director-*`** — Prioritize content that demonstrates the skills and thinking the target role requires
+- **`/draft-*`** — Prioritize content that demonstrates the skills and thinking the target role requires
 - **`/challenge`** — Challenge ideas through the lens of career goals, not just abstract thinking
 - **`/moment`** — When analyzing moments, note connections to professional goals and career trajectory

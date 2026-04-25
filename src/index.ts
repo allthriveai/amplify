@@ -19,6 +19,11 @@ export type {
 } from "./types/canvas.js";
 
 export type { LumisConfig, CaptureConfig, CaptureHotkeys } from "./types/config.js";
+
+export type {
+  Meeting,
+  MeetingFrontmatter,
+} from "./types/meeting.js";
 export { DEFAULT_PATHS, DEFAULT_RESEARCH_CATEGORIES } from "./types/config.js";
 
 export type { BrandConfig, BrandColors, BrandFonts } from "./types/brand.js";
@@ -44,6 +49,7 @@ export type {
   DiagramCreatedSignal,
   DiagramVideoRenderedSignal,
   AudioGeneratedSignal,
+  MeetingSyncedSignal,
 } from "./types/signal.js";
 
 export type { SessionEntry } from "./types/memory.js";
@@ -113,6 +119,9 @@ export { analyzeMoment, humanize } from "./ai/index.js";
 export {
   readMoments,
   writeMoment,
+  readMeetings,
+  readMeeting,
+  writeMeeting,
   readCanvas,
   writeCanvas,
   readResearchNotes,
@@ -159,7 +168,7 @@ export {
   narrateToAudio,
   estimateDuration,
 } from "./studio/index.js";
-export type { HeyGenClient } from "./studio/index.js";
+export type { HeyGenClient, HeyGenVideoOptions } from "./studio/index.js";
 export type { ElevenLabsClient } from "./studio/index.js";
 export type { ImagenClient } from "./studio/index.js";
 export type { RenderProps, DirectorCutRenderProps } from "./studio/index.js";
@@ -178,6 +187,7 @@ export {
   resolveStoryDir,
   resolveDirectorCutPath,
   resolveAudioDir,
+  resolveMeetingsDir,
 } from "./vault/index.js";
 
 // Signals
@@ -196,6 +206,10 @@ export { renderDiagramVideo } from "./diagram/animate.js";
 export { computeAnimationOrder } from "./diagram/animation-order.js";
 export { renderTextRevealVideo } from "./diagram/text-reveal.js";
 export type { TextRevealOptions } from "./diagram/text-reveal.js";
+
+// Carousel
+export { renderCarouselHtml, renderCarouselPdf } from "./carousel/index.js";
+export type { RenderCarouselHtmlOptions, CarouselBrand, RenderCarouselPdfOptions } from "./carousel/index.js";
 
 // Capture
 export {

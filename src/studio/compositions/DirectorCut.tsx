@@ -194,7 +194,9 @@ export const DirectorCut: React.FC<DirectorCutProps> = ({ shots, title }) => {
   return (
     <AbsoluteFill style={{ backgroundColor: brand.colors.charcoal }}>
       {/* Visual layer with transitions */}
-      <TransitionSeries>
+      {/* Spread empty props to work around Remotion 4.0.431 null-props crash
+           in setup-sequence-stack-traces.js (classic JSX transform). */}
+      <TransitionSeries {...{}}>
         {buildVisualElements(shots, title)}
       </TransitionSeries>
 

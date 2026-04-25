@@ -18,7 +18,8 @@ export type SignalType =
   | "images_generated"
   | "diagram_created"
   | "diagram_video_rendered"
-  | "audio_generated";
+  | "audio_generated"
+  | "meeting_synced";
 
 interface BaseSignal {
   id: string;
@@ -197,6 +198,17 @@ export interface AudioGeneratedSignal extends BaseSignal {
   };
 }
 
+export interface MeetingSyncedSignal extends BaseSignal {
+  type: "meeting_synced";
+  data: {
+    title: string;
+    date: string;
+    source: "plaud" | "manual";
+    plaudFileId?: string;
+    path: string;
+  };
+}
+
 export type Signal =
   | MomentCapturedSignal
   | RecommendationRejectedSignal
@@ -213,7 +225,8 @@ export type Signal =
   | ImagesGeneratedSignal
   | DiagramCreatedSignal
   | DiagramVideoRenderedSignal
-  | AudioGeneratedSignal;
+  | AudioGeneratedSignal
+  | MeetingSyncedSignal;
 
 export interface SignalsFile {
   version: 1;

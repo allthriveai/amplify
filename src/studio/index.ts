@@ -7,7 +7,7 @@ import { createHeyGenClient } from "./heygen.js";
 import { renderVideo } from "./render.js";
 
 export { createHeyGenClient } from "./heygen.js";
-export type { HeyGenClient } from "./heygen.js";
+export type { HeyGenClient, HeyGenVideoOptions } from "./heygen.js";
 export { createElevenLabsClient } from "./elevenlabs.js";
 export type { ElevenLabsClient } from "./elevenlabs.js";
 export { renderVideo, renderDirectorCut, previewVideo } from "./render.js";

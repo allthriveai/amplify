@@ -148,6 +148,11 @@ export function resolveBrandDir(config: LumisConfig): string {
   return resolvePath(config, config.paths.brand);
 }
 
+/** Resolve the meetings directory */
+export function resolveMeetingsDir(config: LumisConfig): string {
+  return resolvePath(config, config.paths.meetings);
+}
+
 /** Resolve the Brand.md file */
 export function resolveBrandPath(config: LumisConfig): string {
   return resolvePath(config, join(config.paths.brand, "Brand.md"));

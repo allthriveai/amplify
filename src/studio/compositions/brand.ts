@@ -5,7 +5,9 @@
 // To use custom brand colors from .lumisrc, pass them as props to compositions
 // or use Remotion's getInputProps() at render time.
 
-import { fontFamily } from './fonts';
+// Font family string — matches the loadFont() call in fonts.ts.
+// Duplicated here to avoid pulling @remotion/google-fonts into Node builds.
+const fontFamily = 'Inter';
 
 export const brand = {
   colors: {

@@ -2,11 +2,11 @@ import React from 'react';
 import {
   AbsoluteFill,
   Img,
-  OffthreadVideo,
   useCurrentFrame,
   useVideoConfig,
   interpolate,
 } from 'remotion';
+import { Video } from '@remotion/media';
 import { BRollPlaceholder } from './BRollPlaceholder';
 import { resolveMediaSrc } from './AvatarClip';
 import { useEntranceExit } from './animations';
@@ -33,7 +33,7 @@ export const ScreenCapture: React.FC<ScreenCaptureProps> = ({
   if (isVideo) {
     return (
       <AbsoluteFill style={{ opacity: combinedOpacity }}>
-        <OffthreadVideo
+        <Video
           src={resolveMediaSrc(src)}
           style={{
             width: '100%',

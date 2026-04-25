@@ -1,6 +1,6 @@
 ---
 name: craft-content
-description: Finds a story through free writing and guided questions, then shapes it into a clean narrative draft. The story is the asset. Video timelines, hooks, and production happen in /director-video. Never writes without your review.
+description: Finds a story through free writing and guided questions, then shapes it into a clean narrative draft. The story is the asset. Video timelines, hooks, and production happen in /draft-video. Never writes without your review.
 ---
 
 # Craft Content
@@ -21,7 +21,17 @@ Read the config and resolve the vault path.
 
 Read `{vaultPath}/{paths.voice}` (Voice.md) if it exists. This shapes how you write for the user.
 
+Read `{vaultPath}/Lumis/Brand/Script Standards.md` if it exists. The story you're about to write will be converted into a video script — following Script Standards now prevents rework later.
+
 If the user referenced an existing piece (moment, story, research), read it from the vault.
+
+### Step 0.1: Detect mode flags
+
+- **`--quick`**: skip the full 6-turn interview. Go directly to: one 5-second moment, one transformation, one turn. Used for quick-turn LinkedIn videos that don't need a full story arc. Minimum viable story for `/draft-video` downstream.
+
+- **`--from-moment {slug}`**: instead of free-writing, read an existing moment from the vault and use it as the free-write input. Fast path when the story seed is already captured.
+
+- No flag: full interview mode (the existing 6-turn process).
 
 ### Step 1: Free Write
 
@@ -165,9 +175,9 @@ Contents:
   story.md — the narrative draft
 
 Ready to turn this into content? Pick a format:
-  /director-video {slug}     — shot-by-shot video timeline
-  /director-carousel {slug}  — LinkedIn carousel with card copy
-  /director-article {slug}   — long-form blog post
+  /draft-video {slug}     — shot-by-shot video timeline
+  /draft-carousel {slug}  — LinkedIn carousel with card copy
+  /draft-article {slug}   — long-form blog post
 ```
 
 ### Step 5b: Log to Session Memory
@@ -186,9 +196,9 @@ Each story lives in its own folder under `{paths.stories}/`:
 {paths.stories}/{slug}/
   raw.md                                    ← free write + 5 interview answers (craft-content)
   story.md                                  ← pure narrative draft (craft-content)
-  video-{hook}-{slug}-{date}.md             ← video timeline (director-video)
-  carousel-{hook}-{slug}-{date}.md          ← carousel cards (director-carousel)
-  article-{hook}-{slug}-{date}.md           ← blog post (director-article)
+  video-{hook}-{slug}-{date}.md             ← video timeline (draft-video)
+  carousel-{hook}-{slug}-{date}.md          ← carousel cards (draft-carousel)
+  article-{hook}-{slug}-{date}.md           ← blog post (draft-article)
 ```
 
 **`/craft-content` creates:** `raw.md` and `story.md`

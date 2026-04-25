@@ -14,10 +14,10 @@ Lumis uses a structured event log (`Lumis/Signals/signals.json`) to connect pipe
 | `story_practice` | /craft-storytelling practice | momentTitle, element |
 | `inspiration_added` | /add-inspiration | person, tags, backLinks, path |
 | `challenge_completed` | /challenge | idea, prompts, promoted, path |
-| `timeline_created` | /director-video | slug, storySource, hook, structure, platform, shotCount, targetDuration |
-| `video_rendered` | /director-video produce | slug, outputPath, platform, duration |
-| `carousel_created` | /director-carousel | slug, storySource, hook, structure, platform, cardCount |
-| `article_created` | /director-article | slug, storySource, hook, structure, platform, wordCount |
+| `timeline_created` | /draft-video | slug, storySource, hook, structure, platform, shotCount, targetDuration |
+| `video_rendered` | /draft-video produce | slug, outputPath, platform, duration |
+| `carousel_created` | /draft-carousel | slug, storySource, hook, structure, platform, cardCount |
+| `article_created` | /draft-article | slug, storySource, hook, structure, platform, wordCount |
 
 ## Behavior
 
@@ -27,10 +27,10 @@ Lumis uses a structured event log (`Lumis/Signals/signals.json`) to connect pipe
 
 ## How Director Skills Use Signals
 
-1. `/director-video` emits `timeline_created` when a shot-by-shot timeline is saved
-2. `/director-video` emits `video_rendered` when production completes (HeyGen + Remotion assembly)
-3. `/director-carousel` emits `carousel_created` when a card plan is saved
-4. `/director-article` emits `article_created` when a blog post is saved
+1. `/draft-video` emits `timeline_created` when a shot-by-shot timeline is saved
+2. `/draft-video` emits `video_rendered` when production completes (HeyGen + Remotion assembly)
+3. `/draft-carousel` emits `carousel_created` when a card plan is saved
+4. `/draft-article` emits `article_created` when a blog post is saved
 5. Each director can check the others' signals to see what formats a story already has
 
 ## Implementation

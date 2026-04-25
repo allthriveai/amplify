@@ -44,7 +44,7 @@ export async function storyboardCommand(args: string[]): Promise<void> {
 
     if (files.length === 0) {
       console.error(`No timeline files (video-*.md) found in ${storyDir}`);
-      console.error("Run /director-video first to create a timeline.");
+      console.error("Run /draft-video first to create a timeline.");
       process.exit(1);
     }
 

@@ -1,5 +1,5 @@
-export { readMoments, readMoment, readResearchNotes, readStories, readStory } from "./reader.js";
-export { writeMoment, writeCanvas, writeResearchNote, writeTldrNote, writeStory, appendPracticeLog } from "./writer.js";
+export { readMoments, readMoment, readMeetings, readMeeting, readResearchNotes, readStories, readStory } from "./reader.js";
+export { writeMoment, writeMeeting, writeCanvas, writeResearchNote, writeTldrNote, writeStory, appendPracticeLog } from "./writer.js";
 export { parseFrontmatter, serializeFrontmatter } from "./frontmatter.js";
 export {
   resolvePath,
@@ -59,4 +59,4 @@ export { formatSessionTime, appendSessionEntry, readSession, readRecentSessions,
 
 // Brand
 export { readBrand, readBrandInspirations } from "./brand-reader.js";
-export { resolveBrandDir, resolveBrandPath, resolveBrandInspirationDir } from "./paths.js";
+export { resolveBrandDir, resolveBrandPath, resolveBrandInspirationDir, resolveMeetingsDir } from "./paths.js";

@@ -53,6 +53,7 @@ export function loadConfig(overrides?: Partial<LumisConfig>): LumisConfig {
       brand: overrides?.paths?.brand ?? rcPaths?.brand ?? DEFAULT_PATHS.brand,
       audio: overrides?.paths?.audio ?? rcPaths?.audio ?? DEFAULT_PATHS.audio,
       goals: overrides?.paths?.goals ?? rcPaths?.goals ?? DEFAULT_PATHS.goals,
+      meetings: overrides?.paths?.meetings ?? rcPaths?.meetings ?? DEFAULT_PATHS.meetings,
     },
     researchCategories: overrides?.researchCategories ?? rc?.researchCategories ?? DEFAULT_RESEARCH_CATEGORIES,
     ...(overrides?.brand ?? rc?.brand ? { brand: overrides?.brand ?? rc?.brand } : {}),

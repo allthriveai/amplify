@@ -1,13 +1,13 @@
 ---
-name: director-images
-description: Generates AI images for director formats (video, carousel, article) using Google Imagen. Finds image slots, builds brand-aware prompts, generates images, and updates source files so images flow into rendering automatically. Use when the user asks to generate images for a story's video, carousel, or article, or says "make the images", "generate images", or "add images to this".
+name: draft-images
+description: Generates AI images for draft formats (video, carousel, article) using Google Imagen. Finds image slots, builds brand-aware prompts, generates images, and updates source files so images flow into rendering automatically. Use when the user asks to generate images for a story's video, carousel, or article, or says "make the images", "generate images", or "add images to this".
 ---
 
-# Director Images
+# Draft Images
 
 ## Instructions
 
-When the user runs `/director-images`, optionally followed by a story slug:
+When the user runs `/draft-images`, optionally followed by a story slug:
 
 ### Step 0: Load Context
 
@@ -30,7 +30,7 @@ This brand context string gets prepended to every image prompt.
 
 ### Step 1: Find the Story
 
-If the user provided a slug (e.g., `/director-images why-we-rebuilt-onboarding`), use it directly.
+If the user provided a slug (e.g., `/draft-images why-we-rebuilt-onboarding`), use it directly.
 
 If no slug, scan `{vaultPath}/{paths.stories}/` for story folders. List stories that have any director output (video-*.md, carousel-*.md, or article-*.md). Present the list and let the user pick.
 
@@ -41,7 +41,7 @@ Scan the story folder `{stories}/{slug}/` for:
 - `carousel-*.md` files (carousel cards)
 - `article-*.md` files (blog posts)
 
-If only one format exists, use it. If multiple formats exist, present the list and let the user pick. If none exist, tell the user: "No director cuts found for this story. Run `/director-video`, `/director-carousel`, or `/director-article` first."
+If only one format exists, use it. If multiple formats exist, present the list and let the user pick. If none exist, tell the user: "No drafts found for this story. Run `/draft-video`, `/draft-carousel`, or `/draft-article` first."
 
 Read the selected file and parse its frontmatter.
 
@@ -232,10 +232,10 @@ Default to `16:9` for video, `1:1` for carousel, `16:9` for article hero images.
 {stories}/{slug}/
   raw.md                                    <- free write + interview (craft-content)
   story.md                                  <- pure narrative (craft-content)
-  video-{hook}-{slug}-{date}.md             <- video timeline (director-video)
-  carousel-{hook}-{slug}-{date}.md          <- carousel cards (director-carousel)
-  article-{hook}-{slug}-{date}.md           <- blog post (director-article)
-  assets/                                   <- generated images (director-images)
+  video-{hook}-{slug}-{date}.md             <- video timeline (draft-video)
+  carousel-{hook}-{slug}-{date}.md          <- carousel cards (draft-carousel)
+  article-{hook}-{slug}-{date}.md           <- blog post (draft-article)
+  assets/                                   <- generated images (draft-images)
     shot-04-tension.png
     card-03-tension.png
     section-02-setup.png

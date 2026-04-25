@@ -73,6 +73,8 @@ export interface LumisConfig {
     audio: string;
     /** Your goals/north star file. Default: "Lumis/Goals.md" */
     goals: string;
+    /** Where meeting notes are stored. Default: "Meetings" */
+    meetings: string;
   };
 
   /** Categories for auto-classifying research notes */
@@ -111,6 +113,7 @@ export const DEFAULT_PATHS: LumisConfig["paths"] = {
   brand: "Lumis/Brand",
   audio: "Research/Audio",
   goals: "Lumis/Goals.md",
+  meetings: "Meetings",
 };
 
 export const DEFAULT_RESEARCH_CATEGORIES: ResearchCategory[] = [];

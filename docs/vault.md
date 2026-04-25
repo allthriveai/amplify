@@ -16,9 +16,9 @@ Lumis/
     {slug}/
       raw.md          ← free write + interview answers (from /craft-content)
       story.md        ← clean narrative draft (from /craft-content)
-      timeline.md     ← Director Cut timeline (from /director-video)
-      carousel.md     ← carousel cards with copy and image direction (from /director-carousel)
-      article.md      ← long-form blog post (from /director-article)
+      timeline.md     ← Draft timeline (from /draft-video)
+      carousel.md     ← carousel cards with copy and image direction (from /draft-carousel)
+      article.md      ← long-form blog post (from /draft-article)
     Practice Log.md   ← storytelling practice history
   Research/           ← full research notes
     TL;DR/            ← companion summaries
@@ -54,7 +54,7 @@ Moments can be marked private by adding `private: true` to their frontmatter (or
 
 - Still get full analysis: 5-second moment, themes, connections, story potential
 - Still appear on the Pattern Map canvas and connect to other moments
-- Are excluded from all content pipelines: `get_moments`, `get_patterns`, `social_coach`, `story_craft_practice`, `story_craft_develop`, `/craft-content`, and all `/director-*` skills
+- Are excluded from all content pipelines: `get_moments`, `get_patterns`, `social_coach`, `story_craft_practice`, `story_craft_develop`, `/craft-content`, and all `/draft-*` skills
 - Stay in the vault and can always be found directly in Obsidian
 
 This lets you journal deeply personal things with full pattern recognition without them ever surfacing as content candidates.
@@ -80,7 +80,7 @@ This lets you journal deeply personal things with full pattern recognition witho
 - **18 content structures**: frameworks with persuasion principles embedded (e.g., "I Used to Believe," "The Great Paradox," "The Vulnerable Admission").
 - **Persuasion Glossary**: 10 persuasion principles for reference.
 
-`/director-video`, `/director-carousel`, and `/director-article` read these when building their outputs, selecting the right hook type and structure for each format.
+`/draft-video`, `/draft-carousel`, and `/draft-article` read these when building their outputs, selecting the right hook type and structure for each format.
 
 ## IP Separation
 

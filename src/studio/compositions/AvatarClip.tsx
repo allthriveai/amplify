@@ -1,10 +1,13 @@
 import React from 'react';
-import { AbsoluteFill, OffthreadVideo, staticFile } from 'remotion';
+import { AbsoluteFill, staticFile } from 'remotion';
+import { Video } from '@remotion/media';
 import { useEntranceExit } from './animations';
 
 interface AvatarClipProps {
   videoSrc: string;
   muted?: boolean;
+  /** Skip entrance fade — avatar visible from frame 0 */
+  skipEntrance?: boolean;
 }
 
 /** Wrap a path in staticFile() unless it's already a URL or absolute path */
@@ -15,12 +18,12 @@ const resolveMediaSrc = (src: string) =>
 
 export { resolveMediaSrc };
 
-export const AvatarClip: React.FC<AvatarClipProps> = ({ videoSrc, muted }) => {
+export const AvatarClip: React.FC<AvatarClipProps> = ({ videoSrc, muted, skipEntrance }) => {
   const { combinedOpacity } = useEntranceExit(8);
 
   return (
-    <AbsoluteFill style={{ opacity: combinedOpacity }}>
-      <OffthreadVideo
+    <AbsoluteFill style={{ opacity: skipEntrance ? 1 : combinedOpacity }}>
+      <Video
         src={resolveMediaSrc(videoSrc)}
         muted={muted}
         style={{

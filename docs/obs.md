@@ -219,7 +219,7 @@ shots:
 
 ```
 /craft-content         → write your story
-/director-video        → build the timeline (mark screen-capture shots)
+/draft-video        → build the timeline (mark screen-capture shots)
 lumis obs setup    → one-time OBS setup
 lumis obs start <slug>  → record the screen demo
 lumis obs stop     → stop recording

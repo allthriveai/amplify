@@ -2,10 +2,11 @@ import { readFileSync, readdirSync, existsSync } from "node:fs";
 import { join } from "node:path";
 import type { LumisConfig } from "../types/config.js";
 import type { Moment, MomentFrontmatter } from "../types/moment.js";
+import type { Meeting, MeetingFrontmatter } from "../types/meeting.js";
 import type { ResearchNote, ResearchFrontmatter } from "../types/research.js";
 import type { Story, StoryFrontmatter, StoryElements } from "../types/story.js";
 import type { CanvasFile } from "../types/canvas.js";
-import { resolveMomentsDir, resolveCanvasPath, resolveResearchDir, resolveResearchCategoryDir, resolveStoriesDir } from "./paths.js";
+import { resolveMomentsDir, resolveMeetingsDir, resolveCanvasPath, resolveResearchDir, resolveResearchCategoryDir, resolveStoriesDir } from "./paths.js";
 import { parseFrontmatter } from "./frontmatter.js";
 
 /** Read all moment files from the configured moments directory */
@@ -49,6 +50,35 @@ export function readMoment(config: LumisConfig, filename: string): Moment | null
     content,
     fiveSecondMoment: fiveSecMatch?.[1]?.trim(),
     connections,
+  };
+}
+
+/** Read all meeting notes from the configured meetings directory */
+export function readMeetings(config: LumisConfig): Meeting[] {
+  const dir = resolveMeetingsDir(config);
+  if (!existsSync(dir)) return [];
+
+  return readdirSync(dir)
+    .filter((f) => f.endsWith(".md") && f !== "README.md")
+    .map((filename) => readMeeting(config, filename))
+    .filter((m): m is Meeting => m !== null);
+}
+
+/** Read a single meeting note by filename */
+export function readMeeting(config: LumisConfig, filename: string): Meeting | null {
+  const dir = resolveMeetingsDir(config);
+  const filepath = join(dir, filename);
+
+  if (!existsSync(filepath)) return null;
+
+  const raw = readFileSync(filepath, "utf-8");
+  const { frontmatter, content } = parseFrontmatter<MeetingFrontmatter>(raw);
+
+  return {
+    filename,
+    path: join(config.paths.meetings, filename),
+    frontmatter,
+    content,
   };
 }
 

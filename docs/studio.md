@@ -46,14 +46,14 @@ lumis studio render      # Render a story's timeline to video
 lumis studio preview     # Open Remotion preview
 ```
 
-## Director Cut Pipeline
+## Draft Pipeline
 
-The Director Cut pipeline turns a crafted story into a multi-shot video:
+The Draft pipeline turns a crafted story into a multi-shot video:
 
 ```
-/craft-content (story) → /director-video (timeline) → /director-images (AI images) → HeyGen (avatar clips) → Remotion (assemble) → CapCut (final polish)
-                        → /director-carousel (cards) → /director-images (AI images) → Canva/Figma (design)
-                        → /director-article (post)   → /director-images (AI images) → publish
+/craft-content (story) → /draft-video (timeline) → /draft-images (AI images) → HeyGen (avatar clips) → Remotion (assemble) → CapCut (final polish)
+                        → /draft-carousel (cards) → /draft-images (AI images) → Canva/Figma (design)
+                        → /draft-article (post)   → /draft-images (AI images) → publish
 ```
 
 ### Compositions
@@ -169,7 +169,7 @@ hook → intro → setup → tension → five-second-moment → transformation �
 
 ## Image Generation
 
-The `/director-images` skill generates AI images for any director format using Google Imagen 4.0.
+The `/draft-images` skill generates AI images for any director format using Google Imagen 4.0.
 
 ### How it works
 
@@ -181,7 +181,7 @@ The `/director-images` skill generates AI images for any director format using G
 
 ### Integration with rendering
 
-For video timelines, `/director-images` sets the `asset` field on shots and changes `b-roll-placeholder` to `screen-capture`. The `ScreenCapture` composition already renders images with Ken Burns zoom, so generated images flow into `lumis studio render` with no extra steps.
+For video timelines, `/draft-images` sets the `asset` field on shots and changes `b-roll-placeholder` to `screen-capture`. The `ScreenCapture` composition already renders images with Ken Burns zoom, so generated images flow into `lumis studio render` with no extra steps.
 
 ### API client
 

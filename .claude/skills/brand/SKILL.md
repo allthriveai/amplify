@@ -160,7 +160,7 @@ Brand set up.
   Config: .lumisrc brand section written
   Brand doc: {paths.brand}/Brand.md
 
-Director skills (/director-video, /director-carousel, /director-article) will use this for visual decisions.
+Draft skills (/draft-video, /draft-carousel, /draft-article) will use this for visual decisions.
 Video intros/outros will show "{name}" and "{domain}".
 ```
 

@@ -1,13 +1,13 @@
 ---
-name: director-carousel
-description: Takes a crafted story and produces a LinkedIn carousel plan. Reads the vault, picks hook + structure from Amplify, builds card-by-card copy with image direction, and saves a carousel.md to the story folder. Use when the user asks to make a carousel, slide deck for LinkedIn, or says "turn this into a carousel", "make carousel slides", or "create a LinkedIn carousel".
+name: draft-carousel
+description: Takes a crafted story and drafts a LinkedIn carousel plan. Reads the vault, picks hook + structure from Amplify, builds card-by-card copy with image direction, and saves a carousel.md to the story folder. Use when the user asks to make a carousel, slide deck for LinkedIn, or says "turn this into a carousel", "make carousel slides", or "create a LinkedIn carousel".
 ---
 
-# Director Carousel
+# Draft Carousel
 
 ## Instructions
 
-When the user runs `/director-carousel`, optionally followed by a story slug:
+When the user runs `/draft-carousel`, optionally followed by a story slug:
 
 ### Step 0: Load Context
 
@@ -24,7 +24,7 @@ Read `{vaultPath}/{paths.brand}/Brand.md` if it exists. Use the brand colors, vi
 
 ### Step 1: Find the Story
 
-If the user provided a slug (e.g., `/director-carousel why-we-rebuilt-onboarding`), read directly from `{stories}/{slug}/story.md` and `{stories}/{slug}/raw.md`.
+If the user provided a slug (e.g., `/draft-carousel why-we-rebuilt-onboarding`), read directly from `{stories}/{slug}/story.md` and `{stories}/{slug}/raw.md`.
 
 If no slug, scan `{vaultPath}/{paths.stories}/` for story folders. List stories that have a `story.md` with `craft-status: drafting` or `craft-status: workshopped` or `craft-status: told`. Present the list and let the user pick.
 
@@ -106,12 +106,37 @@ Label one as **Recommended**, one as **Alternative**, optionally a third as **Da
 
 Give LinkedIn-specific carousel guidance:
 
-- Sweet spot is 7-10 cards
+**Dimensions & Format:**
+- Export as PDF at 1080x1350px (4:5 portrait). This is non-negotiable.
+- LinkedIn renders these as "document posts" — each PDF page becomes a swipeable slide.
+- Upload via Start a Post → "..." → "Add a document". NOT image upload.
+- Max file size 25MB. Keep under 5MB for fast loading.
+
+**Font Sizes (CRITICAL — mobile-first):**
+- Over 60% of LinkedIn sessions are on mobile. The carousel renders at ~500px wide on phones.
+- **Headlines: minimum 60px.** Anything smaller is unreadable on mobile.
+- **Body text: minimum 36px.** Never go below 30px for any text.
+- **Labels/metadata: minimum 24px.**
+- If you're designing at 1080px and it looks "too big" on your screen, it's probably right for mobile.
+- Test: shrink your browser to 500px wide. Can you read everything? If not, make it bigger.
+
+**Content Per Slide:**
+- **Maximum 25-30 words per slide.** If you have more, add another slide.
+- **6-8 lines of text max per slide.** Fewer is better.
+- **One idea per slide.** If you need a comma, you need two slides.
+- Visual > text. If you can show it with an image/diagram, don't write it.
+
+**Slide Count:**
+- Sweet spot is **5-7 slides**. Fewer than 5 feels thin. More than 7 causes drop-off.
 - Card 1 stops the scroll. Bold, zero subtext.
 - Card 2 must create momentum. If they don't swipe past card 2, you've lost them.
-- Stat cards work best in positions 3-5 (after setup, before climax)
 - CTA card should ask a commentable question, not "follow me for more"
 - Closer card is name/handle only. No hard sell.
+
+**Layout & Spacing:**
+- Minimum **60px padding** on all sides. Keep text 80px from edges.
+- High contrast: dark text on light backgrounds.
+- Dense infographic/cheat-sheet tables do NOT work on LinkedIn — text is too small at mobile rendering size. Split into multiple slides instead.
 
 If the user mentions a different platform, adapt guidance accordingly.
 
@@ -149,14 +174,19 @@ Map story elements to cards:
 
 #### Card Rules
 
-- 5-10 cards total. 7-8 is the sweet spot.
-- One idea per card. If you need a comma, you need two cards.
-- Headline: max 10 words. Subtext: max 30 words.
+- **5-7 cards total.** 5-6 is the sweet spot for engagement before drop-off.
+- **One idea per card.** If you need a comma, you need two cards.
+- **Max 25-30 words per card.** This is a hard limit, not a suggestion.
+- **Headline: 3-8 words, minimum 60px font.** Billboard at 60mph energy.
+- **Subtext: max 20 words, minimum 36px font.** Supporting, not competing.
+- **No text smaller than 24px.** Labels, metadata, captions — all 24px+.
 - Hook card has zero subtext. The headline IS the hook.
 - CTA card asks a genuine question, not "follow me for more."
 - Closer card: name/handle + one-line description. No hard sell.
+- **Visual-first.** Each card should have a visual element (SVG, icon, diagram) that communicates the idea faster than text. The visual does the heavy lifting; text supports it.
 - Image direction tells a designer what to create. Be specific about layout, not about exact assets.
 - Carousel reads as a story top to bottom. Each card should make the reader swipe.
+- **Avoid dense tables, comparison charts, or cheat sheets** — they look great at full size but are unreadable when LinkedIn renders them at 500px on mobile. Break into one comparison per slide instead.
 - Apply humanizer rules to all copy.
 
 ### Step 5: Present and Edit
@@ -288,16 +318,40 @@ Log to session memory at `{vaultPath}/{paths.memory}/sessions/YYYY-MM-DD.md`:
 - **HH:MM** — carousel_created: Built [N]-card carousel for "[title]" (LinkedIn)
 ```
 
+### Step 6b: Render PDF
+
+After saving the carousel markdown, render a PDF for LinkedIn upload.
+
+1. Read the brand config from `.lumisrc` (the `brand` object).
+2. Map brand tokens to `CarouselBrand`:
+   - `brand.primary` → `primary`
+   - `brand.secondary` → `secondary`
+   - `brand.accent` → `accent`
+   - `brand.background` → `background`
+   - `brand.ink` → `ink`
+   - `brand.inkLight` → `inkLight`
+   - `brand.inkMuted` → `inkMuted`
+   - `brand.fontDisplay` → `displayFont`
+   - `brand.fontBody` → `bodyFont`
+   - `brand.fontsUrl` → `fontsUrl`
+   - `brand.borderRadius` → `borderRadius`
+3. Call `renderCarouselPdf({ cards: frontmatter.cards, brand, slug, config }, outputPath)` where `outputPath` is `{stories}/{slug}/carousel-{hook}-{slug}-{date}.pdf` (same name as the markdown but with `.pdf` extension).
+4. The PDF renders at 1080x1350px (LinkedIn portrait 4:5 ratio), one card per page, with brand fonts and colors.
+
+If the render fails (e.g., Playwright not installed), report the error but don't block. The markdown file is still the source of truth.
+
 ### Step 7: Hand Off
 
 Report what was saved:
 
 ```
 Carousel saved: {stories}/{slug}/carousel-{hook}-{slug}-{date}.md
+PDF rendered:   {stories}/{slug}/carousel-{hook}-{slug}-{date}.pdf
   Cards: {N} ({hookCount} hook, {narrativeCount} narrative, {statCount} stat, {contrastCount} contrast, {ctaCount} CTA, {closerCount} closer)
   Platform: LinkedIn
+  Dimensions: 1080x1350px (4:5 portrait)
 
-Next step: Take this to Canva or Figma. The card types, copy, and image direction are all in the file.
+Next step: Upload the PDF to LinkedIn as a document post. Go to linkedin.com/feed → Start a post → Document icon → upload the PDF.
 ```
 
 ### Humanizer
@@ -312,7 +366,8 @@ Card copy should sound punchy and conversational. If a headline sounds like a co
 {stories}/{slug}/
   raw.md                                    <- free write + interview (craft-content)
   story.md                                  <- pure narrative (craft-content)
-  video-{hook}-{slug}-{date}.md             <- video timeline (director-video)
-  carousel-{hook}-{slug}-{date}.md          <- carousel cards (director-carousel)
-  article-{hook}-{slug}-{date}.md           <- blog post (director-article)
+  video-{hook}-{slug}-{date}.md             <- video timeline (draft-video)
+  carousel-{hook}-{slug}-{date}.md          <- carousel cards (draft-carousel)
+  carousel-{hook}-{slug}-{date}.pdf         <- rendered PDF for LinkedIn upload
+  article-{hook}-{slug}-{date}.md           <- blog post (draft-article)
 ```

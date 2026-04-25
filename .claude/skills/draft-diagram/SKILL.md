@@ -1,15 +1,15 @@
 ---
-name: director-diagram
+name: draft-diagram
 description: Creates interactive React Flow diagrams from crafted stories. Outputs a standalone HTML file (interactive) and a PNG export for embedding in articles, carousels, or sharing. Use when the user asks to make a diagram, flowchart, concept map, or visual from a story, or says "turn this into a diagram", "make a flowchart", "visualize this", or "create a concept map".
 ---
 
-# Director Diagram
+# Draft Diagram
 
 ## Instructions
 
-When the user runs `/director-diagram`, optionally followed by a story slug and/or a brand flag:
+When the user runs `/draft-diagram`, optionally followed by a story slug and/or a brand flag:
 
-**Brand flag**: If the user passes `--{profile}` (e.g., `--go1`), use that brand profile from `.lumisrc` `brandProfiles.{profile}` instead of the default `brand` section. Example: `/director-diagram --go1 my-story-slug`
+**Brand flag**: If the user passes `--{profile}` (e.g., `--go1`), use that brand profile from `.lumisrc` `brandProfiles.{profile}` instead of the default `brand` section. Example: `/draft-diagram --go1 my-story-slug`
 
 ### Step 0: Load Context
 
@@ -40,7 +40,7 @@ Read `{vaultPath}/Voice.md` if it exists for tone context.
 
 ### Step 1: Find the Story
 
-If the user provided a slug (e.g., `/director-diagram why-we-rebuilt-onboarding`), use it directly.
+If the user provided a slug (e.g., `/draft-diagram why-we-rebuilt-onboarding`), use it directly.
 
 If no slug, scan `{vaultPath}/{paths.stories}/` for story folders that have a `story.md`. List them and let the user pick.
 
@@ -218,7 +218,7 @@ Diagram created for "{story title}":
 
 Next steps:
   - Open the HTML file in a browser for the interactive version
-  - Use the PNG in /director-carousel or /director-article
+  - Use the PNG in /draft-carousel or /draft-article
   - Edit the .md file to refine nodes and edges, then re-run to regenerate
 ```
 
@@ -239,10 +239,10 @@ When building diagrams from stories:
 {stories}/{slug}/
   raw.md                                    <- free write + interview (craft-content)
   story.md                                  <- pure narrative (craft-content)
-  video-{hook}-{slug}-{date}.md             <- video timeline (director-video)
-  carousel-{hook}-{slug}-{date}.md          <- carousel cards (director-carousel)
-  article-{hook}-{slug}-{date}.md           <- blog post (director-article)
-  diagram-{type}-{slug}-{date}.md           <- diagram source (director-diagram)
+  video-{hook}-{slug}-{date}.md             <- video timeline (draft-video)
+  carousel-{hook}-{slug}-{date}.md          <- carousel cards (draft-carousel)
+  article-{hook}-{slug}-{date}.md           <- blog post (draft-article)
+  diagram-{type}-{slug}-{date}.md           <- diagram source (draft-diagram)
   assets/                                   <- generated assets
     diagram-{type}.html                     <- interactive React Flow diagram
     diagram-{type}.png                      <- static screenshot

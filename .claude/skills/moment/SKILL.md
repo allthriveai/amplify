@@ -48,7 +48,7 @@ These will be used in Step 3 to cross-reference with the moment's themes.
 
 If the user's input includes the word "private" at the beginning (e.g., `/moment private I realized today...`) or they say "this is private" or "keep this private", set `private: true` in the frontmatter. Private moments:
 - Still get full analysis, connections, and pattern mapping
-- Are excluded from content pipelines: they won't appear in `/craft-content`, `/director-*`, `social_coach`, `story_craft_practice`, or `story_craft_develop` recommendations
+- Are excluded from content pipelines: they won't appear in `/craft-content`, `/draft-*`, `social_coach`, `story_craft_practice`, or `story_craft_develop` recommendations
 - The user can always find them in the vault directly
 
 Strip the word "private" from the raw input before analyzing (it's a flag, not part of the moment).

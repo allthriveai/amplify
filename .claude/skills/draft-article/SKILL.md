@@ -1,13 +1,13 @@
 ---
-name: director-article
-description: Takes a crafted story and writes a long-form blog post. Reads the vault, picks hook + structure from Amplify, writes the full article using the narrative arc, and saves an article.md to the story folder. Use when the user asks to write a blog post, article, or long-form piece from a story, or says "turn this into an article", "write the blog post", or "make this a long-form post".
+name: draft-article
+description: Takes a crafted story and drafts a long-form blog post. Reads the vault, picks hook + structure from Amplify, writes the full article using the narrative arc, and saves an article.md to the story folder. Use when the user asks to write a blog post, article, or long-form piece from a story, or says "turn this into an article", "write the blog post", or "make this a long-form post".
 ---
 
-# Director Article
+# Draft Article
 
 ## Instructions
 
-When the user runs `/director-article`, optionally followed by a story slug:
+When the user runs `/draft-article`, optionally followed by a story slug:
 
 ### Step 0: Load Context
 
@@ -24,7 +24,7 @@ Read `{vaultPath}/{paths.brand}/Brand.md` if it exists. Use the brand visual sty
 
 ### Step 1: Find the Story
 
-If the user provided a slug (e.g., `/director-article why-we-rebuilt-onboarding`), read directly from `{stories}/{slug}/story.md` and `{stories}/{slug}/raw.md`.
+If the user provided a slug (e.g., `/draft-article why-we-rebuilt-onboarding`), read directly from `{stories}/{slug}/story.md` and `{stories}/{slug}/raw.md`.
 
 If no slug, scan `{vaultPath}/{paths.stories}/` for story folders. List stories that have a `story.md` with `craft-status: drafting` or `craft-status: workshopped` or `craft-status: told`. Present the list and let the user pick.
 
@@ -292,7 +292,7 @@ The article should sound written by a person with opinions, not assembled by a s
 {stories}/{slug}/
   raw.md                                    <- free write + interview (craft-content)
   story.md                                  <- pure narrative (craft-content)
-  video-{hook}-{slug}-{date}.md             <- video timeline (director-video)
-  carousel-{hook}-{slug}-{date}.md          <- carousel cards (director-carousel)
-  article-{hook}-{slug}-{date}.md           <- blog post (director-article)
+  video-{hook}-{slug}-{date}.md             <- video timeline (draft-video)
+  carousel-{hook}-{slug}-{date}.md          <- carousel cards (draft-carousel)
+  article-{hook}-{slug}-{date}.md           <- blog post (draft-article)
 ```
