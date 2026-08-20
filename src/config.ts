@@ -1,9 +1,16 @@
 import { readFileSync, existsSync } from "node:fs";
-import { resolve, join } from "node:path";
+import { resolve, join, dirname } from "node:path";
+import { fileURLToPath } from "node:url";
 import { config as loadDotenv } from "dotenv";
 import { LumisConfig, DEFAULT_PATHS, DEFAULT_RESEARCH_CATEGORIES } from "./types/config.js";
 import type { StudioConfig } from "./types/studio.js";
 import type { CaptureConfig } from "./types/config.js";
+
+/** The lumis repo root, resolved from this module rather than the cwd */
+function packageRoot(): string {
+  // src/config.ts and dist/config.js are both one level below the root
+  return resolve(dirname(fileURLToPath(import.meta.url)), "..");
+}
 
 /**
  * Load Lumis configuration from (in priority order):
@@ -12,7 +19,12 @@ import type { CaptureConfig } from "./types/config.js";
  * 3. Environment variables (VAULT_PATH, ANTHROPIC_API_KEY)
  */
 export function loadConfig(overrides?: Partial<LumisConfig>): LumisConfig {
+  // dotenv defaults to the cwd, which is wrong whenever something other than a
+  // terminal in this repo starts Lumis — Claude Desktop launches the MCP server
+  // from an arbitrary directory. Load the repo's own .env too, without letting
+  // it override variables the host already set.
   loadDotenv();
+  loadDotenv({ path: join(packageRoot(), ".env") });
 
   const rc = readLumisrc();
   const rcPaths = rc?.paths;
@@ -54,6 +66,7 @@ export function loadConfig(overrides?: Partial<LumisConfig>): LumisConfig {
       audio: overrides?.paths?.audio ?? rcPaths?.audio ?? DEFAULT_PATHS.audio,
       goals: overrides?.paths?.goals ?? rcPaths?.goals ?? DEFAULT_PATHS.goals,
       meetings: overrides?.paths?.meetings ?? rcPaths?.meetings ?? DEFAULT_PATHS.meetings,
+      reviews: overrides?.paths?.reviews ?? rcPaths?.reviews ?? DEFAULT_PATHS.reviews,
     },
     researchCategories: overrides?.researchCategories ?? rc?.researchCategories ?? DEFAULT_RESEARCH_CATEGORIES,
     ...(overrides?.brand ?? rc?.brand ? { brand: overrides?.brand ?? rc?.brand } : {}),

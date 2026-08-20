@@ -1,5 +1,5 @@
 export interface BrandColors {
-  /** Main brand color (hex) — navy/ethos */
+  /** Main brand color (hex) */
   primary: string;
   /** Secondary brand color — teal/logos */
   secondary: string;

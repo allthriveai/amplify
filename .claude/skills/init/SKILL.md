@@ -68,7 +68,7 @@ If `.lumisrc` doesn't already exist in the vault root, write it:
     "amplifyHooks": "Lumis/Amplify/Hooks",
     "amplifyStructures": "Lumis/Amplify/Structures",
     "amplifyPersuasion": "Lumis/Amplify",
-    "strategyDocs": "2 - Areas/All Thrive",
+    "strategyDocs": "Strategy",
     "voice": "Lumis/Voice.md",
     "signals": "Lumis/Signals",
     "memory": "Lumis/Memory",

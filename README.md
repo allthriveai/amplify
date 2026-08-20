@@ -2,101 +2,137 @@
 
 <img src="lumis.jpg" alt="Lumis" width="200" align="left">
 
-### Your AI confidant. Lumis helps you capture the small moments from your day, synthesize research into lessons, and turn your real life into content worth sharing.
+### Your AI life coach. Lumis makes you show up every day, holds you to the goals you set, and uses your own life as the evidence.
 
-Tell Lumis about your life, share research you are interested in, and learn to craft your own stories.
+Most journaling tools are write-only. You pour things in and nothing ever comes back. Lumis is built the other way around: every session opens with what you said you'd do, how long it's been sitting, and which of your goals have gone quiet.
 
-#### Lumis will help you find the connections across what you've lived and what you've learned:
+<br clear="left"/>
 
-- **Define your voice** `/init` walks you through setting up your vault, voice, and personalized content toolkit
-- **Captures moments** and identifies the "5-second moment," the instant something shifted
-- **Finds connections** to your past moments, things you might not have linked on your own
-- **Builds a Pattern Map** in Obsidian that visualizes how your moments relate over time
-- **Saves research** from articles, books, and videos with TL;DR companions
-- **Captures inspiration** by researching people you admire and connecting them to your vault
-- **Reads research aloud** by converting any vault note to narrated audio with ElevenLabs
-- **Challenges your thinking** through targeted critical thinking prompts with honest feedback
-- **Develops stories** through free writing and guided questions, then shapes them into clean narratives
-- **Directs video production** by turning your story into a shot-by-shot timeline, generating avatar clips, and assembling branded video
-- **Builds carousels** from stories into card-by-card LinkedIn carousel plans with copy and image direction
-- **Writes articles** from stories into full long-form blog posts ready to publish
-- **Generates images** for any director format using Google Imagen, with brand-aware prompts that update source files automatically
-- **Creates diagrams** from stories as interactive React Flow visualizations, with PNG export for embedding anywhere
-- **Sets your goals** through a guided conversation that writes Goals.md, your north star for all content output
-- **Storyboards video** with an editable HTML board so you can see, hear, and rearrange shots before rendering
-- **Cleans AI writing** by detecting and fixing AI vocabulary, filler phrases, em dash overuse, and structural tells
-- **Writes YouTube descriptions** optimized for search, click-through, and the first 150 characters above the fold
-- **Writes LinkedIn posts** optimized for saves and dwell time, with hooks under 110 characters and proven post structures
+## The loop
 
-This repo is the engine. Your [Obsidian](https://obsidian.md) vault is where your moments, stories, and research live. They stay separate so your personal content never ends up in a code repo. Your stories remain private to you.
+Three commands, three rhythms. Everything else feeds them.
+
+| | | |
+|---|---|---|
+| **Daily** | `/today` | Opens with the receipt, then asks what you're doing about it |
+| **Weekly** | `/week` | The reckoning: what moved, what didn't, three commitments |
+| **Ongoing** | `/goals` | The targets both of the above hold you to |
+
+## What a morning looks like
+
+```
+$ lumis today
+
+Where you are
+Last entry: 4 days ago · streak 0 · longest 3 · 12 total
+
+**Carried over**
+- [ ] Draft the launch post (moved 6 days)
+- [ ] Reply to Sam (moved 2 days)
+
+**Targets going quiet**
+- Publish a post — 118 days (weekly)
+- Write a long-form piece — 34 days (monthly)
+
+Drift
+  1 task carried a week or more: "Draft the launch post" (6d)
+  9 of the last 30 days had no entry
+```
+
+No encouragement, no streak-recovery narrative, no reframing four missed days as a fresh start. The numbers do the work.
+
+## Why this works when reminders don't
+
+**Tasks age, and the number is public.** An unfinished task comes back tomorrow as `(moved 6 days)`, aged by the real gap — skip three days and it jumps three. A task that has moved ten days isn't a task anymore, it's a decision you haven't made. Lumis will offer to kill it, and killing it is a legitimate answer.
+
+**Goals are checked, not just stored.** `Goals.md` holds your prose. An `## Active Targets` section holds the machine-readable half:
+
+```markdown
+## Active Targets
+- [ ] Publish a post `cadence:weekly` `last:2026-04-21` #goal/writing
+- [ ] Ship the redesign #goal/product
+```
+
+Recurring targets get a cadence and surface the moment they go quiet. Milestones omit cadence so they never nag. Finish a daily task tagged `#goal/writing` and the matching target gets stamped automatically — targets stay current because real work moved them, not because you remembered to update a tracker.
+
+**Drift is visible across weeks, not inside them.** Any single day looks fine. Lumis counts what only shows up in aggregate: tasks carried past a week, targets abandoned rather than merely slipping, themes you keep circling in your moments, days that went silent. `/week` puts them in front of you and asks what you're going to do.
+
+**It never writes your reflection for you.** Lumis transcribes your words and fixes grammar. It doesn't improve your thinking or tell you how to feel about a bad week.
+
+## Feeding the loop
+
+The coach is only as good as the evidence. These put real material in the vault:
+
+- **`/moment`** — Captures a moment from your day and finds the "5-second moment," the instant something shifted. Connects it to past moments and rebuilds the Pattern Map. Over months this becomes the record of what actually happened to you, which is what `/week` reads when it asks why the same theme keeps coming up.
+- **`/challenge`** — Pressure-tests an idea with critical thinking prompts and honest feedback. When a task has been carried for three weeks, the block is usually a belief, not a schedule problem.
+- **`/add-research`** — Saves articles, PDFs, and videos as categorized notes with TL;DR companions.
+- **`/add-inspiration`** — Researches someone you admire and links them back into your vault.
+- **`/meeting`** — Turns a transcript or pasted notes into decisions, action items, and attendees.
+- **`/voice`** and **`/brand`** — Who you are and how you look. Read by everything that writes.
+
+## The visibility arm
+
+For a lot of people, one of the goals is *be seen doing the work*. That's a target like any other, and it's the one that's hardest to fake — you either published or you didn't.
+
+So Lumis also owns the pipeline that turns your captured life into things you can publish:
+
+- **`/craft-content`** — Free write, find the story, shape the narrative. The story is the asset.
+- **`/draft-video`** · **`/draft-carousel`** · **`/draft-article`** · **`/draft-images`** · **`/draft-diagram`** — Remix one story into platform-ready formats.
+- **`/linkedin-post`** · **`/youtube-description`** · **`/youtube-short`** — Platform-native writing with hook rules baked in.
+- **`/humanizer`** — Strips AI vocabulary, filler, em dash overuse, and structural tells from any prose.
+- **`lumis studio render`** — HeyGen avatar clips, ElevenLabs voiceover, Remotion assembly, branded `.mp4`.
+
+> **Heads up:** this half is being split into its own repo. Lumis is becoming the coach; the content flywheel becomes a separate tool that reads the same vault. Nothing is going away — the seam is the vault, not the code. The tag `v0.1.0-pre-split` marks the last version with both halves together.
 
 ## How it works
 
-Lumis owns the full content flywheel. Most tools handle one step. Lumis connects all of them because a video director that doesn't know your moments is useless, and a content tool that doesn't know your voice is just another template.
-
 ```
-  live your life           read something         someone inspires you
-       │                        │                        │
-       ▼                        ▼                        ▼
-  ┌─────────┐            ┌─────────┐             ┌───────────┐
-  │ /moment │            │ /add-   │             │ /add-     │
-  │         │            │ research│             │inspiration│
-  └────┬────┘            └────┬────┘             └─────┬─────┘
-       │                      │                        │
-       │  5-second moment     │  TL;DR companion       │  bio researched
-       │  connections found   │  category matched      │  vault back-links
-       │  pattern map built   │                        │  found
-       │                      │                        │
-       └──────────────────────┼────────────────────────┘
-                              │
-                      ┌───────▼───────┐
-                      │    Vault      │  moments, stories, research,
-                      │   (Obsidian)  │  voice, inspiration, patterns
-                      └───────┬───────┘
-                              │
-        ┌──────────────────┬──┴───────────────┬──────────────────┐
-        │                  │                  │                  │
-        ▼                  ▼                  ▼                  ▼
-┌───────────────┐  ┌───────────────┐  ┌───────────────┐  ┌───────────────┐
-│ /craft-content│  │ /craft-       │  │ /challenge    │  │ /listen       │
-│               │  │  storytelling │  │               │  │               │
-│ free write    │  │               │  │ pressure-test │  │ research      │
-│ find story    │  │ practice      │  │ your ideas    │  │ notes to      │
-│ shape arc     │  │ & develop     │  │ honest feedbk │  │ audio (TTS)   │
-└───────┬───────┘  └───────────────┘  └───────────────┘  └───────┬───────┘
-        │                                                        │
-        │                                                        ▼
-        │                                                  narrated .mp3
-    ┌───▼─────────────────────────────────────────┐
-    │   Director Cuts                             │
-    │                                             │
-    │ /director-video      shot-by-shot timeline  │
-    │ /director-carousel   card-by-card plan      │
-    │ /director-article    full blog post         │
-    │ /director-images     AI images (Imagen)     │
-    │ /director-diagram    React Flow diagram     │
-    └────┬──────────────┬──────────────┬──────────┘
-         │              │              │
-         ▼              ▼              ▼
-    timeline.md    carousel.md    article.md
-  (shot-by-shot)   (LinkedIn)       (blog)
-         │
-         │  lumis studio render <slug>
-         ▼
-    ┌────▼─────────────────────────────┐
-    │    Studio                        │
-    │                                  │
-    │ HeyGen       avatar clips        │
-    │ ElevenLabs   voiceover audio     │
-    │ Remotion     branded render      │
-    └──────────────┬───────────────────┘
-                   │
-                   ▼
-            branded .mp4
-             (YouTube)
+                     ┌──────────────────┐
+                     │     Goals.md     │
+                     │                  │
+                     │  the job you     │◀────── edit when a target
+                     │  want, targets   │        keeps getting missed
+                     │  with a cadence  │
+                     └────────┬─────────┘
+                              │ holds you to it
+                              ▼
+   ┌──────────────────────────────────────────────────────┐
+   │                      THE LOOP                        │
+   │                                                      │
+   │   every morning     ┌──────────┐                     │
+   │   every evening ───▶│  /today  │                     │
+   │                     └────┬─────┘                     │
+   │                          │  receipt · carried tasks  │
+   │                          │  quiet targets · drift    │
+   │                          ▼                           │
+   │   every sunday   ────▶┌──────────┐                   │
+   │                       │  /week   │                   │
+   │                       └────┬─────┘                   │
+   │                            │  what moved, what didn't│
+   │                            │  three commitments      │
+   └────────────────────────────┼─────────────────────────┘
+                                │
+        ┌───────────────────────┴────────────────────────┐
+        │                    Vault                       │
+        │                  (Obsidian)                    │
+        │  daily notes · reviews · moments · research    │
+        │  goals · voice · signals · patterns            │
+        └───────┬────────────────────────────────┬───────┘
+                │                                │
+      evidence in                        visibility out
+                │                                │
+   ┌────────────┴─────────────┐    ┌─────────────┴──────────────┐
+   │ /moment    /challenge    │    │ /craft-content             │
+   │ /add-research /meeting   │    │ /draft-video /draft-article│
+   │ /add-inspiration         │    │ /draft-carousel  /draft-*  │
+   └──────────────────────────┘    └─────────────┬──────────────┘
+                                                 │
+                                                 ▼
+                                      HeyGen · ElevenLabs
+                                      Remotion → branded .mp4
 ```
 
-Each step feeds the next. Your moments become the raw material for stories. `/craft-content` finds the story, and the director skills turn it into platform-ready formats.
+This repo is the engine. Your [Obsidian](https://obsidian.md) vault is where your days, goals, moments, and stories live. They stay separate so your personal writing never ends up in a code repo.
 
 ## Setup
 
@@ -109,60 +145,109 @@ claude
 /init
 ```
 
-`/init` walks you through choosing your vault path, scaffolds the directory structure, interviews you to populate Voice.md, then copies and personalizes the Amplify toolkit (8 hook types, 18 content structures, persuasion glossary) using your voice. Lumis reads Voice.md at every layer to align moments, stories, and video with your identity.
+`/init` scaffolds your vault, writes `.lumisrc`, and interviews you to populate Voice.md. Then:
+
+```
+/goals      set the targets the coach will hold you to
+/today      start the loop
+```
+
+Run `/today` tomorrow morning and it will already know how you did.
 
 ## Commands
 
+**The loop**
+
 ```
-/init               Set up vault, voice, and Amplify toolkit
-/voice              Fill in or redo your Voice.md
-/moment             Capture a moment
+/today              Open today: receipt, carried tasks, priorities
+/today (evening)    Check tasks off, reflect, close the day
+/week               The weekly reckoning and next week's commitments
+/goals              Set your north star and active targets
+```
+
+**Evidence**
+
+```
+/moment             Capture a moment and find the 5-second shift
+/challenge          Pressure-test an idea with honest feedback
 /add-research       Save and categorize research
 /add-inspiration    Capture a person who inspires you
+/meeting            Turn a transcript into decisions and action items
+/voice              Fill in or redo your Voice.md
+/brand              Set up your visual brand identity
+/init               Set up vault, voice, and Amplify toolkit
+```
+
+**Visibility**
+
+```
 /craft-content      Free write, find the story, shape the narrative
 /craft-storytelling Practice or develop storytelling from moments
-/director-video     Build a shot-by-shot timeline and produce video
-/director-carousel  Build a LinkedIn carousel from a story
-/director-article   Write a long-form article from a story
-/director-images    Generate AI images for any director format
-/director-diagram   Create interactive diagram from a story
-/challenge          Pressure-test an idea with critical thinking prompts
-/goals              Set up Goals.md through guided conversation
+/draft-video        Shot-by-shot timeline, storyboard, produce video
+/draft-carousel     LinkedIn carousel from a story
+/draft-article      Long-form article from a story
+/draft-images       AI images for any draft format
+/draft-diagram      Interactive React Flow diagram from a story
+/linkedin-post      LinkedIn post optimized for saves and dwell time
+/youtube-description  YouTube description optimized for search
+/youtube-short      Build a Short from existing video
+/youtube-upload     Upload, schedule, and publish to YouTube
+/humanizer          Strip AI-writing tells from any prose
 /listen             Convert a research note to narrated audio
-/brand              Set up your visual brand identity
-/storyboard         Visual storyboard for pre-production review
-/humanizer          Clean AI-generated writing patterns from text
-/youtube-description Write a YouTube video description
-/linkedin-post      Write a LinkedIn post
+```
 
-lumis studio list           List all director cuts with status
-lumis studio render <slug>  Render a director cut to branded video
-lumis studio preview        Open Remotion Studio for previewing
-lumis listen <note>         Convert a research note to audio narration
-lumis listen --voices       List available ElevenLabs voices
-lumis capture <cmd>         OBS capture (setup, start, stop, list, scene)
+**CLI**
+
+```
+lumis today                 Open today's journal
+lumis today --done "task"   Check tasks off and close the day
+lumis week [YYYY-MM-DD]     Write a weekly review
+lumis moment "..."          Capture a moment
+lumis patterns              Regenerate the Pattern Map
+lumis init [path]           Set up Lumis in a vault
+lumis studio list           List all draft cuts with status
+lumis studio render <slug>  Render a draft cut to branded video
+lumis studio preview        Open Remotion Studio
+lumis storyboard <slug>     Visual storyboard for pre-production
+lumis listen <note>         Convert a research note to audio
+lumis obs <cmd>             OBS capture (setup, start, stop, scenes)
 ```
 
 ## Docs
 
-- **[Vault structure](docs/vault.md)** — how the Obsidian vault is organized, Voice.md, Amplify toolkit
-- **[Signals](docs/signals.md)** — event log connecting pipeline stages
-- **[Memory](docs/memory.md)** — session history and user preferences
+- **[Vault structure](docs/vault.md)** — how the vault is organized, Voice.md, Amplify toolkit
+- **[Signals](docs/signals.md)** — event log connecting every stage
+- **[Memory](docs/memory.md)** — session history and preferences
 - **[MCP Server](docs/mcp.md)** — all tools and Claude Desktop config
-- **[Studio](docs/studio.md)** — video production pipeline, image generation, and API setup
-- **[OBS Capture](docs/obs.md)** — OBS integration, screen/camera recording, keyboard shortcuts
+- **[Studio](docs/studio.md)** — video pipeline, image generation, API setup
+- **[OBS Capture](docs/obs.md)** — screen and camera recording
+
+## Contributing
+
+This repo is public and must stay free of personal data. Your vault holds the
+personal half; the repo holds only the tool.
+
+```bash
+npm install          # also installs the pre-commit hook
+npm run check:personal
+npm run lint && npm test
+```
+
+The pre-commit hook blocks home paths, emails, API keys, and hardcoded vault
+locations. Add real names you want caught to `.personal-patterns` (gitignored).
+Examples in docs and skills must use invented data.
 
 ## Tech stack
 
 - **Node.js + TypeScript** with ES modules
 - **Claude API** for moment analysis and story development
-- **gray-matter** for YAML frontmatter parsing
-- **MCP SDK** for Claude Code integration
+- **MCP SDK** — 12 tools, works in Claude Code and Claude Desktop
+- **gray-matter** for YAML frontmatter
 - **Remotion** for programmatic video rendering
-- **HeyGen** for AI avatar video generation
+- **HeyGen** for AI avatar video
 - **ElevenLabs** for text-to-speech
-- **Google Imagen** for AI image generation
-- **React Flow** for interactive diagrams (loaded via CDN, no npm dependency)
+- **Google Imagen** for image generation
+- **React Flow** for interactive diagrams (CDN, no npm dependency)
 
 ## License
 

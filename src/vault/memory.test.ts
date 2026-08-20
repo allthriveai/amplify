@@ -1,7 +1,8 @@
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import { rmSync, readFileSync, existsSync } from "node:fs";
 import { join } from "node:path";
-import { formatSessionTime, appendSessionEntry, readSession, readPreferences, addPreference } from "./memory.js";
+import { formatSessionTime, appendSessionEntry, readSession, readRecentSessions, readPreferences, addPreference } from "./memory.js";
+import { toDateKey } from "./dates.js";
 import { createTestConfig, writeTestFile } from "./test-helpers.js";
 import type { LumisConfig } from "../types/config.js";
 
@@ -43,7 +44,7 @@ describe("appendSessionEntry", () => {
     const entry = { time: "14:30", action: "moment", detail: "Captured a realization" };
     appendSessionEntry(config, entry);
 
-    const today = new Date().toISOString().split("T")[0];
+    const today = toDateKey(new Date());
     const sessionPath = join(config.vaultPath, config.paths.memory, "sessions", `${today}.md`);
     expect(existsSync(sessionPath)).toBe(true);
 
@@ -59,7 +60,7 @@ describe("appendSessionEntry", () => {
     appendSessionEntry(config, entry1);
     appendSessionEntry(config, entry2);
 
-    const today = new Date().toISOString().split("T")[0];
+    const today = toDateKey(new Date());
     const sessionPath = join(config.vaultPath, config.paths.memory, "sessions", `${today}.md`);
     const content = readFileSync(sessionPath, "utf-8");
 
@@ -161,5 +162,36 @@ describe("addPreference", () => {
     expect(content).toContain("## Research");
     expect(content).toContain("- **tone**: casual");
     expect(content).toContain("- **format**: detailed");
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Local-day filing
+//
+// Session entries must land on the local calendar day. Deriving the day from
+// toISOString() files evening work under tomorrow anywhere west of UTC.
+// ---------------------------------------------------------------------------
+describe("session entries use the local calendar day", () => {
+  it("writes to the local day, not the UTC day", () => {
+    appendSessionEntry(config, { time: "21:39", action: "journal opened", detail: "test" });
+
+    const now = new Date();
+    const localDay = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+    const utcDay = now.toISOString().split("T")[0];
+
+    expect(readSession(config, localDay)).toContain("journal opened");
+    if (utcDay !== localDay) {
+      expect(readSession(config, utcDay)).toBeNull();
+    }
+  });
+
+  it("readSession defaults to the local day", () => {
+    appendSessionEntry(config, { time: "21:39", action: "journal opened", detail: "test" });
+    expect(readSession(config)).toContain("journal opened");
+  });
+
+  it("readRecentSessions finds an entry written now", () => {
+    appendSessionEntry(config, { time: "21:39", action: "journal opened", detail: "test" });
+    expect(readRecentSessions(config, 3).join("\n")).toContain("journal opened");
   });
 });

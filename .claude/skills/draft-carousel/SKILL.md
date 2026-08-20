@@ -59,7 +59,7 @@ Present all 8 hooks as a numbered menu. For each hook, write 1-2 example opening
 Example format:
 
 ```
-1. **Curiosity Gap** — "Most AI agents have guardrails. Zero have character."
+1. **Curiosity Gap** — "Every team tracks velocity. Almost none track whether it mattered."
    Opens a gap the viewer needs closed. (Information-gap theory: withholding the answer creates pull.)
 
 2. **Bold Claim** — "Your agent's safety benchmarks are measuring the wrong thing."
@@ -196,7 +196,7 @@ Show numbered card list:
 ```
 ## Carousel: "Story Title" (8 cards, LinkedIn)
 
-1. [HOOK] "Most AI agents have guardrails. Zero have character."
+1. [HOOK] "Every team tracks velocity. Almost none track whether it mattered."
 2. [SETUP / narrative] "Six months ago I built an agent" — It passed every safety test...
 3. [TENSION / stat] "67%" — of companies have no character evaluation...
 4. [5-SEC MOMENT / narrative] "Then a user asked it something it shouldn't answer"
@@ -239,7 +239,7 @@ cards:
   - id: 1
     beat: hook
     cardType: hook
-    headline: "Most AI agents have guardrails.\nZero have character."
+    headline: "Every team tracks velocity.\nAlmost none track whether it mattered."
     subtext: ""
     imageDirection: "Dark background, bold white text, no imagery"
   - id: 2

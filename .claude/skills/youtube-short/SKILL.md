@@ -24,7 +24,7 @@ Every Short follows this structure:
 
 2. **Content** — The technique scene with terminal visuals, voiceover audio, and synced captions. Reuses the same shot rendering as the main video.
 
-3. **CTA** (~2.5s / 75 frames) — "example.com" with ElevenLabs voiceover saying "Full breakdown at example.com" at natural 1x speed (not 1.1x — CTA should feel unhurried).
+3. **CTA** (~2.5s / 75 frames) — the brand domain from Brand.md, with an ElevenLabs voiceover saying "Full breakdown at {domain}" at natural 1x speed (not 1.1x — CTA should feel unhurried).
 
 ### Audio
 
@@ -37,7 +37,7 @@ Every Short follows this structure:
 
 Render each Short individually:
 ```bash
-npx remotion render DebuggingShort1 --image-format png --video-bitrate 30M --output out/short-1-raw.mp4
+npx remotion render {ShortCompositionId} --image-format png --video-bitrate 30M --output out/short-1-raw.mp4
 ```
 
 Then two-pass loudness normalize to -14 LUFS:

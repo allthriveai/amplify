@@ -42,7 +42,7 @@ describe("resolvePath", () => {
 
   it("uses the configured vaultPath", () => {
     const config = mockConfig({ vaultPath: "/my/obsidian" });
-    expect(resolvePath(config, "Notes")).toBe("/my/obsidian/Notes");
+    expect(resolvePath(config, "Notes")).toBe("/my/obsidian/Notes");  // personal-ok: generic test fixture
   });
 });
 

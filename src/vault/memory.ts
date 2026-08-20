@@ -3,6 +3,7 @@ import { dirname } from "node:path";
 import type { LumisConfig } from "../types/config.js";
 import type { SessionEntry } from "../types/memory.js";
 import { resolveSessionPath, resolvePreferencesPath } from "./paths.js";
+import { todayKey, shiftDateKey } from "./dates.js";
 
 /** Format a Date as HH:MM for session log entries */
 export function formatSessionTime(date: Date = new Date()): string {
@@ -11,7 +12,7 @@ export function formatSessionTime(date: Date = new Date()): string {
 
 /** Append a session entry to today's session log */
 export function appendSessionEntry(config: LumisConfig, entry: SessionEntry): void {
-  const today = new Date().toISOString().split("T")[0];
+  const today = todayKey();
   const path = resolveSessionPath(config, today);
   const dir = dirname(path);
 
@@ -30,7 +31,7 @@ export function appendSessionEntry(config: LumisConfig, entry: SessionEntry): vo
 
 /** Read a session log for a given date (defaults to today) */
 export function readSession(config: LumisConfig, date?: string): string | null {
-  const d = date ?? new Date().toISOString().split("T")[0];
+  const d = date ?? todayKey();
   const path = resolveSessionPath(config, d);
   if (!existsSync(path)) return null;
   return readFileSync(path, "utf-8");
@@ -39,12 +40,10 @@ export function readSession(config: LumisConfig, date?: string): string | null {
 /** Read session logs for the last N days */
 export function readRecentSessions(config: LumisConfig, days: number): string[] {
   const sessions: string[] = [];
-  const now = new Date();
+  const today = todayKey();
 
   for (let i = 0; i < days; i++) {
-    const d = new Date(now);
-    d.setDate(d.getDate() - i);
-    const dateStr = d.toISOString().split("T")[0];
+    const dateStr = shiftDateKey(today, -i);
     const content = readSession(config, dateStr);
     if (content) {
       sessions.push(content);

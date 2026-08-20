@@ -13,7 +13,10 @@
     "serve": "tsx src/mcp/index.ts",
     "test": "vitest",
     "test:run": "vitest run",
-    "lint": "tsc --noEmit"
+    "lint": "tsc --noEmit",
+    "check:personal": "node tools/check-personal.mjs",
+    "prepublishOnly": "npm run check:personal && npm run lint && npm run test:run",
+    "prepare": "git config core.hooksPath .githooks || true"
   },
   "keywords": [
     "obsidian",
@@ -29,7 +32,7 @@
     "url": "git+https://github.com/allthriveai/lumis.git"
   },
   "homepage": "https://github.com/allthriveai/lumis#readme",
-  "author": "Allie Jones <user@example.com>",
+  "author": "Allie Jones (https://github.com/allierays)",
   "license": "MIT",
   "dependencies": {
     "@anthropic-ai/sdk": "^0.39.0",

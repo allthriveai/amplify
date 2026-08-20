@@ -19,7 +19,10 @@ export type SignalType =
   | "diagram_created"
   | "diagram_video_rendered"
   | "audio_generated"
-  | "meeting_synced";
+  | "meeting_synced"
+  | "journal_entry"
+  | "target_touched"
+  | "week_reviewed";
 
 interface BaseSignal {
   id: string;
@@ -209,6 +212,47 @@ export interface MeetingSyncedSignal extends BaseSignal {
   };
 }
 
+export interface JournalEntrySignal extends BaseSignal {
+  type: "journal_entry";
+  data: {
+    /** YYYY-MM-DD of the note */
+    date: string;
+    path: string;
+    /** "morning" creates the note, "evening" closes it out */
+    run: "morning" | "evening";
+    /** Days since the previous entry. Null on the first entry ever. */
+    gapDays: number | null;
+    tasksCarried: number;
+    tasksCompleted: number;
+    tasksOpen: number;
+    currentStreak: number;
+  };
+}
+
+export interface TargetTouchedSignal extends BaseSignal {
+  type: "target_touched";
+  data: {
+    target: string;
+    cadence: string | null;
+    /** Days since the target was last touched, before this stamp */
+    daysSince: number | null;
+  };
+}
+
+export interface WeekReviewedSignal extends BaseSignal {
+  type: "week_reviewed";
+  data: {
+    /** Monday that starts the reviewed week */
+    weekOf: string;
+    path: string;
+    daysJournaled: number;
+    tasksCompleted: number;
+    tasksOpen: number;
+    momentsCaptured: number;
+    targetsMoved: number;
+  };
+}
+
 export type Signal =
   | MomentCapturedSignal
   | RecommendationRejectedSignal
@@ -226,7 +270,10 @@ export type Signal =
   | DiagramCreatedSignal
   | DiagramVideoRenderedSignal
   | AudioGeneratedSignal
-  | MeetingSyncedSignal;
+  | MeetingSyncedSignal
+  | JournalEntrySignal
+  | TargetTouchedSignal
+  | WeekReviewedSignal;
 
 export interface SignalsFile {
   version: 1;

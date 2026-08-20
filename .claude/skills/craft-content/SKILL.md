@@ -76,7 +76,7 @@ Stories connect with "but" and "therefore," never "and." Each beat should contra
 
 ### Step 2b: Save Raw Interview
 
-Create the story folder at `{vaultPath}/{paths.stories}/{slug}/` where `{slug}` is a short kebab-case name derived from the story title (e.g., "why-we-rebuilt-onboarding", "teaching-agents-wisdom").
+Create the story folder at `{vaultPath}/{paths.stories}/{slug}/` where `{slug}` is a short kebab-case name derived from the story title (e.g., "why-we-rebuilt-onboarding", "the-meeting-that-changed-my-mind").
 
 Save the raw interview to `{vaultPath}/{paths.stories}/{slug}/raw.md`:
 

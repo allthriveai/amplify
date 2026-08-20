@@ -9,7 +9,7 @@ description: Creates interactive React Flow diagrams from crafted stories. Outpu
 
 When the user runs `/draft-diagram`, optionally followed by a story slug and/or a brand flag:
 
-**Brand flag**: If the user passes `--{profile}` (e.g., `--go1`), use that brand profile from `.lumisrc` `brandProfiles.{profile}` instead of the default `brand` section. Example: `/draft-diagram --go1 my-story-slug`
+**Brand flag**: If the user passes `--{profile}` (e.g., `--work`), use that brand profile from `.lumisrc` `brandProfiles.{profile}` instead of the default `brand` section. Example: `/draft-diagram --work my-story-slug`
 
 ### Step 0: Load Context
 
@@ -21,7 +21,7 @@ Find the `.lumisrc` config file. Check these locations in order:
 Read the config and resolve the vault path.
 
 Resolve the brand:
-- If the user passed a `--{profile}` flag, look up `brandProfiles.{profile}` in `.lumisrc`. If it exists, use that profile. Also read `{vaultPath}/{paths.brand}/{profile}-Brand.md` if it exists (e.g., `Go1-Brand.md`).
+- If the user passed a `--{profile}` flag, look up `brandProfiles.{profile}` in `.lumisrc`. If it exists, use that profile. Also read `{vaultPath}/{paths.brand}/{profile}-Brand.md` if it exists (e.g., `Work-Brand.md`).
 - Otherwise, fall back to the default `brand` section in `.lumisrc` and read `{vaultPath}/{paths.brand}/Brand.md`.
 
 Build a brand context from the resolved profile:

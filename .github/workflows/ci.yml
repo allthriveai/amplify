@@ -1,0 +1,28 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      # Runs first: a leak is worse than a broken build
+      - name: Check for personal data
+        run: npm run check:personal
+
+      - name: Type check
+        run: npm run lint
+
+      - name: Test
+        run: npm run test:run

@@ -37,3 +37,11 @@ demo-*
 .trae/
 youtube-credentials.json
 whisper.cpp/
+
+# Personal pattern list for tools/check-personal.mjs — never commit this
+.personal-patterns
+
+# Stray working files that are not part of the tool
+/*.txt
+screenshots/
+.claude/settings.local.json

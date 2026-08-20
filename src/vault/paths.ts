@@ -22,13 +22,16 @@ export function resolveCanvasPath(config: LumisConfig): string {
   return resolvePath(config, config.paths.canvas);
 }
 
-/** Resolve today's daily note path */
+/**
+ * Resolve a daily note path for a YYYY-MM-DD date key.
+ *
+ * The key is split manually rather than passed to `new Date()`, which parses
+ * date-only strings as UTC midnight and lands on the previous calendar day for
+ * any timezone west of UTC.
+ */
 export function resolveDailyNotePath(config: LumisConfig, date: string): string {
   const format = config.paths.dailyNoteFormat || "YYYY-MM-DD";
-  const d = new Date(date);
-  const yyyy = d.getFullYear().toString();
-  const mm = String(d.getMonth() + 1).padStart(2, "0");
-  const dd = String(d.getDate()).padStart(2, "0");
+  const [yyyy, mm, dd] = date.split("-");
   const filename = format.replace("YYYY", yyyy).replace("MM", mm).replace("DD", dd);
   return resolvePath(config, join(config.paths.dailyNotes, `${filename}.md`));
 }
@@ -146,6 +149,16 @@ export function resolveAudioDir(config: LumisConfig): string {
 /** Resolve the brand directory */
 export function resolveBrandDir(config: LumisConfig): string {
   return resolvePath(config, config.paths.brand);
+}
+
+/** Resolve the weekly reviews directory */
+export function resolveReviewsDir(config: LumisConfig): string {
+  return resolvePath(config, config.paths.reviews);
+}
+
+/** Resolve a weekly review path, keyed by the Monday that starts the week */
+export function resolveReviewPath(config: LumisConfig, weekOf: string): string {
+  return join(resolveReviewsDir(config), `Week of ${weekOf}.md`);
 }
 
 /** Resolve the meetings directory */

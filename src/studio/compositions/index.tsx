@@ -1,5 +1,5 @@
 import React from 'react';
-import { Composition, getRemotionEnvironment, registerRoot } from 'remotion';
+import { Composition, registerRoot } from 'remotion';
 import { BrandedVideo, BrandedVideoProps } from './BrandedVideo';
 import { BrandedIntro } from './BrandedIntro';
 import { BrandedOutro } from './BrandedOutro';
@@ -9,23 +9,12 @@ import { BRollPlaceholder, BRollPlaceholderProps } from './BRollPlaceholder';
 import { ScreenCapture, ScreenCaptureProps } from './ScreenCapture';
 import { LinkedInVertical, LinkedInVerticalProps } from './LinkedInVertical';
 import { DecisionFramework, DecisionFrameworkProps } from './DecisionFramework';
-import { DebuggingTechniques, DebuggingTechniquesProps, calculateDebuggingDuration, DebuggingShort, DebuggingShortProps, calculateShortDuration } from './debugging';
 import { brand } from './brand';
 
 const NAVY = '#2d4059';
 const SAGE = '#7a9a6d';
 const TEAL = '#5b9ea6';
 const CORAL = '#e07a5f';
-
-/** Use 720p proxies in studio preview, 4K originals for render */
-const debugAvatar = (name: string) => {
-  try {
-    const isPreview = getRemotionEnvironment().isPreview;
-    return isPreview ? `debugging/${name}-proxy.mp4` : `debugging/${name}.mp4`;
-  } catch {
-    return `debugging/${name}.mp4`;
-  }
-};
 
 const RemotionRoot: React.FC = () => {
   const { width, height } = brand.resolution;
@@ -130,27 +119,16 @@ const RemotionRoot: React.FC = () => {
       <Composition<LinkedInVerticalProps>
         id="LinkedInVertical"
         component={LinkedInVertical}
-        durationInFrames={2577}
+        durationInFrames={750}
         fps={fps}
         width={1080}
         height={1350}
         defaultProps={{
-          bgMusic: 'linkedin/bg-music.mp3',
-          scenes: [
-            { id: 'thumb', text: 'Agents vs Workflows', subtext: 'How to pick the right pattern.', color: NAVY, diagram: 'all' as const, durationInFrames: 15 },
-            { id: 'intro', text: 'Agents vs Workflows', color: NAVY, videoFile: 'linkedin/intro-hook-avatar.mp4', diagram: 'agent' as const, caption: "Most teams jump straight to agents. Here's what I learned after building them in production.", durationInFrames: 150 },
-            { id: 'hook', text: 'How to pick the right\npattern for your agent.', subtext: 'From fully controlled to fully autonomous.', color: NAVY, audioFile: 'linkedin/audio/hook.mp3', diagram: 'all' as const, durationInFrames: 252 },
-            { id: 'workflow', text: 'Workflow', subtext: 'You define the path. The LLM is one step in it.', color: NAVY, audioFile: 'linkedin/audio/workflow.mp3', diagram: 'workflow' as const, durationInFrames: 330 },
-            { id: 'agentic', text: 'Agentic Workflow', subtext: 'You define the structure. The LLM decides when to retry.', color: SAGE, audioFile: 'linkedin/audio/agentic.mp3', diagram: 'agentic' as const, durationInFrames: 306 },
-            { id: 'agent', text: 'Agent', subtext: 'You give it tools and a system prompt. The LLM decides which tool to use.', color: TEAL, audioFile: 'linkedin/audio/agent.mp3', diagram: 'agent' as const, durationInFrames: 331 },
-            { id: 'multi', text: 'Multi-Agent (MAS)', subtext: 'Multiple agents, each with their own prompt and tools.', color: CORAL, audioFile: 'linkedin/audio/multi.mp3', diagram: 'multi' as const, durationInFrames: 301 },
-            { id: 'decide', text: 'How to Decide', subtext: 'Always start with the simplest pattern that meets your needs.', color: NAVY, videoFile: 'linkedin/decide-avatar.mp4', decisions: [
-              { question: 'Can I map the steps?', answer: 'Workflow', color: NAVY, description: '' },
-              { question: 'Does the workflow need to branch or adapt?', answer: 'Agentic Workflow', color: SAGE, description: '' },
-              { question: 'Is the task open-ended for the user?', answer: 'Agent', color: TEAL, description: '' },
-              { question: "Is one agent's context getting in the way?", answer: 'Multi-Agent (MAS)', color: CORAL, description: '' },
-            ], durationInFrames: 703 },
-            { id: 'closing', text: 'Start simple.', subtext: 'Full breakdown on example.com', color: NAVY, videoFile: 'linkedin/closing-avatar.mp4', overlayDiagrams: ['agentic', 'agent'] as const, durationInFrames: 189 },
+                    scenes: [
+            { id: 'intro', text: 'Your title here', subtext: 'A one-line subtitle.', color: NAVY, diagram: 'all' as const, durationInFrames: 120 },
+            { id: 'point-one', text: 'First point', subtext: 'What it is and why it matters.', color: SAGE, diagram: 'workflow' as const, durationInFrames: 240 },
+            { id: 'point-two', text: 'Second point', subtext: 'The trade-off to weigh.', color: TEAL, diagram: 'agentic' as const, durationInFrames: 240 },
+            { id: 'closing', text: 'Closing line.', subtext: 'Where to find more.', color: NAVY, diagram: 'agent' as const, durationInFrames: 150 },
           ],
         }}
       />
@@ -159,27 +137,17 @@ const RemotionRoot: React.FC = () => {
       <Composition<LinkedInVerticalProps>
         id="YouTubeLandscape"
         component={LinkedInVertical}
-        durationInFrames={2562}
+        durationInFrames={750}
         fps={fps}
         width={1920}
         height={1080}
         defaultProps={{
           layout: 'landscape',
-          bgMusic: 'linkedin/bg-music.mp3',
-          scenes: [
-            { id: 'intro', text: 'Agents vs Workflows', color: NAVY, videoFile: 'linkedin/intro-hook-hd.mp4', diagram: 'agent' as const, caption: "Most teams jump straight to agents. Here's what I learned after building them in production.", durationInFrames: 150 },
-            { id: 'hook', text: 'How to pick the right\npattern for your agent.', subtext: 'From fully controlled to fully autonomous.', color: NAVY, audioFile: 'linkedin/audio/hook.mp3', diagram: 'all' as const, durationInFrames: 252 },
-            { id: 'workflow', text: 'Workflow', subtext: 'You define the path. The LLM is one step in it.', color: NAVY, audioFile: 'linkedin/audio/workflow.mp3', diagram: 'workflow' as const, durationInFrames: 330 },
-            { id: 'agentic', text: 'Agentic Workflow', subtext: 'You define the structure. The LLM decides when to retry.', color: SAGE, audioFile: 'linkedin/audio/agentic.mp3', diagram: 'agentic' as const, durationInFrames: 306 },
-            { id: 'agent', text: 'Agent', subtext: 'You give it tools and a system prompt. The LLM decides which tool to use.', color: TEAL, audioFile: 'linkedin/audio/agent.mp3', diagram: 'agent' as const, durationInFrames: 331 },
-            { id: 'multi', text: 'Multi-Agent (MAS)', subtext: 'Multiple agents, each with their own prompt and tools.', color: CORAL, audioFile: 'linkedin/audio/multi.mp3', diagram: 'multi' as const, durationInFrames: 301 },
-            { id: 'decide', text: 'How to Decide', subtext: 'Always start with the simplest pattern that meets your needs.', color: NAVY, videoFile: 'linkedin/decide-avatar.mp4', decisions: [
-              { question: 'Can I map the steps?', answer: 'Workflow', color: NAVY, description: '' },
-              { question: 'Does the workflow need to branch or adapt?', answer: 'Agentic Workflow', color: SAGE, description: '' },
-              { question: 'Is the task open-ended for the user?', answer: 'Agent', color: TEAL, description: '' },
-              { question: "Is one agent's context getting in the way?", answer: 'Multi-Agent (MAS)', color: CORAL, description: '' },
-            ], durationInFrames: 703 },
-            { id: 'closing', text: 'Start simple.', subtext: 'Full breakdown on example.com', color: NAVY, videoFile: 'linkedin/closing-avatar.mp4', overlayDiagrams: ['agentic', 'agent'] as const, durationInFrames: 189 },
+                    scenes: [
+            { id: 'intro', text: 'Your title here', subtext: 'A one-line subtitle.', color: NAVY, diagram: 'all' as const, durationInFrames: 120 },
+            { id: 'point-one', text: 'First point', subtext: 'What it is and why it matters.', color: SAGE, diagram: 'workflow' as const, durationInFrames: 240 },
+            { id: 'point-two', text: 'Second point', subtext: 'The trade-off to weigh.', color: TEAL, diagram: 'agentic' as const, durationInFrames: 240 },
+            { id: 'closing', text: 'Closing line.', subtext: 'Where to find more.', color: NAVY, diagram: 'agent' as const, durationInFrames: 150 },
           ],
         }}
       />
@@ -205,62 +173,6 @@ const RemotionRoot: React.FC = () => {
         height={1350}
         defaultProps={{ layout: 'vertical' }}
       />
-
-      {/* Debugging Techniques — LinkedIn Vertical (1080x1350) */}
-      <Composition<DebuggingTechniquesProps>
-        id="DebuggingTechniquesVertical"
-        component={DebuggingTechniques}
-        durationInFrames={calculateDebuggingDuration()}
-        fps={fps}
-        width={1080}
-        height={1350}
-        defaultProps={{
-          layout: 'vertical',
-          avatarSources: {
-            bridge: { videoSrc: debugAvatar('bridge-v3') },
-            setup: { videoSrc: debugAvatar('setup-v3') },
-            'technique-1': { videoSrc: debugAvatar('technique-1-new') },
-            thesis: { videoSrc: debugAvatar('thesis-v3') },
-            cta: { videoSrc: debugAvatar('cta-v3') },
-          },
-        }}
-      />
-
-      {/* Debugging Techniques — YouTube Landscape (1920x1080) */}
-      <Composition<DebuggingTechniquesProps>
-        id="DebuggingTechniques"
-        component={DebuggingTechniques}
-        durationInFrames={calculateDebuggingDuration()}
-        fps={fps}
-        width={width}
-        height={height}
-        defaultProps={{
-          avatarSources: {
-            bridge: { videoSrc: debugAvatar('bridge-v3') },
-            setup: { videoSrc: debugAvatar('setup-v3') },
-            'technique-1': { videoSrc: debugAvatar('technique-1-new') },
-            thesis: { videoSrc: debugAvatar('thesis-v3') },
-            cta: { videoSrc: debugAvatar('cta-v3') },
-          },
-        }}
-      />
-
-      {/* YouTube Shorts — one per technique (1080x1920) */}
-      {[1, 2, 3, 4, 5, 6, 7].map((num) => (
-        <Composition<DebuggingShortProps>
-          key={`short-${num}`}
-          id={`DebuggingShort${num}`}
-          component={DebuggingShort}
-          durationInFrames={calculateShortDuration(num)}
-          fps={fps}
-          width={1080}
-          height={1920}
-          defaultProps={{
-            techniqueNum: num,
-            avatarSources: {},
-          }}
-        />
-      ))}
 
       {/* Standalone intro for preview */}
       <Composition

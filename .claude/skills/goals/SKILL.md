@@ -94,14 +94,55 @@ Format:
 
 Write the file to `{vaultPath}/{paths.goals}`.
 
-Report back:
+### Step 5: Write the Active Targets section
+
+Goals.md prose is for you. This section is what `/today` reads back.
+
+Turn the targets from question 4 into checkbox lines under `## Active Targets`:
+
+```markdown
+## Active Targets
+- [ ] Publish a post `cadence:weekly` #goal/writing
+- [ ] Write a long-form piece `cadence:monthly` #goal/longform
+- [ ] Ship the redesign #goal/product
+```
+
+Rules:
+- **Cadence only for recurring work.** `daily`, `weekly`, `monthly`, `quarterly`.
+  A target with a cadence surfaces in the daily receipt once it goes quiet.
+- **Milestones get no cadence.** "Ship the redesign", "get the certification"
+  happen once. Without a cadence they never nag.
+- **Never invent a `last:` date.** Leave it off unless the user tells you when
+  they last did the thing. An unset `last:` reads as "never touched", which is
+  the honest starting state.
+- **One `#goal/*` tag per target, and every tag must be unique.** A tag shared
+  by two targets is ambiguous, so Lumis stamps neither and tells you to fix it.
+  Name tags after the target (`#goal/weeklypost`, `#goal/longform`), not after a
+  category both share (`#goal/writing`).
+- Keep target text under about eight words. It has to fit in a receipt line.
+
+Confirm the list with the user before writing. These are what the coach will
+hold them to every morning.
+
+### Step 6: Report
 
 ```
 Goals.md written to {paths.goals}
 
 Sections filled: {count}/5
+Active targets: {n} ({r} recurring, {m} milestones)
 {if any skipped: "Run /goals again anytime to fill in the rest."}
 ```
+
+### Step 7: Log it
+
+Append a session entry to `{vaultPath}/{paths.memory}/sessions/{today}.md`:
+
+```
+- **HH:MM** — goals updated: {n} active targets
+```
+
+Use the local date and time, not UTC.
 
 ### Humanizer Pass
 
@@ -117,3 +158,4 @@ When Goals.md exists, skills should:
 - **`/draft-*`** — Prioritize content that demonstrates the skills and thinking the target role requires
 - **`/challenge`** — Challenge ideas through the lens of career goals, not just abstract thinking
 - **`/moment`** — When analyzing moments, note connections to professional goals and career trajectory
+- **`/today`** — Reads `## Active Targets` every morning and surfaces the ones that have gone quiet. This is the only skill that holds you to the targets rather than just reading them for context.

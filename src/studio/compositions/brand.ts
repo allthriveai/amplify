@@ -22,6 +22,8 @@ export const brand = {
   },
   name: '',
   domain: '',
+  /** Social handle shown in video footers, e.g. '@yourname'. Empty hides it. */
+  handle: '',
   fonts: { body: fontFamily },
   timing: {
     fps: 30,

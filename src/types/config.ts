@@ -55,7 +55,7 @@ export interface LumisConfig {
     amplifyHooks: string;
     /** Where the persuasion glossary lives. Default: "Lumis/Amplify" */
     amplifyPersuasion: string;
-    /** Where strategy docs live. Default: "2 - Areas/All Thrive" */
+    /** Where strategy docs live. Default: "Strategy" */
     strategyDocs: string;
     /** Your voice/identity file. Default: "Lumis/Voice.md" */
     voice: string;
@@ -75,6 +75,8 @@ export interface LumisConfig {
     goals: string;
     /** Where meeting notes are stored. Default: "Meetings" */
     meetings: string;
+    /** Where weekly reviews are stored. Default: "Reviews" */
+    reviews: string;
   };
 
   /** Categories for auto-classifying research notes */
@@ -83,7 +85,7 @@ export interface LumisConfig {
   /** Optional brand config for visual identity (active/default brand) */
   brand?: BrandConfig;
 
-  /** Named brand profiles for multi-brand support (e.g. "go1", "personal") */
+  /** Named brand profiles for multi-brand support (e.g. "work", "personal") */
   brandProfiles?: Record<string, BrandConfig>;
 
   /** Optional studio config for video production (HeyGen, ElevenLabs) */
@@ -114,6 +116,7 @@ export const DEFAULT_PATHS: LumisConfig["paths"] = {
   audio: "Research/Audio",
   goals: "Lumis/Goals.md",
   meetings: "Meetings",
+  reviews: "Reviews",
 };
 
 export const DEFAULT_RESEARCH_CATEGORIES: ResearchCategory[] = [];

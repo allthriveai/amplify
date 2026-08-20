@@ -11,6 +11,16 @@ async function main() {
       await momentCommand(args.join(" "));
       break;
     }
+    case "today": {
+      const { todayCommand } = await import("./commands/today.js");
+      await todayCommand(args);
+      break;
+    }
+    case "week": {
+      const { weekCommand } = await import("./commands/week.js");
+      await weekCommand(args);
+      break;
+    }
     case "patterns": {
       const { patternsCommand } = await import("./commands/patterns.js");
       await patternsCommand();
@@ -63,6 +73,9 @@ async function main() {
       console.log(`lumis — your AI confidant
 
 Commands:
+  lumis today                        Open today's journal (receipt + carried tasks)
+  lumis today --done "task"          Check tasks off and close the day
+  lumis week                         Write this week's review
   lumis moment "..."                 Capture a moment
   lumis patterns                     Regenerate the Pattern Map
   lumis init [path]                  Set up Lumis in a vault

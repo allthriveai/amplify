@@ -3,7 +3,7 @@
 Lumis writes to an Obsidian vault configured in `.lumisrc`. The vault is NOT this repo. The vault path is resolved from:
 1. `.lumisrc` in cwd
 2. `VAULT_PATH` env var
-3. Known fallback: `~/Sites/your-vault`
+3. If neither is set, Lumis asks rather than guessing
 
 ## Structure
 
@@ -45,7 +45,7 @@ Lumis/
   Personal/
     People Who Inspire Me/ ← notes on people who inspire you (from /add-inspiration)
     Thinking/              ← promoted challenge notes (from /challenge)
-  All Thrive/              ← strategy docs (content pillars, strategy, social plan)
+  Strategy/                ← strategy docs (content pillars, strategy, social plan)
 ```
 
 ## Private Moments

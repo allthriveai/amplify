@@ -224,3 +224,9 @@ export {
   DEFAULT_HOTKEYS,
 } from "./capture/index.js";
 export type { HotkeyBindings } from "./capture/index.js";
+
+// Journal — daily notes, tasks, targets
+export * from "./types/journal.js";
+export * from "./vault/daily-notes.js";
+export * from "./vault/targets.js";
+export * from "./journal/index.js";

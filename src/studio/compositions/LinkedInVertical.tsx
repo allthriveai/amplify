@@ -11,6 +11,7 @@ import {
 } from 'remotion';
 import { Audio, Video } from '@remotion/media';
 import { fontFamily } from './fonts';
+import { brand } from './brand';
 import { WorkflowSVG, AgenticSVG, AgentSVG, MultiAgentSVG } from './PatternSVGs';
 
 /* ── Brand colors ── */
@@ -765,9 +766,13 @@ function Scene({
         }}
       >
         <span>Follow for more on LinkedIn</span>
-        <span style={{ fontWeight: 700, color: decisions ? '#ffffff' : NAVY }}>@yourhandle</span>
-        <span>·</span>
-        <span style={{ fontWeight: 700, color: decisions ? '#ffffff' : NAVY }}>example.com</span>
+        {brand.handle && (
+          <span style={{ fontWeight: 700, color: decisions ? '#ffffff' : NAVY }}>{brand.handle}</span>
+        )}
+        {brand.handle && brand.domain && <span>·</span>}
+        {brand.domain && (
+          <span style={{ fontWeight: 700, color: decisions ? '#ffffff' : NAVY }}>{brand.domain}</span>
+        )}
       </div>
     </AbsoluteFill>
   );

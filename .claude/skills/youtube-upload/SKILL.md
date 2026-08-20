@@ -72,10 +72,9 @@ Show the user:
 
 ### Channel Info
 
-- **Channel**: read from the authorized credentials
-- **Channel ID**: `YOUR_CHANNEL_ID`
-- **Account**: `user@example.com`
-- **OAuth was done with the main account, NOT the a brand account**
+Read the channel from the authorized credentials rather than assuming one.
+If the user has both a personal account and a brand account, confirm which one
+holds the OAuth grant before uploading — they map to different channels.
 
 ### Scheduling Best Practices
 
@@ -93,7 +92,7 @@ Show the user:
 
 ### What NOT to do
 
-- Don't upload to the a brand account — it creates a separate channel
+- Don't upload to a brand account unless that is where the OAuth grant was made — it creates a separate channel
 - Don't set `madeForKids` to true — this disables comments and notifications
 - Don't upload more than 6 videos per day — quota is 10,000 units, each upload costs 1,600
 - Don't make videos public without the user reviewing them first — always default to private

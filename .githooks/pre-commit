@@ -1,0 +1,4 @@
+#!/bin/sh
+# Blocks personal data from entering a public repo.
+# Bypass for a reviewed exception: git commit --no-verify
+exec node tools/check-personal.mjs --staged

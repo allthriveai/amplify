@@ -15,6 +15,13 @@
  *   recall                 — Read preferences and session history
  *   story_craft_practice   — Practice storytelling with one exercise
  *   story_craft_develop    — Develop a moment into a full story
+ *   journal_today          — Open or close today's journal
+ *   week_review            — The weekly reckoning
+ *
+ * Prompts (carry the coaching behavior to clients that cannot read skills):
+ *   journal                — Run the daily loop
+ *   weekly-review          — Run the weekly reckoning
+ *   coach                  — Read the vault and say the one thing that matters
  */
 
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
@@ -31,6 +38,9 @@ import { parseFrontmatter } from "../vault/frontmatter.js";
 import { resolveVoicePath, resolveStoriesDir, resolvePracticeLogPath, resolveMomentsDir } from "../vault/paths.js";
 import { emitSignal, signalId, summarizeSignals } from "../vault/signals.js";
 import { appendSessionEntry, formatSessionTime, readRecentSessions, readPreferences, addPreference } from "../vault/memory.js";
+import { openDay, closeDay, setPriorities, runWeekReview, renderDay, renderWeek } from "../journal/index.js";
+import { JOURNAL_PROMPT, WEEK_PROMPT, COACH_PROMPT } from "./prompts.js";
+import { todayKey, formatTask } from "../vault/daily-notes.js";
 import type { LumisConfig } from "../types/config.js";
 import type { ResearchFrontmatter, ResearchCategory } from "../types/research.js";
 import type { CanvasFile, CanvasNode, CanvasEdge } from "../types/canvas.js";
@@ -1036,6 +1046,189 @@ server.registerTool("story_craft_develop", {
     };
   }
 });
+
+// ---------------------------------------------------------------------------
+// Tool 11: journal_today
+// ---------------------------------------------------------------------------
+
+server.registerTool("journal_today", {
+  description:
+    "Open or close today's journal. Action 'open' creates today's daily note, carries unfinished tasks forward with age markers, and returns the receipt: days since the last entry, streak, carried tasks, and goal targets that have gone quiet. Action 'priorities' writes the day's top tasks. Action 'close' checks off completed tasks and stamps any goal targets they served. Use when the user wants to journal, start their day, set priorities, or close out the day.",
+  inputSchema: {
+    action: z
+      .enum(["open", "priorities", "close"])
+      .describe("open = morning pass, priorities = write today's tasks, close = evening pass"),
+    tasks: z
+      .array(z.string())
+      .optional()
+      .describe("For 'priorities', the tasks to write. For 'close', the task texts that got done."),
+    date: z.string().optional().describe("YYYY-MM-DD. Defaults to today."),
+  },
+}, async ({ action, tasks, date }) => {
+  try {
+    const day = date ?? todayKey();
+
+    if (action === "priorities") {
+      const note = setPriorities(config, day, tasks ?? []);
+      return {
+        content: [{
+          type: "text" as const,
+          text: JSON.stringify({
+            date: day,
+            priorities: note.tasks.filter((t) => !t.done).map((t) => t.text),
+          }, null, 2),
+        }],
+      };
+    }
+
+    if (action === "close") {
+      const result = closeDay(config, day, tasks ?? []);
+      return {
+        content: [{
+          type: "text" as const,
+          text: JSON.stringify({
+            date: day,
+            closed: true,
+            completed: result.note.tasks.filter((t) => t.done).map((t) => t.text),
+            stillOpen: result.open.map((t) => formatTask(t)),
+            unmatched: result.unmatched,
+            targetsStamped: result.touchedTargets,
+            ambiguousTags: result.ambiguousTags,
+          }, null, 2),
+        }],
+      };
+    }
+
+    const result = openDay(config, day);
+    return {
+      content: [{
+        type: "text" as const,
+        text: JSON.stringify({
+          // Show this block to the user verbatim before saying anything else
+          display: renderDay(result),
+          date: day,
+          created: result.created,
+          path: result.note.path,
+          receipt: result.receipt,
+          daysSinceLastEntry: result.stats.daysSinceLastEntry,
+          currentStreak: result.stats.currentStreak,
+          longestStreak: result.stats.longestStreak,
+          carried: result.carried.map((t) => formatTask(t)),
+          targetsGoingQuiet: result.targets
+            .filter((t) => t.overdue)
+            .map((t) => ({ target: t.text, cadence: t.cadence, daysSince: t.daysSince })),
+        }, null, 2),
+      }],
+    };
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
+    return {
+      content: [{ type: "text" as const, text: `Error in journal_today: ${message}` }],
+      isError: true,
+    };
+  }
+});
+
+// ---------------------------------------------------------------------------
+// Tool 12: week_review
+// ---------------------------------------------------------------------------
+
+server.registerTool("week_review", {
+  description:
+    "The weekly reckoning. Reads the week's daily notes, tasks kept and missed, moments captured, and goal target movement, then writes Reviews/Week of {Monday}.md and returns the numbers plus drift (stale tasks, abandoned targets, recurring moment themes, silent days). Idempotent — an existing review is returned rather than overwritten. Use when the user wants a weekly review or asks how the week went.",
+  inputSchema: {
+    date: z.string().optional().describe("Any YYYY-MM-DD in the week to review. Defaults to today."),
+  },
+}, async ({ date }) => {
+  try {
+    const { path, created, data } = runWeekReview(config, date);
+
+    return {
+      content: [{
+        type: "text" as const,
+        text: JSON.stringify({
+          // Show this block to the user verbatim before saying anything else
+          display: renderWeek(data),
+          weekOf: data.weekOf,
+          weekEnd: data.weekEnd,
+          path,
+          created,
+          numbers: {
+            daysJournaled: data.daysJournaled,
+            daysElapsed: data.daysElapsed,
+            tasksCompleted: data.completed.length,
+            tasksOpen: data.stillOpen.length,
+            momentsCaptured: data.moments.length,
+            targetsMoved: data.targetsTouched.length,
+            targetsTotal: data.targets.length,
+          },
+          completed: data.completed.map((t) => t.text),
+          stillOpen: data.stillOpen.map((t) => ({ text: t.text, age: t.age })),
+          oldestOpen: data.oldestOpen
+            ? { text: data.oldestOpen.text, age: data.oldestOpen.age }
+            : null,
+          targetsTouched: data.targetsTouched,
+          moments: data.moments,
+          drift: {
+            staleTasks: data.drift.staleTasks.map((t) => ({ text: t.text, age: t.age })),
+            abandonedTargets: data.drift.quietTargets.map((t) => ({
+              target: t.text,
+              cadence: t.cadence,
+              daysSince: t.daysSince,
+            })),
+            recurringThemes: data.drift.repeatedThemes,
+            daysSinceLastMoment: data.drift.daysSinceLastMoment,
+            silentDays: data.drift.silentDays,
+            windowDays: data.drift.windowDays,
+          },
+        }, null, 2),
+      }],
+    };
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
+    return {
+      content: [{ type: "text" as const, text: `Error in week_review: ${message}` }],
+      isError: true,
+    };
+  }
+});
+
+// ---------------------------------------------------------------------------
+// Prompts — the coaching behavior, for clients that cannot read skills
+// ---------------------------------------------------------------------------
+
+const PROMPTS = [
+  {
+    name: "journal",
+    title: "Journal today",
+    description:
+      "Run the daily loop. Opens today's note, reads back the receipt (days since last entry, streak, carried tasks, targets gone quiet), then asks for today's priorities. Run it again in the evening to check tasks off and reflect.",
+    text: JOURNAL_PROMPT,
+  },
+  {
+    name: "weekly-review",
+    title: "Weekly review",
+    description:
+      "The weekly reckoning. States the week's numbers, names the one thing that matters, walks through three questions, works the drift, and sets next week's commitments.",
+    text: WEEK_PROMPT,
+  },
+  {
+    name: "coach",
+    title: "Coach me",
+    description:
+      "Read the vault — today, this week, recent moments, history — and say the single thing most worth attention, then have the conversation that follows.",
+    text: COACH_PROMPT,
+  },
+] as const;
+
+for (const prompt of PROMPTS) {
+  server.registerPrompt(prompt.name, {
+    title: prompt.title,
+    description: prompt.description,
+  }, () => ({
+    messages: [{ role: "user" as const, content: { type: "text" as const, text: prompt.text } }],
+  }));
+}
 
 // ---------------------------------------------------------------------------
 // Start the server

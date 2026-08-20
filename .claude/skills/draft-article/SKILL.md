@@ -59,7 +59,7 @@ Present all 8 hooks as a numbered menu. For each hook, write 1-2 example opening
 Example format:
 
 ```
-1. **Curiosity Gap** — "Most AI agents have guardrails. Zero have character."
+1. **Curiosity Gap** — "Every team tracks velocity. Almost none track whether it mattered."
    Opens a gap the reader needs closed. (Information-gap theory: withholding the answer creates pull.)
 
 2. **Bold Claim** — "Your agent's safety benchmarks are measuring the wrong thing."
@@ -214,11 +214,11 @@ sections:
     wordTarget: 100
 ---
 
-Most AI agents have guardrails. Zero have character. That distinction cost me six months to understand.
+Every team tracks velocity. Almost none track whether it mattered. That gap cost us two quarters.
 
-## The Agent That Passed Every Test
+## The Sprint That Hit Every Target
 
-Six months ago I built an agent that aced every safety benchmark...
+Two quarters ago we shipped every ticket on the board...
 
 ## Then Someone Asked the Wrong Question
 

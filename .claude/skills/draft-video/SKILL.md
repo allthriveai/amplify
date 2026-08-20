@@ -84,7 +84,7 @@ Present all 8 hooks as a numbered menu. For each hook, write 1-2 example opening
 Example format:
 
 ```
-1. **Curiosity Gap** — "Most AI agents have guardrails. Zero have character."
+1. **Curiosity Gap** — "Every team tracks velocity. Almost none track whether it mattered."
    Opens a gap the viewer needs closed. (Information-gap theory: withholding the answer creates pull.)
 
 2. **Bold Claim** — "Your agent's safety benchmarks are measuring the wrong thing."
@@ -314,7 +314,7 @@ Every scene gets these elements:
 1. **Top accent bar** — 4px, colored, centered, animates width from 0 → 200px via spring
 2. **Content area** — centered, padded `60px 80px 100px`, flex column
 3. **Spectrum bar** — 4 stripes (Navy, Sage, Teal, Coral) at bottom, 4px tall, 0.4 opacity
-4. **Footer** — `Follow for more @yourhandle · example.com` in `inkMuted`, navy for handles
+4. **Footer** — `Follow for more {handle} · {domain}` from Brand.md, in `inkMuted`, primary for handles
 
 #### Animations
 
@@ -342,7 +342,7 @@ When no HeyGen video is available, show the script text on cream background with
 
 #### Branded Outro
 
-Cream background, `example.com` in navy, subtitle in `inkMuted`. No dark backgrounds.
+Cream background, the brand domain in navy, subtitle in `inkMuted`. No dark backgrounds.
 
 ### Step 4: Build the Timeline
 
@@ -503,7 +503,7 @@ Key rules:
 - **The avatar's source recording determines framing.** If the avatar was recorded in landscape, a 9:16 output will have padding. The user may need to record a vertical avatar.
 - **Give the user the scripts** and let them generate in HeyGen directly if the API results aren't right. Don't loop re-generating automatically.
 - Poll `GET /v1/video_status.get?video_id={id}` until `status: "completed"`, then download from `video_url`.
-- Save clips to `public/debugging/` (for Remotion) and `{stories}/{slug}/assets/` (for the vault).
+- Save clips to `public/{slug}/` (for Remotion) and `{stories}/{slug}/assets/` (for the vault).
 
 #### 7b: Transcribe for Caption Sync
 

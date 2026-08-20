@@ -18,14 +18,15 @@ Lumis is a CLI tool and MCP server that lives in an Obsidian vault. It helps cap
 
 ```
 src/
-  types/          ← TypeScript interfaces (moment, canvas, config, research, amplify, signal, memory, story, studio, director, diagram)
+  types/          ← TypeScript interfaces (moment, canvas, config, research, amplify, signal, memory, story, studio, director, diagram, journal)
   vault/          ← Read/write Obsidian markdown files with gray-matter frontmatter
   cli/            ← CLI commands (moment, init, import-sparks)
-  mcp/            ← MCP server (stdio transport, 11 tools)
+  mcp/            ← MCP server (stdio transport, 12 tools)
   ai/             ← Claude API integration for moment analysis
   canvas/         ← Obsidian canvas file generation
   pipeline/       ← Moment capture pipeline
   amplify/        ← Content amplification context builder
+  journal/        ← The coach loop: receipt, task carry-forward, drift, weekly review
   studio/         ← Video production (HeyGen, ElevenLabs, Google Imagen, Remotion rendering, asset management)
   diagram/        ← React Flow diagram generation (self-contained HTML output)
   config.ts       ← Loads .lumisrc config with fallbacks to env vars
@@ -39,6 +40,7 @@ src/
 - Readers return typed objects, writers accept typed objects
 - New vault content types follow the pattern: types file, path resolver, reader, writer, re-export in `vault/index.ts` and `index.ts`
 - Config changes go in three places: `types/config.ts` (interface + DEFAULT_PATHS), `config.ts` (loadConfig merge), `.lumisrc.example`
+- **Dates: use `src/vault/dates.ts`, never raw `Date` math.** Two traps it exists to avoid. `new Date("2026-08-19")` parses as UTC midnight and lands on the previous day west of UTC. `new Date().toISOString().split("T")[0]` is the UTC day, which rolls over mid-evening in the Americas and files work under tomorrow. Frontmatter dates are a third trap: YAML parses an unquoted `date:` into a `Date` object, not the `string` the type claims, so read them through `normalizeDateKey()`.
 - CLI commands live in `src/cli/commands/` and register in `src/cli/index.ts`
 
 ## Skills
@@ -48,6 +50,8 @@ Lumis has Claude Code skills in `.claude/skills/`:
 - **`/init`** — Interactive vault setup. Asks for vault path, scaffolds directories, writes `.lumisrc`, walks through voice interview to populate Voice.md, then copies and personalizes the Amplify toolkit (8 hook types, 18 structures, persuasion glossary).
 - **`/voice`** — Standalone voice interview. Fills in or redoes Voice.md through a guided conversation.
 - **`/goals`** — Sets up Goals.md through a guided conversation. Asks about the job you want, what you're building, what's in the way, concrete targets, and how you'll know it's working. Goals.md is your north star — every content skill reads it alongside Voice.md to keep output aligned with what you're building toward.
+- **`/today`** — The daily loop. Opens today's note from the vault template, carries unfinished tasks forward with age markers (`moved 6 days`), and shows the receipt: days since last entry, streak, and which `## Active Targets` in Goals.md have gone quiet. Run it again in the evening to check tasks off and reflect. A completed task tagged `#goal/*` stamps the matching target automatically.
+- **`/week`** — The weekly reckoning. Reads the week's daily notes, tasks kept and missed, moments, and target movement, then writes `Reviews/Week of {Monday}.md`. Surfaces drift that is only visible across weeks: tasks carried past a week, targets abandoned rather than slipping, recurring moment themes, silent days. Walks through three questions and sets next week's commitments. Idempotent — never overwrites a review you have written into.
 - **`/moment`** — Captures a daily moment. Reads all existing moments, analyzes the input, finds connections, writes the note, regenerates the Pattern Map canvas, and reports back. Use `/moment private` to mark a moment as private: it still gets full pattern analysis and connections but is excluded from all content pipelines (`/craft-content`, `/draft-*`, `social_coach`, `story_craft`).
 - **`/add-research`** — Saves a URL/PDF/article as research. Fetches content, categorizes it, writes a full note + TL;DR companion, extracts learnings, and reports topic clusters.
 - **`/craft-storytelling`** — Develops storytelling skill from captured moments. Practice mode or full story development.
@@ -72,7 +76,35 @@ All skills read `.lumisrc` for vault paths and write directly to the Obsidian va
 Skills read three identity files that shape all output:
 - **Voice.md** (`paths.voice`) — Who you are and how you sound
 - **Goals.md** (`paths.goals`) — What you're building toward and why. Every content-creating skill should read Goals.md to keep output aligned with career goals, target audience, and professional trajectory.
+  - A `## Active Targets` section holds the machine-readable half, read by `/today`:
+
+    ```markdown
+    ## Active Targets
+    - [ ] Publish a post `cadence:weekly` `last:2026-04-21` #goal/writing
+    - [ ] Ship the redesign #goal/product
+    ```
+
+    Cadence is one of daily/weekly/monthly/quarterly. A target with a cadence and no recent `last:` shows up as going quiet. Milestones omit cadence so they never nag.
 - **Brand.md** (`paths.brand/Brand.md`) — How you look visually
+
+## Keeping personal data out
+
+This repo is public. Everything personal — moments, goals, journal entries,
+names, vault paths, brand identity — lives in the user's Obsidian vault and must
+never be committed here.
+
+- `npm run check:personal` scans tracked and untracked-but-not-ignored files.
+- A pre-commit hook in `.githooks/` runs it on staged changes and blocks the
+  commit on a hit. `npm install` wires it up via the `prepare` script.
+- Generic patterns (home paths, emails, API keys, vault paths) live in
+  `tools/check-personal.mjs`. Real names live in `.personal-patterns`, which is
+  gitignored — the names themselves must not enter the repo.
+- `package.json`, `README.md`, and `LICENSE` are exempt from the name rules
+  only, since a public repo needs its own URL and attribution. The hard rules
+  still apply to them.
+- Docs and skill examples must use invented data. Never paste a real goal,
+  colleague, story slug, or vault path into an example.
+- If a match is genuinely fine, add a `personal-ok` comment on that line.
 
 ## Writing style
 
@@ -91,6 +123,9 @@ npm run dev          # Run CLI with tsx
 npm run lint         # Type check without emit
 npm test             # Run vitest
 lumis init [path]    # Scaffold vault structure
+lumis today          # Open today's journal (receipt + carried tasks)
+lumis today --done "task"   # Check tasks off and close the day
+lumis week           # Write this week's review
 lumis moment         # Capture a moment
 lumis import-sparks  # Import content from sparks.json manifest
 lumis studio list    # List director cuts across stories

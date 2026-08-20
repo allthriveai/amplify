@@ -31,10 +31,10 @@ After generating or regenerating audio (ElevenLabs, HeyGen, etc.), transcribe it
 
 ```bash
 # Transcribe any technique audio (pass number as arg, defaults to 4):
-node scripts/transcribe-technique-5.mjs 3
+node tools/transcribe.mjs <clip-name>
 
 # For HeyGen talking head clips, extract audio first:
-ffmpeg -i public/debugging/hook-v3.mp4 -vn -ar 16000 -ac 1 /tmp/hook.wav
+ffmpeg -i public/<slug>/<clip>.mp4 -vn -ar 16000 -ac 1 /tmp/clip.wav
 # Then run the transcribe script pointed at the wav
 ```
 
