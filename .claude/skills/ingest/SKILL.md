@@ -79,6 +79,7 @@ tags: [topic tags in kebab-case]
 sources: [{same-slug}.md]
 created: [today]
 updated: [today]
+aliases: ["[Title Case Title]"]
 ---
 
 # [Title Case Title]
@@ -120,6 +121,10 @@ For each one:
 - **No page** → create it, following the page shapes in `CLAUDE.md`.
 - **Contradicts what a page says** → do not overwrite. Write that the sources
   disagree, cite both, and say which is more recent.
+
+Every page needs `aliases: ["Its Title Case Title"]`. Filenames are kebab-case and
+links are written from the title, so without it `[[Vector Search]]` will not resolve
+to `vector-search.md` and every link to that page dangles.
 
 Then link in both directions. A link that only points one way is half a link: if the
 source page links `[[Vector Search]]`, the vector search page names this source too.

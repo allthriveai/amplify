@@ -40,6 +40,7 @@ tags: [retrieval, evaluation]
 sources: [some-clipped-article.md, 2026-01-14-planning-call.md]
 created: 2026-01-15
 updated: 2026-02-02
+aliases: [Retrieval Augmented Generation]
 ---
 ```
 
@@ -47,6 +48,9 @@ updated: 2026-02-02
 - `sources` — filenames in `Sources/`, not paths, not URLs. This is the audit trail
   back to raw material. A page with an empty `sources` list is unsupported opinion.
 - `created` / `updated` — `YYYY-MM-DD`. Bump `updated` on every rewrite.
+- `aliases` — the page's Title Case title. **Required.** Filenames are kebab-case and
+  links are written from the title, so without the alias every `[[Link]]` in the vault
+  dangles. This one field is what makes the naming convention work in Obsidian.
 
 Below the frontmatter: a single `# Title Case Heading` matching the page title, then
 the body.
@@ -73,6 +77,8 @@ where the evidence lands. Cite the pages, not the raw sources.
 - Filenames: kebab-case. `retrieval-augmented-generation.md`
 - Page titles: Title Case. `# Retrieval Augmented Generation`
 - Links: `[[Retrieval Augmented Generation]]` — the **title**, never the filename.
+  This resolves because every page carries its title in `aliases`. A page without
+  that alias cannot be linked to.
 - Link on first mention of anything that has its own page.
 
 **The orphan rule: every new page must link to at least one existing page.** A page

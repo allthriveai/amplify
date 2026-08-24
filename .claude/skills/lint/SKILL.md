@@ -38,9 +38,14 @@ that no longer exist.
 **Dangling sources.** A page whose `sources` frontmatter names a file that is not in
 `{sources}/`. Means the audit trail is broken.
 
-**Frontmatter violations.** Missing `tags`, `sources`, `created`, or `updated`. Extra
-fields that are not in the schema. An empty `sources` list on anything but a synthesis
-page, which means the page is unsupported opinion.
+**Frontmatter violations.** Missing `tags`, `sources`, `created`, `updated`, or
+`aliases`. Extra fields that are not in the schema. An empty `sources` list on anything
+but a synthesis page, which means the page is unsupported opinion.
+
+**Missing aliases.** A page whose `aliases` does not contain its own `# Title`. This is
+the highest-value mechanical check in the list: links are written from the title while
+filenames are kebab-case, so a page without its alias cannot be linked to at all, and it
+will read as an orphan for a reason that has nothing to do with how well it is connected.
 
 **Naming.** Filenames that are not kebab-case, titles that are not Title Case, links
 written as `[[some-file-name]]` instead of `[[Some File Name]]`.
