@@ -17,7 +17,7 @@ Find the `.lumisrc` config file. Check these locations in order:
 2. `.lumisrc` at the path specified by `VAULT_PATH` environment variable
 3. `.lumisrc` at the fallback vault path (if configured in CLAUDE.md or known from previous sessions)
 
-Read the config and resolve the vault path. The people directory is at `{vaultPath}/{paths.inspiration}` (default: `1 - Projects/Lumis/People Who Inspire Me`).
+Read the config and resolve the vault path. Entity pages live at `{vaultPath}/{paths.people}` (default: `Wiki/Entities`) — inside the wiki, so the schema in `{vaultPath}/CLAUDE.md` applies.
 
 Read `{vaultPath}/{paths.voice}` (Voice.md) if it exists.
 
@@ -71,7 +71,7 @@ If the user says "skip" or gives no answer to question 3, move on.
 Search the vault for mentions of this person. Check:
 
 1. **Moments** at `{paths.moments}`: search both `people` frontmatter fields and body content for the person's name (and aliases)
-2. **Research** at `{paths.research}`: search note content and titles
+2. **Sources** at `{paths.sources}`: search clipping content and titles
 3. **Learnings** at `{paths.learnings}`: search note content
 4. **Stories** at `{paths.stories}`: search note content
 
@@ -81,12 +81,14 @@ Collect any matches as back-links: note title, path, and a short excerpt of the 
 
 ### Step 5: Write the Note
 
-Write to `{vaultPath}/{paths.inspiration}/{Person Name}.md` using this template:
+Write to `{vaultPath}/{paths.people}/{person-name}.md` — kebab-case filename, Title Case `# Heading` — using this template:
 
 ```markdown
 ---
-date: YYYY-MM-DD
 tags: [inspiration, {domain-tag-1}, {domain-tag-2}]
+sources: [{clipping filenames this draws on, or empty}]
+created: YYYY-MM-DD
+updated: YYYY-MM-DD
 aliases: [{alias if any}]
 ---
 
@@ -140,19 +142,31 @@ If back-links were found in Step 4, add:
 - Keep quotes accurate. Do not fabricate quotes. If you can't verify a quote, don't include it.
 - Use Obsidian wiki-links (`[[Note Title]]`) for back-links.
 
-### Step 6: Update README
+### Step 6: Update the wiki index and log
 
-Check if `{vaultPath}/{paths.inspiration}/README.md` exists.
+The note lands in `{paths.people}`, which is `Wiki/Entities` — the wiki's entity
+layer. So it is a wiki page and follows the schema in `{vaultPath}/CLAUDE.md`: kebab-case
+filename, Title Case `# Heading`, and the standard frontmatter.
 
-If it exists, read it and append the new person to the list, maintaining alphabetical order.
+Don't write a folder README here. The wiki navigates itself through `index.md`, and a
+second hand-maintained list beside it is the thing that goes stale.
 
-If it doesn't exist, create it:
+Add one line to `{vaultPath}/{paths.wiki}/index.md` under `## Entities`:
 
 ```markdown
-# People Who Inspire Me
-
 - [[{Person Name}]] — {one-line summary from bio}
 ```
+
+Append to `{vaultPath}/{paths.wiki}/log.md`:
+
+```markdown
+## [YYYY-MM-DD] ingest | {Person Name}
+Added entity page. Linked to [[{whatever it connects to}]].
+```
+
+**The orphan rule applies.** The page must link to at least one existing page. The
+back-links found in Step 4 usually cover it; if nothing connects, that is a signal
+the wiki is missing a concept page about what you admire in this person's work.
 
 ### Step 7: Emit Signal
 
@@ -167,7 +181,7 @@ Append to the signals file at `{vaultPath}/{paths.signals}/signals.json`:
     "person": "{Person Name}",
     "tags": ["{domain-tags}"],
     "backLinks": {count},
-    "path": "{paths.inspiration}/{Person Name}.md"
+    "path": "{paths.people}/{person-name}.md"
   }
 }
 ```
@@ -189,7 +203,7 @@ Tell the user what happened:
 **Bio**: {one-line summary}
 **Tags**: {tags joined with ", "}
 **Back-links**: {count} connections found in your vault
-**Saved to**: {paths.inspiration}/{Person Name}.md
+**Saved to**: {paths.people}/{person-name}.md
 
 {If back-links > 0: "This person already shows up in {count} of your notes. Check the Connections section."}
 ```

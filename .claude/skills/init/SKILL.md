@@ -26,28 +26,77 @@ Resolve the path to an absolute path. Check if it's an existing Obsidian vault (
 
 ### Step 2: Scaffold Directories
 
-Create all Lumis directories inside the vault. Use `mkdir -p` for each:
+The tree encodes ownership. Four buckets, each answering "may the agent rewrite this?"
+
+Create these with `mkdir -p`:
 
 ```
-Lumis/Moments
-Lumis/Stories
-Lumis/Research
-Lumis/Research/TL;DR
-Lumis/Research/AI & Agents
-Lumis/Research/Tools & Software
-Lumis/Research/Books
-Lumis/Research/Articles
-Lumis/Research/Courses & Learning
-Lumis/Learnings
-Lumis/Amplify/Hooks
+Sources/Clippings          ← raw, immutable. read it, never rewrite it.
+Sources/Meetings
+Sources/Audio
+Sources/assets
+
+Wiki/Sources               ← agent-owned. rewritten and kept current.
+Wiki/Concepts
+Wiki/Entities
+Wiki/Synthesis
+
+Journal/Moments            ← first-person. never ingested into the wiki.
+Journal/Daily Notes
+Journal/Reviews
+Journal/Challenges
+
+Work/Stories               ← projects and pipeline output
+Work/Strategy
+
+Lumis/Amplify/Hooks        ← system files
 Lumis/Amplify/Structures
 Lumis/Signals
 Lumis/Memory/sessions
-Lumis/Challenges
-2 - Areas/Personal/People Who Inspire Me
+Lumis/Brand
+Lumis/Brand/Inspiration
 ```
 
-Add a `README.md` with `# {folder-name}\n` in each directory that doesn't already have one.
+Add a `README.md` with `# {folder-name}\n` to each directory that doesn't have one —
+**except the `Wiki/` subfolders.** The wiki navigates itself through `index.md`, and a
+hand-maintained hub sitting next to a generated index is exactly what goes stale and
+starts lying about what the folder holds.
+
+Instead, seed the wiki's two special files:
+
+`Wiki/index.md`:
+```markdown
+# Index
+
+Every page in the wiki, one line each. Read this first when answering anything.
+
+## Sources
+
+## Concepts
+
+## Entities
+
+## Synthesis
+```
+
+`Wiki/log.md`:
+```markdown
+# Log
+
+Append-only. Newest entries at the bottom. Never edit an entry already written.
+```
+
+### Step 2b: Copy the schema
+
+Copy `templates/vault/CLAUDE.md` from the Lumis repo to `{vaultPath}/CLAUDE.md`.
+
+This is the most important file in the vault. It defines the three layers, the single
+frontmatter schema, the page shapes, the ingest and query and lint workflows, and the
+orphan rule. Without it an agent with vault access is a chatbot; with it, the wiki
+maintains itself.
+
+Don't overwrite an existing `CLAUDE.md` — if one is there, show the user the template
+and ask whether to merge.
 
 ### Step 3: Write .lumisrc
 
@@ -57,31 +106,28 @@ If `.lumisrc` doesn't already exist in the vault root, write it:
 {
   "vaultPath": "{absolute vault path}",
   "paths": {
-    "moments": "Lumis/Moments",
-    "stories": "Lumis/Stories",
-    "canvas": "Lumis/Pattern Map.canvas",
-    "dailyNotes": "Daily Notes",
+    "sources": "Sources",
+    "wiki": "Wiki",
+    "meetings": "Sources/Meetings",
+    "audio": "Sources/Audio",
+    "moments": "Journal/Moments",
+    "dailyNotes": "Journal/Daily Notes",
     "dailyNoteFormat": "YYYY-MM-DD",
-    "research": "Lumis/Research",
-    "researchTldr": "Lumis/Research/TL;DR",
-    "learnings": "Lumis/Learnings",
+    "reviews": "Journal/Reviews",
+    "challenges": "Journal/Challenges",
+    "stories": "Work/Stories",
+    "strategyDocs": "Work/Strategy",
+    "people": "Wiki/Entities",
+    "canvas": "Lumis/Pattern Map.canvas",
+    "voice": "Lumis/Voice.md",
+    "goals": "Lumis/Goals.md",
     "amplifyHooks": "Lumis/Amplify/Hooks",
     "amplifyStructures": "Lumis/Amplify/Structures",
     "amplifyPersuasion": "Lumis/Amplify",
-    "strategyDocs": "Strategy",
-    "voice": "Lumis/Voice.md",
     "signals": "Lumis/Signals",
     "memory": "Lumis/Memory",
-    "people": "2 - Areas/Personal/People Who Inspire Me",
-    "challenges": "Lumis/Challenges"
+    "brand": "Lumis/Brand"
   },
-  "researchCategories": [
-    {"name": "AI & Agents", "folder": "AI & Agents", "keywords": ["ai", "agent", "llm", "mcp", "ml", "machine learning", "prompt engineering", "rag", "embedding", "transformer", "gpt", "claude", "neural"]},
-    {"name": "Tools & Software", "folder": "Tools & Software", "keywords": ["tool", "software", "platform", "app", "framework", "library", "sdk", "api", "saas", "devops", "cli"]},
-    {"name": "Books", "folder": "Books", "keywords": ["book", "book summary", "book review", "author", "chapter", "reading"]},
-    {"name": "Articles", "folder": "Articles", "keywords": ["article", "blog", "opinion", "essay", "post", "newsletter"]},
-    {"name": "Courses & Learning", "folder": "Courses & Learning", "keywords": ["course", "tutorial", "workshop", "training", "certification", "lesson", "curriculum", "mooc"]}
-  ],
   "studio": {
     "heygenApiKey": "",
     "heygenAvatarId": "",
@@ -91,6 +137,10 @@ If `.lumisrc` doesn't already exist in the vault root, write it:
   }
 }
 ```
+
+Note there are no research categories. Keyword-matching sources into folders sounds
+tidy and doesn't survive contact with a real vault — most sources match nothing and
+pile up at the root. Tags in frontmatter and `Wiki/index.md` do that job instead.
 
 If `.lumisrc` already exists, read it and confirm the vault path matches. If it doesn't match, ask the user which to keep.
 

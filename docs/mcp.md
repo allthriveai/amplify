@@ -11,7 +11,7 @@ Entry point: `src/mcp/index.ts` (compiles to `dist/mcp/index.js`). Runs on stdio
 | `capture_moment` | Full pipeline: analyze, connect, write, humanize, regenerate canvas, emit signal |
 | `get_moments` | Read moments with optional theme filter and limit (excludes private) |
 | `get_patterns` | Pattern map theme clusters and connection summary (excludes private) |
-| `add_research` | Auto-categorize and save research to vault, emit signal |
+| `ingest_source` | Save a raw source into the immutable source layer, emit signal |
 | `social_coach` | Recommend content based on stories and moments, reads signals + memory (excludes private) |
 | `record_signal` | Record user feedback: rejected recommendations, posted content, engagement metrics |
 | `remember` | Save a user preference to preferences.md |

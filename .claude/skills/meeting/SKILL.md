@@ -34,7 +34,7 @@ Three input modes:
 
 ### Step 2: Read Existing Meetings
 
-Read all existing meeting notes from `{vaultPath}/{paths.meetings}` (default: `Meetings/`). This helps:
+Read all existing meeting notes from `{vaultPath}/{paths.meetings}` (default: `Sources/Meetings/`). This helps:
 - Avoid duplicates (check `plaud_file_id` in frontmatter)
 - Maintain consistent formatting
 - Link to related meetings
@@ -119,12 +119,28 @@ Emit a `meeting_synced` signal:
 }
 ```
 
-### Step 8: Report
+### Step 8: Offer the wiki handoff
+
+The meeting note is a **raw source**. It lands in `{paths.meetings}` under the source
+layer, immutable from here on. On its own it is inert — a meeting nobody links to is a
+meeting nobody finds again.
+
+Offer to ingest it: run the `ingest` skill against the note so the people mentioned
+become entity pages, recurring topics become concept pages, and the decisions get
+cross-referenced against what is already in the wiki.
+
+Worth pushing on when the meeting named a decision, a person not yet in
+`Wiki/Entities`, or a topic that has come up in earlier meetings. Skip it for routine
+status calls — not every meeting is knowledge, and a wiki full of standups is a wiki
+nobody reads.
+
+### Step 9: Report
 
 Tell the user:
 - Meeting title and date
 - Number of decisions and action items extracted
 - Path to the meeting note
 - Any connections to goals or existing meetings
+- Whether it was ingested into the wiki, and which pages it touched
 
 Keep it brief. Don't repeat the full content — they can read the note.

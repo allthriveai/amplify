@@ -65,7 +65,9 @@ The coach is only as good as the evidence. These put real material in the vault:
 
 - **`/moment`** — Captures a moment from your day and finds the "5-second moment," the instant something shifted. Connects it to past moments and rebuilds the Pattern Map. Over months this becomes the record of what actually happened to you, which is what `/week` reads when it asks why the same theme keeps coming up.
 - **`/challenge`** — Pressure-tests an idea with critical thinking prompts and honest feedback. When a task has been carried for three weeks, the block is usually a belief, not a schedule problem.
-- **`/add-research`** — Saves articles, PDFs, and videos as categorized notes with TL;DR companions.
+- **`/ingest`** — Saves a source immutably, distills a wiki page from it, and updates every entity and concept it touches.
+- **`/wiki`** — Answers a question from the wiki, with citations back to the pages.
+- **`/lint`** — Health-checks the wiki: orphans, broken links, contradictions, stale claims, index drift.
 - **`/add-inspiration`** — Researches someone you admire and links them back into your vault.
 - **`/meeting`** — Turns a transcript or pasted notes into decisions, action items, and attendees.
 - **`/voice`** and **`/brand`** — Who you are and how you look. Read by everything that writes.
@@ -115,7 +117,7 @@ So Lumis also owns the pipeline that turns your captured life into things you ca
         ┌───────────────────────┴────────────────────────┐
         │                    Vault                       │
         │                  (Obsidian)                    │
-        │  daily notes · reviews · moments · research    │
+        │  daily notes · reviews · moments · sources     │
         │  goals · voice · signals · patterns            │
         └───────┬────────────────────────────────┬───────┘
                 │                                │
@@ -123,7 +125,7 @@ So Lumis also owns the pipeline that turns your captured life into things you ca
                 │                                │
    ┌────────────┴─────────────┐    ┌─────────────┴──────────────┐
    │ /moment    /challenge    │    │ /craft-content             │
-   │ /add-research /meeting   │    │ /draft-video /draft-article│
+   │ /ingest /meeting /wiki   │    │ /draft-video /draft-article│
    │ /add-inspiration         │    │ /draft-carousel  /draft-*  │
    └──────────────────────────┘    └─────────────┬──────────────┘
                                                  │
@@ -170,7 +172,9 @@ Run `/today` tomorrow morning and it will already know how you did.
 ```
 /moment             Capture a moment and find the 5-second shift
 /challenge          Pressure-test an idea with honest feedback
-/add-research       Save and categorize research
+/ingest             Save a source and distill it into the wiki
+/wiki               Ask the wiki a question, with citations
+/lint               Health-check the wiki
 /add-inspiration    Capture a person who inspires you
 /meeting            Turn a transcript into decisions and action items
 /voice              Fill in or redo your Voice.md
@@ -193,7 +197,7 @@ Run `/today` tomorrow morning and it will already know how you did.
 /youtube-short      Build a Short from existing video
 /youtube-upload     Upload, schedule, and publish to YouTube
 /humanizer          Strip AI-writing tells from any prose
-/listen             Convert a research note to narrated audio
+/listen             Convert a source note to narrated audio
 ```
 
 **CLI**
@@ -209,7 +213,7 @@ lumis studio list           List all draft cuts with status
 lumis studio render <slug>  Render a draft cut to branded video
 lumis studio preview        Open Remotion Studio
 lumis storyboard <slug>     Visual storyboard for pre-production
-lumis listen <note>         Convert a research note to audio
+lumis listen <note>         Convert a source note to audio
 lumis obs <cmd>             OBS capture (setup, start, stop, scenes)
 ```
 

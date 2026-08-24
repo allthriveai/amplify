@@ -7,6 +7,7 @@ import {
   writeHook,
 } from "../../vault/amplify-writer.js";
 import { slugify } from "../../vault/slug.js";
+import { todayKey } from "../../vault/dates.js";
 
 /** `lumis import-sparks --from <path>` — import sparks from a manifest */
 export async function importSparksCommand(fromPath: string): Promise<void> {
@@ -33,7 +34,11 @@ export async function importSparksCommand(fromPath: string): Promise<void> {
     readFileSync(manifestPath, "utf-8"),
   );
 
-  const today = new Date().toISOString().split("T")[0];
+  // Source PDFs are raw material, so they live under the source layer. This used
+  // to point at a hardcoded "3 - Resources/..." path that no longer exists, which
+  // meant every imported structure carried a dead embed.
+  const pdfDir = join(config.paths.sources, "Blueprints");
+  const today = todayKey();
   let count = 0;
 
   // Import structures
@@ -46,7 +51,7 @@ export async function importSparksCommand(fromPath: string): Promise<void> {
 
     if (s.pdfFile) {
       contentSections.push(
-        `\n## Source\n\n![[3 - Resources/Creator Blueprints/${s.pdfFile}]]`,
+        `\n## Source\n\n![[${pdfDir}/${s.pdfFile}]]`,
       );
     }
 
@@ -70,9 +75,7 @@ export async function importSparksCommand(fromPath: string): Promise<void> {
       tags: ["amplify", "structure", s.category.toLowerCase()],
       category: s.category,
       source: "Creator Blueprints",
-      pdfUrl: s.pdfFile
-        ? `[[3 - Resources/Creator Blueprints/${s.pdfFile}]]`
-        : undefined,
+      pdfUrl: s.pdfFile ? `[[${pdfDir}/${s.pdfFile}]]` : undefined,
     }, contentSections.join("\n"));
 
     count++;

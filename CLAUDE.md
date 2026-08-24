@@ -18,7 +18,7 @@ Lumis is a CLI tool and MCP server that lives in an Obsidian vault. It helps cap
 
 ```
 src/
-  types/          ← TypeScript interfaces (moment, canvas, config, research, amplify, signal, memory, story, studio, director, diagram, journal)
+  types/          ← TypeScript interfaces (moment, canvas, config, source, wiki, amplify, signal, memory, story, studio, director, diagram, journal)
   vault/          ← Read/write Obsidian markdown files with gray-matter frontmatter
   cli/            ← CLI commands (moment, init, import-sparks)
   mcp/            ← MCP server (stdio transport, 12 tools)
@@ -39,7 +39,9 @@ src/
 - Frontmatter is parsed/serialized with `gray-matter` via `src/vault/frontmatter.ts`
 - Readers return typed objects, writers accept typed objects
 - New vault content types follow the pattern: types file, path resolver, reader, writer, re-export in `vault/index.ts` and `index.ts`
-- Config changes go in three places: `types/config.ts` (interface + DEFAULT_PATHS), `config.ts` (loadConfig merge), `.lumisrc.example`
+- Config changes go in three places: `types/config.ts` (interface + DEFAULT_PATHS), `config.ts` (loadConfig merge), `.lumisrc.example`. Then run `npm run check:vault` — it catches a path that resolves to nothing, which is otherwise silent
+- **The vault has three ownership layers.** `Sources/` is immutable: read it, cite it, never rewrite it. `Wiki/` is agent-owned: create and rewrite freely. `Journal/` is first-person and never gets ingested into the wiki. Anything writing to the vault has to respect that boundary
+- Slugs go through `src/vault/slug.ts`, not a local copy
 - **Dates: use `src/vault/dates.ts`, never raw `Date` math.** Two traps it exists to avoid. `new Date("2026-08-19")` parses as UTC midnight and lands on the previous day west of UTC. `new Date().toISOString().split("T")[0]` is the UTC day, which rolls over mid-evening in the Americas and files work under tomorrow. Frontmatter dates are a third trap: YAML parses an unquoted `date:` into a `Date` object, not the `string` the type claims, so read them through `normalizeDateKey()`.
 - CLI commands live in `src/cli/commands/` and register in `src/cli/index.ts`
 
@@ -51,9 +53,11 @@ Lumis has Claude Code skills in `.claude/skills/`:
 - **`/voice`** — Standalone voice interview. Fills in or redoes Voice.md through a guided conversation.
 - **`/goals`** — Sets up Goals.md through a guided conversation. Asks about the job you want, what you're building, what's in the way, concrete targets, and how you'll know it's working. Goals.md is your north star — every content skill reads it alongside Voice.md to keep output aligned with what you're building toward.
 - **`/today`** — The daily loop. Opens today's note from the vault template, carries unfinished tasks forward with age markers (`moved 6 days`), and shows the receipt: days since last entry, streak, and which `## Active Targets` in Goals.md have gone quiet. Run it again in the evening to check tasks off and reflect. A completed task tagged `#goal/*` stamps the matching target automatically.
-- **`/week`** — The weekly reckoning. Reads the week's daily notes, tasks kept and missed, moments, and target movement, then writes `Reviews/Week of {Monday}.md`. Surfaces drift that is only visible across weeks: tasks carried past a week, targets abandoned rather than slipping, recurring moment themes, silent days. Walks through three questions and sets next week's commitments. Idempotent — never overwrites a review you have written into.
+- **`/week`** — The weekly reckoning. Reads the week's daily notes, tasks kept and missed, moments, and target movement, then writes `Journal/Reviews/Week of {Monday}.md`. Surfaces drift that is only visible across weeks: tasks carried past a week, targets abandoned rather than slipping, recurring moment themes, silent days. Walks through three questions and sets next week's commitments. Idempotent — never overwrites a review you have written into.
 - **`/moment`** — Captures a daily moment. Reads all existing moments, analyzes the input, finds connections, writes the note, regenerates the Pattern Map canvas, and reports back. Use `/moment private` to mark a moment as private: it still gets full pattern analysis and connections but is excluded from all content pipelines (`/craft-content`, `/draft-*`, `social_coach`, `story_craft`).
-- **`/add-research`** — Saves a URL/PDF/article as research. Fetches content, categorizes it, writes a full note + TL;DR companion, extracts learnings, and reports topic clusters.
+- **`/ingest`** — Saves a URL/PDF/article into the source layer immutably, distills a wiki source page from it, then updates every entity and concept page it touches, the index, and the log. One source touching 10-15 pages is normal.
+- **`/wiki`** — Answers a question from the wiki. Reads `Wiki/index.md` first, drills into the pages it names, answers with `[[wikilink]]` citations, and offers to file anything worth keeping into `Wiki/Synthesis/`.
+- **`/lint`** — Health-checks the wiki: orphans, broken links, index drift, dangling sources, frontmatter and naming violations, plus the judgment checks (contradictions, stale claims, missing pages). Run every 10 ingests, monthly minimum.
 - **`/craft-storytelling`** — Develops storytelling skill from captured moments. Practice mode or full story development.
 - **`/craft-content`** — Finds a story and shapes it into a clean narrative draft. Free write, find the 5-second moment, build the arc, write, review. The story is the asset; draft skills remix it into formats.
 - **`/draft-video`** — Takes a crafted story and drafts a shot-by-shot video timeline, then opens the storyboard for review and approval. Picks hook + structure from Amplify, builds the timeline, generates and opens the storyboard HTML for inline editing, and optionally produces avatar clips via HeyGen and assembles with Remotion. Storyboard approval is built in as the pre-production gate.
@@ -67,9 +71,17 @@ Lumis has Claude Code skills in `.claude/skills/`:
 - **`/humanizer`** — Removes signs of AI-generated writing. Detects and fixes AI vocabulary, significance inflation, em dash overuse, filler phrases, and structural tells.
 - **`/youtube-description`** — Writes YouTube video descriptions. Hook-first structure optimized for search and click-through. Keyword placement, timestamps, CTA strategy, humanizer rules baked in.
 - **`/linkedin-post`** — Writes LinkedIn posts optimized for saves and dwell time. Hook under 110 chars, multiple post structures (story, listicle, contrarian, before/after), links in first comment, humanizer rules baked in.
-- **`/meeting`** — Processes a Plaud-synced transcript or pasted meeting notes into a structured meeting note. Extracts decisions, action items with owners, discussion topics, and attendees. Reads from the Plaud sync folder (populated by the plaud-sync-for-obsidian Obsidian plugin) or accepts pasted text. Writes to `Meetings/`.
+- **`/meeting`** — Processes a Plaud-synced transcript or pasted meeting notes into a structured meeting note. Extracts decisions, action items with owners, discussion topics, and attendees. Reads from the Plaud sync folder (populated by the plaud-sync-for-obsidian Obsidian plugin) or accepts pasted text. Writes to `Sources/Meetings/`, then offers to ingest it into the wiki.
 
 All skills read `.lumisrc` for vault paths and write directly to the Obsidian vault.
+
+### The wiki schema
+
+`{vaultPath}/CLAUDE.md` is the vault's own schema — the contract that turns an agent
+with file access into a disciplined wiki maintainer. It defines the three layers, the
+single frontmatter schema, the page shapes, the ingest/query/lint workflows, and the
+orphan rule ("every new page must link to at least one existing page"). The template
+lives at `templates/vault/CLAUDE.md` and is copied on `/init`.
 
 ### Identity files
 
@@ -122,6 +134,7 @@ npm run build        # Compile TypeScript
 npm run dev          # Run CLI with tsx
 npm run lint         # Type check without emit
 npm test             # Run vitest
+npm run check:vault  # Assert every configured vault path exists
 lumis init [path]    # Scaffold vault structure
 lumis today          # Open today's journal (receipt + carried tasks)
 lumis today --done "task"   # Check tasks off and close the day
