@@ -24,7 +24,7 @@ export type {
   Meeting,
   MeetingFrontmatter,
 } from "./types/meeting.js";
-export { DEFAULT_PATHS, DEFAULT_RESEARCH_CATEGORIES } from "./types/config.js";
+export { DEFAULT_PATHS } from "./types/config.js";
 
 export type { BrandConfig, BrandColors, BrandFonts } from "./types/brand.js";
 export { THEME_COLORS } from "./types/canvas.js";
@@ -68,12 +68,20 @@ export type {
 } from "./types/studio.js";
 
 export type {
-  ResearchResourceType,
-  ResearchFrontmatter,
-  TldrFrontmatter,
-  ResearchNote,
-  ResearchCategory,
-} from "./types/research.js";
+  SourceResourceType,
+  ClippingFrontmatter,
+  Clipping,
+} from "./types/source.js";
+
+export type {
+  WikiPageKind,
+  WikiFrontmatter,
+  WikiPage,
+  IndexEntry,
+  LogEntry,
+  LintReport,
+} from "./types/wiki.js";
+export { WIKI_SUBDIRS } from "./types/wiki.js";
 
 export type {
   AmplifyType,
@@ -124,9 +132,9 @@ export {
   writeMeeting,
   readCanvas,
   writeCanvas,
-  readResearchNotes,
-  writeResearchNote,
-  writeTldrNote,
+  readClippings,
+  writeClipping,
+  writeWikiPage,
   readStructures,
   readHooks,
   readPersuasionGlossary,

@@ -6,6 +6,7 @@ import {
   writeStructure,
   writeHook,
 } from "../../vault/amplify-writer.js";
+import { slugify } from "../../vault/slug.js";
 
 /** `lumis import-sparks --from <path>` — import sparks from a manifest */
 export async function importSparksCommand(fromPath: string): Promise<void> {
@@ -111,9 +112,3 @@ function scaffoldEmptyStructure(vaultPath: string): void {
   }
 }
 
-function slugify(text: string): string {
-  return text
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-|-$/g, "");
-}

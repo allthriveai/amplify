@@ -8,7 +8,7 @@
  *   capture_moment         — Capture a daily moment
  *   get_moments            — Read moments from the vault
  *   get_patterns           — Get the Pattern Map
- *   add_research           — Save research to the vault
+ *   ingest_source          — Save a raw source into the immutable source layer
  *   social_coach           — Recommend what to post and where
  *   record_signal          — Record user feedback signals
  *   remember               — Save a user preference
@@ -33,7 +33,7 @@ import { join } from "node:path";
 import { loadConfig } from "../config.js";
 import { captureMoment } from "../pipeline/capture.js";
 import { readMoments, readCanvas, readStories } from "../vault/reader.js";
-import { writeResearchNote, writeStory, appendPracticeLog } from "../vault/writer.js";
+import { writeClipping, writeStory, appendPracticeLog } from "../vault/writer.js";
 import { parseFrontmatter } from "../vault/frontmatter.js";
 import { resolveVoicePath, resolveStoriesDir, resolvePracticeLogPath, resolveMomentsDir } from "../vault/paths.js";
 import { emitSignal, signalId, summarizeSignals } from "../vault/signals.js";
@@ -41,8 +41,9 @@ import { appendSessionEntry, formatSessionTime, readRecentSessions, readPreferen
 import { openDay, closeDay, setPriorities, runWeekReview, renderDay, renderWeek } from "../journal/index.js";
 import { JOURNAL_PROMPT, WEEK_PROMPT, COACH_PROMPT } from "./prompts.js";
 import { todayKey, formatTask } from "../vault/daily-notes.js";
+import { slugify } from "../vault/slug.js";
 import type { LumisConfig } from "../types/config.js";
-import type { ResearchFrontmatter, ResearchCategory } from "../types/research.js";
+import type { ClippingFrontmatter } from "../types/source.js";
 import type { CanvasFile, CanvasNode, CanvasEdge } from "../types/canvas.js";
 import type { Signal, StoryDevelopedSignal, StoryPracticeSignal } from "../types/signal.js";
 import type { StoryFrontmatter } from "../types/story.js";
@@ -270,80 +271,52 @@ server.registerTool("get_patterns", {
 });
 
 // ---------------------------------------------------------------------------
-// Tool 4: add_research
+// Tool 4: ingest_source
 // ---------------------------------------------------------------------------
 
-server.registerTool("add_research", {
+server.registerTool("ingest_source", {
   description:
-    "Save research from a URL or text. Categorizes it, writes a full note to the vault, and returns metadata.",
+    "Save a raw source (article, paper, transcript) into the immutable source layer. "
+    + "Returns the path so the caller can distill it into wiki pages. Writing the "
+    + "clipping is all this does — it never touches the wiki.",
   inputSchema: {
-    url: z.string().optional().describe("Source URL of the research"),
-    title: z.string().describe("Title of the research note"),
-    content: z.string().describe("The research content (markdown)"),
-    resourceType: z.string().optional().describe("Type of resource: article, paper, guide, video, book, tool, course, podcast, documentation"),
+    url: z.string().optional().describe("Canonical URL of the source"),
+    title: z.string().describe("Title of the source"),
+    content: z.string().describe("The full source content (markdown)"),
+    author: z.string().optional().describe("Author name(s)"),
+    published: z.string().optional().describe("Publish date, YYYY-MM-DD"),
+    resourceType: z.string().optional().describe("article, paper, guide, video, book, tool, course, podcast, documentation, meeting"),
+    tags: z.array(z.string()).optional().describe("Topic tags in kebab-case"),
   },
-}, async ({ url, title, content, resourceType }) => {
+}, async ({ url, title, content, author, published, resourceType, tags }) => {
   try {
-    // Auto-categorize based on content keywords
-    const lowerContent = (title + " " + content).toLowerCase();
-    let matchedCategory: ResearchCategory | undefined;
-    let bestScore = 0;
-
-    for (const category of config.researchCategories) {
-      const score = category.keywords.reduce((count, keyword) => {
-        return count + (lowerContent.includes(keyword) ? 1 : 0);
-      }, 0);
-      if (score > bestScore) {
-        bestScore = score;
-        matchedCategory = category;
-      }
-    }
-
-    // Extract tags from content (simple keyword extraction)
-    const tags: string[] = ["research"];
-    if (resourceType) {
-      tags.push(resourceType);
-    }
-    if (matchedCategory) {
-      tags.push(matchedCategory.name.toLowerCase().replace(/ & /g, "-").replace(/ /g, "-"));
-    }
-
-    // Build frontmatter
-    const today = new Date().toISOString().split("T")[0];
-    const frontmatter: ResearchFrontmatter = {
+    const frontmatter: ClippingFrontmatter = {
       title,
       source: url ?? "",
-      author: "",
-      published: "",
-      created: today,
-      tags,
+      author: author ?? "",
+      published: published ?? "",
+      created: todayKey(),
+      tags: [
+        ...(resourceType ? [`resource/${resourceType}`] : []),
+        ...(tags ?? []),
+      ],
     };
 
-    // Build filename
-    const safeTitle = title
-      .replace(/[^\w\s-]/g, "")
-      .replace(/\s+/g, " ")
-      .trim()
-      .slice(0, 80);
-    const filename = `${safeTitle}.md`;
+    // Kebab-case, so a clipping and the wiki page distilled from it share a name.
+    const filename = `${slugify(title)}.md`;
+    const filepath = writeClipping(config, filename, frontmatter, content);
 
-    // Write the note
-    const filepath = writeResearchNote(config, filename, frontmatter, content, matchedCategory);
-
-    // Log to session memory
-    const now = new Date();
-    const timeStr = formatSessionTime(now);
     appendSessionEntry(config, {
-      time: timeStr,
-      action: "research_added",
-      detail: `Saved "${title}" to ${matchedCategory?.name ?? "Uncategorized"}, tags: ${tags.join(", ")}`,
+      time: formatSessionTime(new Date()),
+      action: "source_ingested",
+      detail: `Saved "${title}" to the source layer, tags: ${frontmatter.tags.join(", ") || "none"}`,
     });
 
     const result = {
       filepath,
       filename,
-      category: matchedCategory?.name ?? "Uncategorized",
-      tags,
+      tags: frontmatter.tags,
+      next: "Distill into Wiki/Sources, update entity and concept pages, then index.md and log.md",
     };
 
     return {
@@ -352,13 +325,12 @@ server.registerTool("add_research", {
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
     return {
-      content: [{ type: "text" as const, text: `Error saving research: ${message}` }],
+      content: [{ type: "text" as const, text: `Error saving source: ${message}` }],
       isError: true,
     };
   }
 });
 
-// ---------------------------------------------------------------------------
 // Tool 5: social_coach
 // ---------------------------------------------------------------------------
 

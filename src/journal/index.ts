@@ -208,7 +208,7 @@ export function closeDay(
         id: signalId(),
         type: "target_touched",
         timestamp: new Date().toISOString(),
-        data: { target: target.text, cadence: target.cadence, daysSince: target.daysSince },
+        data: { target: target.text, cadence: target.cadence, daysSince: target.daysSince, date },
       });
     }
   }

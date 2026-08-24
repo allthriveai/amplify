@@ -2,7 +2,7 @@ import { readFileSync, existsSync } from "node:fs";
 import { resolve, join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { config as loadDotenv } from "dotenv";
-import { LumisConfig, DEFAULT_PATHS, DEFAULT_RESEARCH_CATEGORIES } from "./types/config.js";
+import { LumisConfig, DEFAULT_PATHS } from "./types/config.js";
 import type { StudioConfig } from "./types/studio.js";
 import type { CaptureConfig } from "./types/config.js";
 
@@ -51,8 +51,8 @@ export function loadConfig(overrides?: Partial<LumisConfig>): LumisConfig {
       canvas: overrides?.paths?.canvas ?? rcPaths?.canvas ?? DEFAULT_PATHS.canvas,
       dailyNotes: overrides?.paths?.dailyNotes ?? rcPaths?.dailyNotes ?? DEFAULT_PATHS.dailyNotes,
       dailyNoteFormat: overrides?.paths?.dailyNoteFormat ?? rcPaths?.dailyNoteFormat ?? DEFAULT_PATHS.dailyNoteFormat,
-      research: overrides?.paths?.research ?? rcPaths?.research ?? DEFAULT_PATHS.research,
-      researchTldr: overrides?.paths?.researchTldr ?? rcPaths?.researchTldr ?? DEFAULT_PATHS.researchTldr,
+      sources: overrides?.paths?.sources ?? rcPaths?.sources ?? DEFAULT_PATHS.sources,
+      wiki: overrides?.paths?.wiki ?? rcPaths?.wiki ?? DEFAULT_PATHS.wiki,
       amplifyStructures: overrides?.paths?.amplifyStructures ?? rcPaths?.amplifyStructures ?? DEFAULT_PATHS.amplifyStructures,
       amplifyHooks: overrides?.paths?.amplifyHooks ?? rcPaths?.amplifyHooks ?? DEFAULT_PATHS.amplifyHooks,
       amplifyPersuasion: overrides?.paths?.amplifyPersuasion ?? rcPaths?.amplifyPersuasion ?? DEFAULT_PATHS.amplifyPersuasion,
@@ -68,7 +68,6 @@ export function loadConfig(overrides?: Partial<LumisConfig>): LumisConfig {
       meetings: overrides?.paths?.meetings ?? rcPaths?.meetings ?? DEFAULT_PATHS.meetings,
       reviews: overrides?.paths?.reviews ?? rcPaths?.reviews ?? DEFAULT_PATHS.reviews,
     },
-    researchCategories: overrides?.researchCategories ?? rc?.researchCategories ?? DEFAULT_RESEARCH_CATEGORIES,
     ...(overrides?.brand ?? rc?.brand ? { brand: overrides?.brand ?? rc?.brand } : {}),
     ...(overrides?.brandProfiles ?? rc?.brandProfiles ? { brandProfiles: overrides?.brandProfiles ?? rc?.brandProfiles } : {}),
     ...(studio ? { studio } : {}),

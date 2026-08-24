@@ -1,54 +1,28 @@
 {
   "vaultPath": "~/path/to/your/obsidian-vault",
   "paths": {
-    "moments": "Lumis/Moments",
-    "stories": "Lumis/Stories",
-    "canvas": "Lumis/Pattern Map.canvas",
-    "dailyNotes": "Daily Notes",
+    "sources": "Sources",
+    "wiki": "Wiki",
+    "meetings": "Sources/Meetings",
+    "audio": "Sources/Audio",
+    "moments": "Journal/Moments",
+    "dailyNotes": "Journal/Daily Notes",
     "dailyNoteFormat": "YYYY-MM-DD",
-    "research": "Lumis/Research",
-    "researchTldr": "Lumis/Research/TL;DR",
+    "reviews": "Journal/Reviews",
+    "challenges": "Journal/Challenges",
+    "stories": "Work/Stories",
+    "strategyDocs": "Work/Strategy",
+    "people": "Wiki/Entities",
+    "canvas": "Lumis/Pattern Map.canvas",
+    "voice": "Lumis/Voice.md",
+    "goals": "Lumis/Goals.md",
     "amplifyStructures": "Lumis/Amplify/Structures",
     "amplifyHooks": "Lumis/Amplify/Hooks",
     "amplifyPersuasion": "Lumis/Amplify",
-    "strategyDocs": "Strategy",
-    "voice": "Lumis/Voice.md",
-    "goals": "Lumis/Goals.md",
     "signals": "Lumis/Signals",
     "memory": "Lumis/Memory",
-    "people": "2 - Areas/Personal/People Who Inspire Me",
-    "challenges": "Lumis/Challenges",
-    "reviews": "Reviews",
-    "brand": "Brand",
-    "audio": "3 - Resources/Research/Audio"
+    "brand": "Lumis/Brand"
   },
-  "researchCategories": [
-    {
-      "name": "AI & Agents",
-      "folder": "AI & Agents",
-      "keywords": ["ai", "agent", "llm", "mcp", "ml", "machine learning", "prompt engineering", "rag"]
-    },
-    {
-      "name": "Tools & Software",
-      "folder": "Tools & Software",
-      "keywords": ["tool", "software", "platform", "framework", "library", "sdk", "api"]
-    },
-    {
-      "name": "Books",
-      "folder": "Books",
-      "keywords": ["book", "book summary", "book review"]
-    },
-    {
-      "name": "Articles",
-      "folder": "Articles",
-      "keywords": ["article", "blog", "opinion", "essay", "newsletter"]
-    },
-    {
-      "name": "Courses & Learning",
-      "folder": "Courses & Learning",
-      "keywords": ["course", "tutorial", "workshop", "training", "certification"]
-    }
-  ],
   "brand": {
     "name": "Your Brand",
     "tagline": "What you do in one line",

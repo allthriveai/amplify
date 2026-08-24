@@ -9,6 +9,7 @@ import {
   MOMENT_WIDTH,
   MOMENT_HEIGHT,
 } from "./layout.js";
+import { slugify } from "../vault/slug.js";
 
 /** Build a canvas from a list of moments */
 export function buildCanvas(moments: Moment[]): CanvasFile {
@@ -83,14 +84,6 @@ export function buildCanvas(moments: Moment[]): CanvasFile {
   }
 
   return { nodes, edges };
-}
-
-function slugify(s: string): string {
-  return s
-    .toLowerCase()
-    .replace(/\.md$/, "")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-|-$/g, "");
 }
 
 function capitalize(s: string): string {

@@ -1,6 +1,6 @@
 import { join } from "node:path";
 import type { LumisConfig } from "../types/config.js";
-import type { ResearchCategory } from "../types/research.js";
+import { WIKI_SUBDIRS, type WikiPageKind } from "../types/wiki.js";
 
 /** Resolve an absolute path within the vault */
 export function resolvePath(config: LumisConfig, relativePath: string): string {
@@ -36,19 +36,44 @@ export function resolveDailyNotePath(config: LumisConfig, date: string): string 
   return resolvePath(config, join(config.paths.dailyNotes, `${filename}.md`));
 }
 
-/** Resolve the research root directory */
-export function resolveResearchDir(config: LumisConfig): string {
-  return resolvePath(config, config.paths.research);
+/** Resolve the source layer root. Everything under here is immutable. */
+export function resolveSourcesDir(config: LumisConfig): string {
+  return resolvePath(config, config.paths.sources);
 }
 
-/** Resolve the TL;DR companion notes directory */
-export function resolveTldrDir(config: LumisConfig): string {
-  return resolvePath(config, config.paths.researchTldr);
+/** Resolve the clippings directory: {sources}/Clippings */
+export function resolveClippingsDir(config: LumisConfig): string {
+  return join(resolveSourcesDir(config), "Clippings");
 }
 
-/** Resolve a specific research category subfolder */
-export function resolveResearchCategoryDir(config: LumisConfig, category: ResearchCategory): string {
-  return join(resolveResearchDir(config), category.folder);
+/** Resolve the source-layer assets directory: {sources}/assets */
+export function resolveSourceAssetsDir(config: LumisConfig): string {
+  return join(resolveSourcesDir(config), "assets");
+}
+
+/** Resolve the wiki root. Everything under here is agent-owned. */
+export function resolveWikiDir(config: LumisConfig): string {
+  return resolvePath(config, config.paths.wiki);
+}
+
+/** Resolve the wiki subfolder for a page kind: {wiki}/{Sources|Concepts|Entities|Synthesis} */
+export function resolveWikiSubdir(config: LumisConfig, kind: WikiPageKind): string {
+  return join(resolveWikiDir(config), WIKI_SUBDIRS[kind]);
+}
+
+/** Resolve a wiki page path: {wiki}/{subdir}/{filename} */
+export function resolveWikiPagePath(config: LumisConfig, kind: WikiPageKind, filename: string): string {
+  return join(resolveWikiSubdir(config, kind), filename);
+}
+
+/** Resolve the wiki catalog: {wiki}/index.md */
+export function resolveWikiIndexPath(config: LumisConfig): string {
+  return join(resolveWikiDir(config), "index.md");
+}
+
+/** Resolve the append-only wiki log: {wiki}/log.md */
+export function resolveWikiLogPath(config: LumisConfig): string {
+  return join(resolveWikiDir(config), "log.md");
 }
 
 /** Resolve the amplify structures directory */

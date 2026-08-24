@@ -3,10 +3,11 @@ import { join, dirname } from "node:path";
 import type { LumisConfig } from "../types/config.js";
 import type { MomentFrontmatter } from "../types/moment.js";
 import type { MeetingFrontmatter } from "../types/meeting.js";
-import type { ResearchFrontmatter, TldrFrontmatter, ResearchCategory } from "../types/research.js";
+import type { ClippingFrontmatter } from "../types/source.js";
+import type { WikiFrontmatter, WikiPageKind } from "../types/wiki.js";
 import type { StoryFrontmatter } from "../types/story.js";
 import type { CanvasFile } from "../types/canvas.js";
-import { resolveMomentsDir, resolveMeetingsDir, resolveCanvasPath, resolveResearchDir, resolveTldrDir, resolveResearchCategoryDir, resolveStoriesDir, resolvePracticeLogPath } from "./paths.js";
+import { resolveMomentsDir, resolveMeetingsDir, resolveCanvasPath, resolveClippingsDir, resolveWikiSubdir, resolveStoriesDir, resolvePracticeLogPath } from "./paths.js";
 import { serializeFrontmatter } from "./frontmatter.js";
 
 /** Write a moment file to the vault */
@@ -43,17 +44,14 @@ export function writeMeeting(
   return filepath;
 }
 
-/** Write a research note to the vault, optionally into a category subfolder */
-export function writeResearchNote(
+/** Write a raw clipping into the immutable source layer */
+export function writeClipping(
   config: LumisConfig,
   filename: string,
-  frontmatter: ResearchFrontmatter,
+  frontmatter: ClippingFrontmatter,
   content: string,
-  category?: ResearchCategory,
 ): string {
-  const dir = category
-    ? resolveResearchCategoryDir(config, category)
-    : resolveResearchDir(config);
+  const dir = resolveClippingsDir(config);
   mkdirSync(dir, { recursive: true });
 
   const filepath = join(dir, filename);
@@ -63,14 +61,15 @@ export function writeResearchNote(
   return filepath;
 }
 
-/** Write a TL;DR companion note to the central TL;DR folder */
-export function writeTldrNote(
+/** Write a wiki page into the subfolder for its kind */
+export function writeWikiPage(
   config: LumisConfig,
+  kind: WikiPageKind,
   filename: string,
-  frontmatter: TldrFrontmatter,
+  frontmatter: WikiFrontmatter,
   content: string,
 ): string {
-  const dir = resolveTldrDir(config);
+  const dir = resolveWikiSubdir(config, kind);
   mkdirSync(dir, { recursive: true });
 
   const filepath = join(dir, filename);

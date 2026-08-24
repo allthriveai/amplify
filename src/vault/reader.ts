@@ -3,10 +3,10 @@ import { join } from "node:path";
 import type { LumisConfig } from "../types/config.js";
 import type { Moment, MomentFrontmatter } from "../types/moment.js";
 import type { Meeting, MeetingFrontmatter } from "../types/meeting.js";
-import type { ResearchNote, ResearchFrontmatter } from "../types/research.js";
+import type { Clipping, ClippingFrontmatter } from "../types/source.js";
 import type { Story, StoryFrontmatter, StoryElements } from "../types/story.js";
 import type { CanvasFile } from "../types/canvas.js";
-import { resolveMomentsDir, resolveMeetingsDir, resolveCanvasPath, resolveResearchDir, resolveResearchCategoryDir, resolveStoriesDir } from "./paths.js";
+import { resolveMomentsDir, resolveMeetingsDir, resolveCanvasPath, resolveClippingsDir, resolveStoriesDir } from "./paths.js";
 import { parseFrontmatter } from "./frontmatter.js";
 
 /** Read all moment files from the configured moments directory */
@@ -82,38 +82,24 @@ export function readMeeting(config: LumisConfig, filename: string): Meeting | nu
   };
 }
 
-/** Read all research notes across all category folders and the research root */
-export function readResearchNotes(config: LumisConfig): ResearchNote[] {
-  const notes: ResearchNote[] = [];
+/**
+ * Read every raw clipping from the source layer.
+ *
+ * Flat by design. Clippings used to be split across keyword-matched category
+ * folders, which left most of them uncategorized at the root anyway; tags in
+ * frontmatter and the wiki index do that job now.
+ */
+export function readClippings(config: LumisConfig): Clipping[] {
+  const dir = resolveClippingsDir(config);
+  if (!existsSync(dir)) return [];
 
-  // Read from research root
-  const rootDir = resolveResearchDir(config);
-  if (existsSync(rootDir)) {
-    notes.push(...readResearchNotesFromDir(rootDir, config.paths.research));
-  }
-
-  // Read from each category subfolder
-  for (const category of config.researchCategories) {
-    const categoryDir = resolveResearchCategoryDir(config, category);
-    if (existsSync(categoryDir)) {
-      const relativePath = join(config.paths.research, category.folder);
-      notes.push(...readResearchNotesFromDir(categoryDir, relativePath));
-    }
-  }
-
-  return notes;
-}
-
-function readResearchNotesFromDir(
-  dir: string,
-  relativePath: string,
-): ResearchNote[] {
+  const relativePath = join(config.paths.sources, "Clippings");
   return readdirSync(dir)
     .filter((f) => f.endsWith(".md") && f !== "README.md")
     .map((filename) => {
       const filepath = join(dir, filename);
       const raw = readFileSync(filepath, "utf-8");
-      const { frontmatter, content } = parseFrontmatter<ResearchFrontmatter>(raw);
+      const { frontmatter, content } = parseFrontmatter<ClippingFrontmatter>(raw);
       return {
         filename,
         path: join(relativePath, filename),

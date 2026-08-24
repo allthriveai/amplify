@@ -82,7 +82,12 @@ export function gatherWeek(config: LumisConfig, date: string = todayKey()): Week
       readSignals(config)
         .filter((s) => s.type === "target_touched")
         .filter((s) => {
-          const day = s.timestamp.slice(0, 10);
+          // Group on the journal day the target was stamped against, not on when
+          // the signal happened to be written — closing out Monday on Friday still
+          // belongs to Monday. Signals written before `date` existed fall back to
+          // the timestamp.
+          const data = s.data as { date?: string };
+          const day = data.date ?? s.timestamp.slice(0, 10);
           return day >= weekOf && day <= weekEnd;
         })
         .map((s) => (s.data as { target: string }).target),
