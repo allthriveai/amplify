@@ -32,6 +32,11 @@ count — being listed is not being connected.
 **Broken links.** `[[Targets]]` with no page of that title. Usually a rename that did
 not propagate, or a link written from the filename instead of the title.
 
+**Wrapped links.** A `[[link]]` split across a line break does not resolve, and it reads
+as correct in the source — the only symptom is the target showing up as a broken link
+whose name contains a newline. Worth checking for explicitly, since hard-wrapped prose
+produces it constantly.
+
 **Index drift.** Pages on disk missing from `index.md`, and index entries naming pages
 that no longer exist.
 

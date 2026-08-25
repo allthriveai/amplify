@@ -80,6 +80,8 @@ where the evidence lands. Cite the pages, not the raw sources.
   This resolves because every page carries its title in `aliases`. A page without
   that alias cannot be linked to.
 - Link on first mention of anything that has its own page.
+- **Never let a `[[link]]` wrap across a line break.** A link split over two lines does
+  not resolve, and it looks correct in the source. Rewrite the sentence instead.
 
 **The orphan rule: every new page must link to at least one existing page.** A page
 nothing points at is a page nobody will ever find again. If a new page genuinely
