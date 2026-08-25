@@ -6,12 +6,18 @@
  * cross-cutting query impossible.
  */
 
-/** Wiki page kinds. Each maps to a subfolder under the wiki root. */
-export type WikiPageKind = "source" | "concept" | "entity" | "synthesis";
+/**
+ * Wiki page kinds. Each maps to a subfolder under the wiki root.
+ *
+ * A distilled page about a source is a `summary`, filed in `Wiki/Summaries/`. It is
+ * deliberately not called a "source" — the raw layer is `Sources/`, and the `sources`
+ * frontmatter field points there. Two folders named Sources is how that gets confused.
+ */
+export type WikiPageKind = "summary" | "concept" | "entity" | "synthesis";
 
 /** Subfolder name for each page kind, relative to the wiki root */
 export const WIKI_SUBDIRS: Record<WikiPageKind, string> = {
-  source: "Sources",
+  summary: "Summaries",
   concept: "Concepts",
   entity: "Entities",
   synthesis: "Synthesis",

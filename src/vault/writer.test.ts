@@ -104,8 +104,8 @@ describe("writeWikiPage", () => {
       .toBe(join(wiki, "Concepts", "vector-search.md"));
     expect(writeWikiPage(config, "entity", "some-org.md", sampleFrontmatter, "Body."))
       .toBe(join(wiki, "Entities", "some-org.md"));
-    expect(writeWikiPage(config, "source", "note.md", sampleFrontmatter, "Body."))
-      .toBe(join(wiki, "Sources", "note.md"));
+    expect(writeWikiPage(config, "summary", "note.md", sampleFrontmatter, "Body."))
+      .toBe(join(wiki, "Summaries", "note.md"));
     expect(writeWikiPage(config, "synthesis", "a-vs-b.md", sampleFrontmatter, "Body."))
       .toBe(join(wiki, "Synthesis", "a-vs-b.md"));
   });

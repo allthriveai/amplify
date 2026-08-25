@@ -41,7 +41,7 @@ Sources/                ← IMMUTABLE. read, never rewritten.
 Wiki/                   ← AGENT-OWNED. rewritten and kept current.
   index.md              ← catalog: every page, one line, under 120 chars
   log.md                ← append-only: ingests, queries, lint passes
-  Sources/              ← one distilled page per raw source
+  Summaries/            ← one distilled page per raw source
   Concepts/             ← ideas, frameworks, patterns
   Entities/             ← people, organizations, products, tools
   Synthesis/            ← comparisons and cross-cutting analysis
@@ -97,6 +97,10 @@ updated: 2026-02-02
 
 `sources` names filenames in `Sources/`, not paths and not URLs. It is the audit trail
 back to raw material, and a page with an empty `sources` list is unsupported opinion.
+
+Note the naming. The raw layer is `Sources/` and the `sources` field points there; a page
+*about* a source is a **summary**, filed in `Wiki/Summaries/`. Naming both folders
+`Sources` reads fine in a diagram and is genuinely confusing in a file tree.
 
 Filenames are kebab-case, page titles are Title Case, and `[[links]]` use the **title**
 rather than the filename.

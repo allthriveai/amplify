@@ -23,7 +23,7 @@ Everything else in the vault belongs to the person who owns it:
 Wiki/
 ├── index.md       catalog of every page
 ├── log.md         append-only history
-├── Sources/       one page per ingested source
+├── Summaries/     one page per ingested source
 ├── Concepts/      ideas, frameworks, patterns
 ├── Entities/      people, organizations, products, tools
 └── Synthesis/     comparisons and cross-cutting analysis
@@ -64,10 +64,13 @@ and the part that turns out to be worth the most later.
 **Entity** — what this person, org, product, or tool is, the relationship to it, and
 when it last came up. Keep judgments attributed to a source rather than stated flat.
 
-**Source** — canonical URL or file reference, the claims the source actually makes,
-and links to every concept and entity it touches. Stay factual here. Interpretation
-belongs on concept and synthesis pages, so a source page stays valid even after you
-change your mind about what it means.
+**Summary** — one page per source in `Sources/`. Canonical URL or file reference, the
+claims the source actually makes, and links to every concept and entity it touches. Stay
+factual here. Interpretation belongs on concept and synthesis pages, so a summary stays
+valid even after you change your mind about what the source means.
+
+Note the naming: the raw layer is `Sources/` and the `sources` frontmatter field points
+there. A page *about* a source is a summary. Do not create a `Wiki/Sources/`.
 
 **Synthesis** — the comparison or question being resolved, what each side holds, and
 where the evidence lands. Cite the pages, not the raw sources.
@@ -95,7 +98,7 @@ create that one too.
 1. Read the source completely.
 2. Talk through the takeaways before writing anything.
 3. Write the raw material to `Sources/` if it is not already there. Never edit it after.
-4. Write a page in `Wiki/Sources/`.
+4. Write a summary page in `Wiki/Summaries/`.
 5. For every entity and concept the source touches: update the page if it exists,
    create it if it does not.
 6. Add `[[links]]` in both directions. A link that only points one way is half a link.
@@ -130,7 +133,7 @@ anything large.
 
 ## Index format
 
-One line per page, grouped under `## Sources`, `## Concepts`, `## Entities`,
+One line per page, grouped under `## Summaries`, `## Concepts`, `## Entities`,
 `## Synthesis`. Keep each line under 120 characters.
 
 ```markdown

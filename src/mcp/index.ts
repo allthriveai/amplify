@@ -316,7 +316,7 @@ server.registerTool("ingest_source", {
       filepath,
       filename,
       tags: frontmatter.tags,
-      next: "Distill into Wiki/Sources, update entity and concept pages, then index.md and log.md",
+      next: "Distill into Wiki/Summaries, update entity and concept pages, then index.md and log.md",
     };
 
     return {

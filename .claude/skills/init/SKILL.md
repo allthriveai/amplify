@@ -36,7 +36,7 @@ Sources/Meetings
 Sources/Audio
 Sources/assets
 
-Wiki/Sources               ← agent-owned. rewritten and kept current.
+Wiki/Summaries             ← agent-owned. rewritten and kept current.
 Wiki/Concepts
 Wiki/Entities
 Wiki/Synthesis
@@ -70,7 +70,7 @@ Instead, seed the wiki's two special files:
 
 Every page in the wiki, one line each. Read this first when answering anything.
 
-## Sources
+## Summaries
 
 ## Concepts
 

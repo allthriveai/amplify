@@ -126,7 +126,7 @@ describe("wiki layer", () => {
 
   it("maps each page kind to its subfolder", () => {
     const config = mockConfig();
-    expect(resolveWikiSubdir(config, "source")).toBe("/test/vault/Wiki/Sources");
+    expect(resolveWikiSubdir(config, "summary")).toBe("/test/vault/Wiki/Summaries");
     expect(resolveWikiSubdir(config, "concept")).toBe("/test/vault/Wiki/Concepts");
     expect(resolveWikiSubdir(config, "entity")).toBe("/test/vault/Wiki/Entities");
     expect(resolveWikiSubdir(config, "synthesis")).toBe("/test/vault/Wiki/Synthesis");

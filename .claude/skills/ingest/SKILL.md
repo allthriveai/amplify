@@ -71,7 +71,7 @@ and the slug.
 
 ## Step 4: Write the wiki source page
 
-`{wiki}/Sources/{same-slug}.md`. Same filename as the clipping, so the pair is obvious.
+`{wiki}/Summaries/{same-slug}.md`. Same filename as the clipping, so the pair is obvious.
 
 ```markdown
 ---
