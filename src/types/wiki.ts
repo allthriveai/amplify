@@ -33,6 +33,12 @@ export interface WikiFrontmatter {
   created: string;
   /** YYYY-MM-DD, bumped on every rewrite */
   updated: string;
+  /**
+   * Must contain the page's Title Case title. Filenames are kebab-case and
+   * links are written from the title, so without this alias every inbound
+   * [[Link]] to the page dangles. Additional aliases are welcome after it.
+   */
+  aliases: string[];
 }
 
 export interface WikiPage {

@@ -106,15 +106,15 @@ Filenames are kebab-case, page titles are Title Case, and `[[links]]` use the **
 rather than the filename.
 
 **The orphan rule: every new page must link to at least one existing page.** A page
-nothing points at is a page nobody finds again. Before this rule the vault had 107 of
-154 research notes with zero inbound links.
+nothing points at is a page nobody finds again — without the rule, the typical vault
+ends up with most of its notes carrying zero inbound links.
 
 ## Why there are no research categories
 
 Sources used to be keyword-matched into category subfolders. It sounds tidy and does not
-survive a real vault: most sources matched nothing and piled up at the root, while three
-of the five configured categories were never created at all. `Sources/Clippings/` is flat,
-and `tags` plus `Wiki/index.md` do the categorizing.
+survive a real vault: most sources match nothing and pile up at the root, while configured
+categories go uncreated. `Sources/Clippings/` is flat, and `tags` plus `Wiki/index.md` do
+the categorizing.
 
 ## Config drift
 

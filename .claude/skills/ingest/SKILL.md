@@ -19,7 +19,7 @@ paths.sources   → raw layer root (default: "Sources")
 paths.wiki      → wiki root (default: "Wiki")
 ```
 
-Clippings go in `{sources}/Clippings`. Wiki pages go in `{wiki}/{Sources,Concepts,Entities,Synthesis}`.
+Clippings go in `{sources}/Clippings`. Wiki pages go in `{wiki}/{Summaries,Concepts,Entities,Synthesis}` — never a `Wiki/Sources/`.
 
 Read `{vaultPath}/CLAUDE.md` — the vault schema. It is the authority on page shape,
 frontmatter, and naming. This skill is the workflow; that file is the contract.

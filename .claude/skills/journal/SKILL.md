@@ -145,19 +145,22 @@ the section rather than inventing a pattern from two data points.
 
 ## Step 6: Stamp the targets
 
-Journaling stamps its own target. If a target's text or tag matches journaling,
-stamp it:
+Journaling stamps its own target — directly, since the entry note has no
+checkboxes for `--done` to match:
 
 ```bash
-lumis today --done "Journal"
+lumis today --touch "#goal/journal"
 ```
+
+`--touch` stamps by target name or tag, needs no checkbox and no existing task,
+and is idempotent per day, so running it twice cannot inflate an Nx-weekly count.
 
 Then read the other active targets and ask **once**, as a single question, which
 of them landed today. Do not walk through them one at a time — that turns a
 journal into a compliance checklist.
 
-Stamp what they confirm. Say nothing about what they missed; the receipt already
-did that this morning and will again tomorrow.
+Stamp what they confirm, each with its own `--touch`. Say nothing about what they
+missed; the receipt already did that this morning and will again tomorrow.
 
 ## Step 7: Report
 

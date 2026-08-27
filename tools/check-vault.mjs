@@ -24,6 +24,12 @@ if (!config.vaultPath || !existsSync(config.vaultPath)) {
 
 /** Paths that name a file rather than a directory */
 const FILE_KEYS = new Set(["canvas", "voice", "goals"]);
+/**
+ * Files created by later workflows, not by init — the canvas by the first
+ * /moment, Goals.md by /goals. Missing on a fresh vault is expected, so these
+ * warn instead of failing the check.
+ */
+const LATER_KEYS = new Set(["canvas", "goals"]);
 /** Not a path at all */
 const SKIP_KEYS = new Set(["dailyNoteFormat"]);
 
@@ -47,12 +53,13 @@ for (const sub of Object.values(WIKI_SUBDIRS)) {
 }
 
 const missing = [];
+const later = [];
 const wrongKind = [];
 
 for (const check of checks) {
   const abs = join(config.vaultPath, check.rel);
   if (!existsSync(abs)) {
-    missing.push(check);
+    (LATER_KEYS.has(check.label) ? later : missing).push(check);
     continue;
   }
   const isDir = statSync(abs).isDirectory();
@@ -63,8 +70,11 @@ for (const check of checks) {
 console.log(`Vault: ${config.vaultPath}`);
 console.log(`Checked ${checks.length} configured paths.`);
 
+for (const l of later) {
+  console.log(`  not yet  ${l.label.padEnd(22)} ${l.rel} (created by a later workflow — fine on a fresh vault)`);
+}
 if (missing.length === 0 && wrongKind.length === 0) {
-  console.log("All resolved paths exist.");
+  console.log("All required paths exist.");
   process.exit(0);
 }
 

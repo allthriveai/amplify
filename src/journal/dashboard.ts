@@ -1,5 +1,5 @@
-import type { Task, TargetStatus, Drift, WeekData } from "../types/journal.js";
-import { parseDateKey, formatDate } from "../vault/dates.js";
+import type { Task, TargetStatus, Drift, WeekData, DayPreview } from "../types/journal.js";
+import { parseDateKey, formatDate, todayKey } from "../vault/dates.js";
 import type { OpenDayResult } from "./index.js";
 
 /**
@@ -51,9 +51,10 @@ function driftRows(drift: Drift): string[] {
 }
 
 /** The daily picture, in one block */
-export function renderDay(result: OpenDayResult): string {
+export function renderDay(result: OpenDayResult | DayPreview): string {
   const { stats, carried, targets, drift, note } = result;
-  const heading = formatDate(parseDateKey(note.date), "ddd MMM D");
+  const day = note?.date ?? ("date" in result ? result.date : todayKey());
+  const heading = formatDate(parseDateKey(day), "ddd MMM D");
 
   const lines: string[] = [
     `${heading} · streak ${stats.currentStreak} · best ${stats.longestStreak}`,
@@ -65,15 +66,16 @@ export function renderDay(result: OpenDayResult): string {
     lines.push(`Last entry: ${stats.daysSinceLastEntry} days ago`);
   }
 
-  const open = note.tasks.filter((t) => !t.done);
-  const done = note.tasks.filter((t) => t.done);
+  const open = note?.tasks.filter((t) => !t.done) ?? [];
+  const done = note?.tasks.filter((t) => t.done) ?? [];
 
   if (carried.length > 0) {
     lines.push("", "Carried over", ...carried.map(taskRow));
   }
 
-  // On a reopened note, show what today already holds
-  if (!result.created && (open.length > 0 || done.length > 0)) {
+  // On a note that already existed, show what today already holds
+  const isNewNote = "created" in result ? result.created : !result.exists;
+  if (!isNewNote && (open.length > 0 || done.length > 0)) {
     if (done.length > 0) lines.push("", "Done today", ...done.map((t) => ` • ${t.text}`));
     const fresh = open.filter((t) => t.age === 0);
     if (fresh.length > 0) lines.push("", "Today", ...fresh.map(taskRow));

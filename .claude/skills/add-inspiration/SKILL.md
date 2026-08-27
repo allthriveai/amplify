@@ -72,7 +72,7 @@ Search the vault for mentions of this person. Check:
 
 1. **Moments** at `{paths.moments}`: search both `people` frontmatter fields and body content for the person's name (and aliases)
 2. **Sources** at `{paths.sources}`: search clipping content and titles
-3. **Learnings** at `{paths.learnings}`: search note content
+3. **Wiki concepts** at `{paths.wiki}`: scan index.md for related concept pages
 4. **Stories** at `{paths.stories}`: search note content
 
 Use Grep with the person's name (and aliases if they have one) across these directories.
@@ -89,7 +89,7 @@ tags: [inspiration, {domain-tag-1}, {domain-tag-2}]
 sources: [{clipping filenames this draws on, or empty}]
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
-aliases: [{alias if any}]
+aliases: ["{Person Name}", {other aliases if any}]
 ---
 
 # {Person Name}

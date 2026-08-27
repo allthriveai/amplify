@@ -263,7 +263,7 @@ describe("times-per-period cadence", () => {
 
   it("counts hits inside the period and is not overdue once the count is met", () => {
     const target = parseTargetLine("- [ ] Work out `cadence:3x-weekly` #goal/workout")!;
-    const touches = new Map([["work out", ["2026-08-25", "2026-08-26", "2026-08-27"]]]);
+    const touches = new Map([["work out", new Set(["2026-08-25", "2026-08-26", "2026-08-27"])]]);
     const [status] = computeTargetStatus([target], "2026-08-27", touches);
     expect(status.hits).toBe(3);
     expect(status.overdue).toBe(false);
@@ -271,7 +271,7 @@ describe("times-per-period cadence", () => {
 
   it("is overdue when short of the count", () => {
     const target = parseTargetLine("- [ ] Work out `cadence:3x-weekly` #goal/workout")!;
-    const touches = new Map([["work out", ["2026-08-26", "2026-08-27"]]]);
+    const touches = new Map([["work out", new Set(["2026-08-26", "2026-08-27"])]]);
     const [status] = computeTargetStatus([target], "2026-08-27", touches);
     expect(status.hits).toBe(2);
     expect(status.overdue).toBe(true);
@@ -281,7 +281,7 @@ describe("times-per-period cadence", () => {
     const target = parseTargetLine("- [ ] Work out `cadence:3x-weekly` #goal/workout")!;
     const touches = new Map([[
       "work out",
-      ["2026-08-01", "2026-08-02", "2026-08-03", "2026-08-27"],
+      new Set(["2026-08-01", "2026-08-02", "2026-08-03", "2026-08-27"]),
     ]]);
     const [status] = computeTargetStatus([target], "2026-08-27", touches);
     expect(status.hits).toBe(1);
@@ -292,6 +292,17 @@ describe("times-per-period cadence", () => {
     const target = parseTargetLine("- [ ] Work out `cadence:3x-weekly` #goal/workout")!;
     const [status] = computeTargetStatus([target], "2026-08-27", new Map());
     expect(status.hits).toBe(0);
+    expect(status.overdue).toBe(true);
+  });
+});
+
+describe("touch deduplication", () => {
+  it("counts one day only once no matter how many signals landed on it", () => {
+    const target = parseTargetLine("- [ ] Work out `cadence:3x-weekly` #goal/workout")!;
+    // A Set models the dedupe contract: two closes of 2026-08-26 are one hit
+    const touches = new Map([["work out", new Set(["2026-08-26", "2026-08-26", "2026-08-27"])]]);
+    const [status] = computeTargetStatus([target], "2026-08-27", touches);
+    expect(status.hits).toBe(2);
     expect(status.overdue).toBe(true);
   });
 });

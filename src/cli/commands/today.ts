@@ -1,5 +1,5 @@
 import { loadConfig } from "../../config.js";
-import { openDay, previewDay, closeDay, setPriorities } from "../../journal/index.js";
+import { openDay, previewDay, closeDay, setPriorities, touchTarget } from "../../journal/index.js";
 import { todayKey, formatTask } from "../../vault/daily-notes.js";
 
 function printReceipt(receipt: string): void {
@@ -19,6 +19,21 @@ export async function todayCommand(args: string[]): Promise<void> {
 
   const doneIndex = args.indexOf("--done");
   const prioIndex = args.indexOf("--priorities");
+  const touchIndex = args.indexOf("--touch");
+
+  if (touchIndex !== -1) {
+    const names = args.slice(touchIndex + 1).filter((a) => !a.startsWith("--"));
+    if (names.length === 0) {
+      console.error('Usage: lumis today --touch "target name or #goal/tag"');
+      process.exit(1);
+    }
+    for (const name of names) {
+      const result = touchTarget(config, name, date);
+      if (result.stamped) console.log(`Stamped: ${result.target}`);
+      else console.log(`Not stamped — ${name}: ${result.reason}`);
+    }
+    return;
+  }
 
   if (doneIndex !== -1) {
     const completed = args.slice(doneIndex + 1).filter((a) => !a.startsWith("--"));

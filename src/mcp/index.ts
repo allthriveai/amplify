@@ -35,10 +35,10 @@ import { captureMoment } from "../pipeline/capture.js";
 import { readMoments, readCanvas, readStories } from "../vault/reader.js";
 import { writeClipping, writeStory, appendPracticeLog } from "../vault/writer.js";
 import { parseFrontmatter } from "../vault/frontmatter.js";
-import { resolveVoicePath, resolveStoriesDir, resolvePracticeLogPath, resolveMomentsDir } from "../vault/paths.js";
+import { resolveVoicePath, resolveStoriesDir, resolvePracticeLogPath, resolveMomentsDir, resolveClippingsDir } from "../vault/paths.js";
 import { emitSignal, signalId, summarizeSignals } from "../vault/signals.js";
 import { appendSessionEntry, formatSessionTime, readRecentSessions, readPreferences, addPreference } from "../vault/memory.js";
-import { openDay, closeDay, setPriorities, runWeekReview, renderDay, renderWeek } from "../journal/index.js";
+import { openDay, previewDay, closeDay, setPriorities, touchTarget, runWeekReview, renderDay, renderWeek } from "../journal/index.js";
 import { JOURNAL_PROMPT, WEEK_PROMPT, COACH_PROMPT } from "./prompts.js";
 import { todayKey, daysBetween, formatTask } from "../vault/daily-notes.js";
 import { slugify } from "../vault/slug.js";
@@ -305,6 +305,23 @@ server.registerTool("ingest_source", {
 
     // Kebab-case, so a clipping and the wiki page distilled from it share a name.
     const filename = `${slugify(title)}.md`;
+
+    // The source layer is immutable — a slug collision must never silently
+    // replace raw material that wiki pages already cite.
+    const existing = join(resolveClippingsDir(config), filename);
+    if (existsSync(existing)) {
+      return {
+        content: [{
+          type: "text" as const,
+          text: `A clipping already exists at ${existing}. The source layer is immutable — `
+            + `if this is the same source, cite the existing file instead of re-ingesting; `
+            + `if it is a different source that happens to share the title, re-run with a `
+            + `more specific title so the slug differs.`,
+        }],
+        isError: true,
+      };
+    }
+
     const filepath = writeClipping(config, filename, frontmatter, content);
 
     appendSessionEntry(config, {
@@ -1026,22 +1043,36 @@ server.registerTool("story_craft_develop", {
 
 server.registerTool("journal_today", {
   description:
-    "Open or close today's journal. Action 'open' creates today's daily note, carries unfinished tasks forward with age markers, and returns the receipt: days since the last entry, streak, carried tasks, and goal targets that have gone quiet. Action 'priorities' writes the day's top tasks. Action 'close' checks off completed tasks and stamps any goal targets they served. Use when the user wants to journal, start their day, set priorities, or close out the day.",
+    "Open or close today's journal. Action 'open' returns the receipt WITHOUT creating a note — an empty scaffold is not a journal entry. It carries unfinished tasks forward and reports: days since the last entry, streak, carried tasks, and goal targets that have gone quiet. Action 'priorities' writes the day's top tasks. Action 'close' checks off completed tasks and stamps any goal targets they served. Use when the user wants to journal, start their day, set priorities, or close out the day.",
   inputSchema: {
     action: z
-      .enum(["open", "priorities", "close"])
-      .describe("open = morning pass, priorities = write today's tasks, close = evening pass"),
+      .enum(["open", "priorities", "close", "touch"])
+      .describe("open = receipt (creates nothing), priorities = write today's tasks, close = evening pass, touch = stamp one target directly"),
+    target: z
+      .string()
+      .optional()
+      .describe("For 'touch': target name or #goal/* tag. For work with no checkbox — journaling itself is the canonical case."),
     tasks: z
       .array(z.string())
       .optional()
       .describe("For 'priorities', the tasks to write. For 'close', the task texts that got done."),
     date: z.string().optional().describe("YYYY-MM-DD. Defaults to today."),
   },
-}, async ({ action, tasks, date }) => {
+}, async ({ action, tasks, target, date }) => {
   try {
     const day = date ?? todayKey();
 
+    if (action === "touch") {
+      if (!target) throw new Error("'touch' needs a target name or #goal/* tag");
+      const result = touchTarget(config, target, day);
+      return {
+        content: [{ type: "text" as const, text: JSON.stringify({ date: day, ...result }, null, 2) }],
+      };
+    }
+
     if (action === "priorities") {
+      // Priorities are content, so this is where the note earns its file.
+      openDay(config, day);
       const note = setPriorities(config, day, tasks ?? []);
       return {
         content: [{
@@ -1072,7 +1103,9 @@ server.registerTool("journal_today", {
       };
     }
 
-    const result = openDay(config, day);
+    // Preview only — the CLI stopped writing empty scaffolds on open, and the MCP
+    // path must agree or the two report contradictory streaks.
+    const result = previewDay(config, day);
     return {
       content: [{
         type: "text" as const,
@@ -1080,8 +1113,8 @@ server.registerTool("journal_today", {
           // Show this block to the user verbatim before saying anything else
           display: renderDay(result),
           date: day,
-          created: result.created,
-          path: result.note.path,
+          exists: result.exists,
+          path: result.note?.path ?? null,
           receipt: result.receipt,
           daysSinceLastEntry: result.stats.daysSinceLastEntry,
           currentStreak: result.stats.currentStreak,

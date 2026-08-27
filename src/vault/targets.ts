@@ -5,7 +5,7 @@ import type { Cadence, Target, TargetStatus } from "../types/journal.js";
 import { CADENCE_DAYS } from "../types/journal.js";
 import { resolveGoalsPath } from "./paths.js";
 import { daysBetween, todayKey, GOAL_TAG } from "./daily-notes.js";
-import { readSignals } from "./signals.js";
+import { readSignals, signalDay } from "./signals.js";
 
 /** Heading that holds the machine-readable targets inside Goals.md */
 export const TARGETS_HEADING = "## Active Targets";
@@ -134,7 +134,7 @@ export function readActiveTargets(config: LumisConfig): Target[] {
 export function computeTargetStatus(
   targets: Target[],
   today: string = todayKey(),
-  touches?: Map<string, string[]>,
+  touches?: Map<string, Set<string>>,
 ): TargetStatus[] {
   return targets.map((target) => {
     const daysSince = target.last ? daysBetween(target.last, today) : null;
@@ -149,23 +149,29 @@ export function computeTargetStatus(
     }
 
     const dates = touches?.get(target.text.toLowerCase())
-      ?? (target.last ? [target.last] : []);
-    const hits = dates.filter((d) => daysBetween(d, today) < period).length;
+      ?? new Set(target.last ? [target.last] : []);
+    const hits = [...dates].filter((d) => daysBetween(d, today) < period).length;
 
     return { ...target, daysSince, overdue: hits < target.times, hits };
   });
 }
 
-/** Days each target was stamped on, from the signal log */
-function touchesByTarget(config: LumisConfig): Map<string, string[]> {
-  const map = new Map<string, string[]>();
+/**
+ * Days each target was stamped on, from the signal log.
+ *
+ * Days are deduplicated per target: closing the day twice, or two done tasks
+ * carrying the same tag, must count as one hit — otherwise a 3x-weekly target
+ * is satisfied by working out once and closing the day three times.
+ */
+function touchesByTarget(config: LumisConfig): Map<string, Set<string>> {
+  const map = new Map<string, Set<string>>();
   for (const signal of readSignals(config)) {
     if (signal.type !== "target_touched") continue;
-    const data = signal.data as { target?: string; date?: string };
-    const day = data.date ?? signal.timestamp.slice(0, 10);
+    const data = signal.data as { target?: string };
     if (!data.target) continue;
     const key = data.target.toLowerCase();
-    map.set(key, [...(map.get(key) ?? []), day]);
+    if (!map.has(key)) map.set(key, new Set());
+    map.get(key)!.add(signalDay(signal));
   }
   return map;
 }

@@ -56,7 +56,7 @@ export function resolveWikiDir(config: LumisConfig): string {
   return resolvePath(config, config.paths.wiki);
 }
 
-/** Resolve the wiki subfolder for a page kind: {wiki}/{Sources|Concepts|Entities|Synthesis} */
+/** Resolve the wiki subfolder for a page kind: {wiki}/{Summaries|Concepts|Entities|Synthesis} */
 export function resolveWikiSubdir(config: LumisConfig, kind: WikiPageKind): string {
   return join(resolveWikiDir(config), WIKI_SUBDIRS[kind]);
 }

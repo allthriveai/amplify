@@ -235,6 +235,9 @@ export function closeDay(
 
     const target = matches[0];
     if (touchedTargets.includes(target.text)) continue;
+    // Already stamped for this date — a second close of the same day must not
+    // emit another signal, or Nx-weekly hit counts inflate.
+    if (target.last === date) continue;
 
     if (updateTargetLastTouched(config, target.text, date)) {
       touchedTargets.push(target.text);
@@ -274,4 +277,39 @@ export function closeDay(
   });
 
   return { note: updated, completed, unmatched, open: openTasks, touchedTargets, ambiguousTags };
+}
+
+/**
+ * Stamp a single target as touched today, by name or #goal tag.
+ *
+ * Exists for work that produces no checkbox — journaling itself is the canonical
+ * case: the entry note has no task list, so closeDay's tag-matching can never
+ * fire for it. Idempotent per day: a second touch on the same date is a no-op,
+ * so hit counts on Nx-cadence targets stay honest.
+ */
+export function touchTarget(
+  config: LumisConfig,
+  nameOrTag: string,
+  date: string = todayKey(),
+): { stamped: boolean; target: string | null; reason?: string } {
+  const targets = readTargetStatus(config, date);
+  const wanted = nameOrTag.trim().toLowerCase();
+
+  const matches = targets.filter(
+    (t) => t.text.toLowerCase() === wanted || t.goalTags.some((g) => g.toLowerCase() === wanted),
+  );
+  if (matches.length === 0) return { stamped: false, target: null, reason: "no matching target" };
+  if (matches.length > 1) return { stamped: false, target: null, reason: "matches more than one target" };
+
+  const target = matches[0];
+  if (target.last === date) return { stamped: false, target: target.text, reason: "already stamped today" };
+
+  updateTargetLastTouched(config, target.text, date);
+  emitSignal(config, {
+    id: signalId(),
+    type: "target_touched",
+    timestamp: new Date().toISOString(),
+    data: { target: target.text, cadence: target.cadence, daysSince: target.daysSince, date },
+  });
+  return { stamped: true, target: target.text };
 }

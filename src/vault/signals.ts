@@ -11,6 +11,7 @@ import type {
   EngagementUpdatedSignal,
 } from "../types/signal.js";
 import { resolveSignalsPath } from "./paths.js";
+import { toDateKey } from "./dates.js";
 
 const PRUNE_DAYS = 90;
 
@@ -101,4 +102,17 @@ export function summarizeSignals(config: LumisConfig): SignalSummary {
     postedContent,
     topEngagement,
   };
+}
+
+/**
+ * The journal day a signal belongs to.
+ *
+ * Prefers the explicit `data.date` stamped at emit time. Signals from before
+ * that field existed fall back to the timestamp — converted to the LOCAL day
+ * via toDateKey, not sliced, because an ISO timestamp written at 8pm CDT
+ * carries tomorrow's UTC date.
+ */
+export function signalDay(signal: Signal): string {
+  const data = signal.data as { date?: string };
+  return data.date ?? toDateKey(new Date(signal.timestamp));
 }

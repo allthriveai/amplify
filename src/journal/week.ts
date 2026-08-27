@@ -4,7 +4,7 @@ import type { LumisConfig } from "../types/config.js";
 import type { DailyNote, Task, WeekData, WeekMoment } from "../types/journal.js";
 import { readMoments } from "../vault/reader.js";
 import { readTargetStatus } from "../vault/targets.js";
-import { readSignals, emitSignal, signalId } from "../vault/signals.js";
+import { readSignals, signalDay, emitSignal, signalId } from "../vault/signals.js";
 import { appendSessionEntry, formatSessionTime } from "../vault/memory.js";
 import { resolveReviewPath } from "../vault/paths.js";
 import {
@@ -86,8 +86,7 @@ export function gatherWeek(config: LumisConfig, date: string = todayKey()): Week
           // the signal happened to be written — closing out Monday on Friday still
           // belongs to Monday. Signals written before `date` existed fall back to
           // the timestamp.
-          const data = s.data as { date?: string };
-          const day = data.date ?? s.timestamp.slice(0, 10);
+          const day = signalDay(s);
           return day >= weekOf && day <= weekEnd;
         })
         .map((s) => (s.data as { target: string }).target),

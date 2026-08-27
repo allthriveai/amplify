@@ -4,18 +4,13 @@ import { fileURLToPath } from "node:url";
 import { DEFAULT_PATHS } from "../../types/config.js";
 import { WIKI_SUBDIRS } from "../../types/wiki.js";
 
+// Headings derive from WIKI_SUBDIRS so the index and the folders cannot disagree —
+// a hand-written list here once said "## Sources" while everything else said Summaries.
 const WIKI_INDEX_TEMPLATE = `# Index
 
 Every page in the wiki, one line each. Read this first when answering anything.
 
-## Sources
-
-## Concepts
-
-## Entities
-
-## Synthesis
-`;
+${Object.values(WIKI_SUBDIRS).map((sub) => `## ${sub}\n`).join("\n")}`;
 
 const WIKI_LOG_TEMPLATE = `# Log
 
