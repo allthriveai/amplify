@@ -72,8 +72,8 @@ describe("buildReceipt", () => {
 
   it("lists only overdue targets", () => {
     const targets = [
-      { text: "LinkedIn post", cadence: "weekly" as const, last: "2026-04-21", goalTags: [], done: false, raw: "", daysSince: 118, overdue: true },
-      { text: "Fine one", cadence: "weekly" as const, last: "2026-08-18", goalTags: [], done: false, raw: "", daysSince: 1, overdue: false },
+      { text: "LinkedIn post", cadence: "weekly" as const, times: null, last: "2026-04-21", goalTags: [], done: false, raw: "", daysSince: 118, overdue: true, hits: null },
+      { text: "Fine one", cadence: "weekly" as const, times: null, last: "2026-08-18", goalTags: [], done: false, raw: "", daysSince: 1, overdue: false, hits: null },
     ];
     const receipt = buildReceipt({ stats, carried: [], targets });
     expect(receipt).toContain("LinkedIn post — 118 days (weekly)");

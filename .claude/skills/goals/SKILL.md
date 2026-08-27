@@ -110,6 +110,11 @@ Turn the targets from question 4 into checkbox lines under `## Active Targets`:
 Rules:
 - **Cadence only for recurring work.** `daily`, `weekly`, `monthly`, `quarterly`.
   A target with a cadence surfaces in the daily receipt once it goes quiet.
+- **Use `Nx-` for times per period.** `cadence:3x-weekly` means three times a
+  week, not once. The receipt reports it as "2 of 3 this week" rather than days
+  since the last one, because days-since says nothing useful about a count. Reach
+  for this whenever the user says "three days a week" — do not flatten it to
+  `weekly`, which only fires when a whole week passes empty.
 - **Milestones get no cadence.** "Ship the redesign", "get the certification"
   happen once. Without a cadence they never nag.
 - **Never invent a `last:` date.** Leave it off unless the user tells you when

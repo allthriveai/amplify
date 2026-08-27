@@ -27,7 +27,12 @@ function taskRow(task: Task): string {
 }
 
 function targetRow(target: TargetStatus): string {
-  return row(target.text, target.daysSince === null ? "never" : `${target.daysSince}d`);
+  // A count target reports progress inside the period; days-since says nothing useful
+  // about three workouts a week.
+  const value = target.times !== null
+    ? `${target.hits ?? 0}/${target.times}`
+    : target.daysSince === null ? "never" : `${target.daysSince}d`;
+  return row(target.text, value);
 }
 
 function driftRows(drift: Drift): string[] {

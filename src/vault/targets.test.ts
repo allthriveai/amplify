@@ -238,3 +238,60 @@ describe("updateTargetLastTouched", () => {
     expect(readActiveTargets(config)[0].last).toBe("2026-04-21");
   });
 });
+
+describe("times-per-period cadence", () => {
+  it("parses 3x-weekly into a period and a count", () => {
+    const t = parseTargetLine("- [ ] Work out `cadence:3x-weekly` #goal/workout");
+    expect(t?.cadence).toBe("weekly");
+    expect(t?.times).toBe(3);
+    expect(t?.text).toBe("Work out");
+  });
+
+  it("leaves times null for a plain cadence", () => {
+    expect(parseTargetLine("- [ ] Journal `cadence:daily` #goal/journal")?.times).toBeNull();
+  });
+
+  it("rejects a zero count and an unknown period", () => {
+    expect(parseTargetLine("- [ ] X `cadence:0x-weekly`")?.cadence).toBeNull();
+    expect(parseTargetLine("- [ ] X `cadence:3x-fortnightly`")?.cadence).toBeNull();
+  });
+
+  it("round-trips through formatTarget", () => {
+    const line = "- [ ] Work out `cadence:3x-weekly` #goal/workout";
+    expect(formatTarget(parseTargetLine(line)!)).toBe(line);
+  });
+
+  it("counts hits inside the period and is not overdue once the count is met", () => {
+    const target = parseTargetLine("- [ ] Work out `cadence:3x-weekly` #goal/workout")!;
+    const touches = new Map([["work out", ["2026-08-25", "2026-08-26", "2026-08-27"]]]);
+    const [status] = computeTargetStatus([target], "2026-08-27", touches);
+    expect(status.hits).toBe(3);
+    expect(status.overdue).toBe(false);
+  });
+
+  it("is overdue when short of the count", () => {
+    const target = parseTargetLine("- [ ] Work out `cadence:3x-weekly` #goal/workout")!;
+    const touches = new Map([["work out", ["2026-08-26", "2026-08-27"]]]);
+    const [status] = computeTargetStatus([target], "2026-08-27", touches);
+    expect(status.hits).toBe(2);
+    expect(status.overdue).toBe(true);
+  });
+
+  it("ignores completions that fall outside the period", () => {
+    const target = parseTargetLine("- [ ] Work out `cadence:3x-weekly` #goal/workout")!;
+    const touches = new Map([[
+      "work out",
+      ["2026-08-01", "2026-08-02", "2026-08-03", "2026-08-27"],
+    ]]);
+    const [status] = computeTargetStatus([target], "2026-08-27", touches);
+    expect(status.hits).toBe(1);
+    expect(status.overdue).toBe(true);
+  });
+
+  it("treats a never-touched count target as overdue with zero hits", () => {
+    const target = parseTargetLine("- [ ] Work out `cadence:3x-weekly` #goal/workout")!;
+    const [status] = computeTargetStatus([target], "2026-08-27", new Map());
+    expect(status.hits).toBe(0);
+    expect(status.overdue).toBe(true);
+  });
+});

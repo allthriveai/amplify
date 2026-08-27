@@ -93,10 +93,13 @@ Skills read three identity files that shape all output:
     ```markdown
     ## Active Targets
     - [ ] Publish a post `cadence:weekly` `last:2026-04-21` #goal/writing
+    - [ ] Work out `cadence:3x-weekly` #goal/workout
     - [ ] Ship the redesign #goal/product
     ```
 
     Cadence is one of daily/weekly/monthly/quarterly. A target with a cadence and no recent `last:` shows up as going quiet. Milestones omit cadence so they never nag.
+
+    `Nx-` prefixes a count: `3x-weekly` is three times a week. Those are scored on completions inside the period rather than the gap since the last one, counted from `target_touched` signals, and the receipt reports them as "2 of 3 this week". Lines inside HTML comments are skipped, so a target can be parked without deleting it.
 - **Brand.md** (`paths.brand/Brand.md`) — How you look visually
 
 ## Keeping personal data out

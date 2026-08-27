@@ -53,10 +53,7 @@ export function buildReceipt({ stats, carried, targets }: ReceiptInput): string 
   const quiet = targets.filter((t) => t.overdue);
   if (quiet.length > 0) {
     lines.push("**Targets going quiet**");
-    for (const target of quiet) {
-      const cadence = target.cadence ? ` (${target.cadence})` : "";
-      lines.push(`- ${target.text} — ${describeDuration(target.daysSince)}${cadence}`);
-    }
+    for (const target of quiet) lines.push(`- ${target.text} — ${describeTarget(target)}`);
     lines.push("");
   }
 
@@ -65,4 +62,20 @@ export function buildReceipt({ stats, carried, targets }: ReceiptInput): string 
   }
 
   return lines.join("\n");
+}
+
+/**
+ * How far behind a target is, in its own terms.
+ *
+ * "Days since" is the wrong unit for a times-per-period target — three workouts
+ * a week is not answered by when the last one was, so those report the count
+ * inside the period instead.
+ */
+function describeTarget(target: TargetStatus): string {
+  if (target.times !== null) {
+    const period = target.cadence === "weekly" ? "this week" : `this ${target.cadence}`;
+    return `${target.hits ?? 0} of ${target.times} ${period}`;
+  }
+  const cadence = target.cadence ? ` (${target.cadence})` : "";
+  return `${describeDuration(target.daysSince)}${cadence}`;
 }

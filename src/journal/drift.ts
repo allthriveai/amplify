@@ -69,6 +69,9 @@ export function detectDrift(
 
   const quietTargets = readTargetStatus(config, today).filter((t) => {
     if (!t.cadence || !t.overdue) return false;
+    // A count target is only "very quiet" when nothing landed in the period at all.
+    // Missing two of three workouts is a normal week, not drift worth surfacing.
+    if (t.times !== null) return (t.hits ?? 0) === 0;
     if (t.daysSince === null) return true;
     return t.daysSince > CADENCE_DAYS[t.cadence] * VERY_QUIET_MULTIPLIER;
   });

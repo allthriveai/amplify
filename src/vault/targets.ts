@@ -5,6 +5,7 @@ import type { Cadence, Target, TargetStatus } from "../types/journal.js";
 import { CADENCE_DAYS } from "../types/journal.js";
 import { resolveGoalsPath } from "./paths.js";
 import { daysBetween, todayKey } from "./daily-notes.js";
+import { readSignals } from "./signals.js";
 
 /** Heading that holds the machine-readable targets inside Goals.md */
 export const TARGETS_HEADING = "## Active Targets";
@@ -18,6 +19,26 @@ function isCadence(value: string): value is Cadence {
   return value in CADENCE_DAYS;
 }
 
+/** Matches the times-per-period form, e.g. `3x-weekly` */
+const TIMES_CADENCE = /^(\d+)x-(\w+)$/;
+
+/**
+ * Parse a cadence value into a period and an optional count.
+ *
+ * `weekly` means at least once a week. `3x-weekly` means three times a week,
+ * which is a different question and cannot be answered by a single `last:` date.
+ */
+function parseCadenceValue(value: string): { cadence: Cadence; times: number | null } | null {
+  const timed = value.match(TIMES_CADENCE);
+  if (timed) {
+    const count = Number(timed[1]);
+    const period = timed[2];
+    if (count > 0 && isCadence(period)) return { cadence: period, times: count };
+    return null;
+  }
+  return isCadence(value) ? { cadence: value, times: null } : null;
+}
+
 /** Parse one `- [ ] ...` line into a Target */
 export function parseTargetLine(raw: string): Target | null {
   const match = raw.match(TARGET_LINE);
@@ -26,10 +47,17 @@ export function parseTargetLine(raw: string): Target | null {
   const [, checkbox, body] = match;
 
   let cadence: Cadence | null = null;
+  let times: number | null = null;
   let last: string | null = null;
 
   for (const [, key, value] of body.matchAll(META_TAG)) {
-    if (key === "cadence" && isCadence(value)) cadence = value;
+    if (key === "cadence") {
+      const parsed = parseCadenceValue(value);
+      if (parsed) {
+        cadence = parsed.cadence;
+        times = parsed.times;
+      }
+    }
     if (key === "last") last = value;
   }
 
@@ -42,13 +70,16 @@ export function parseTargetLine(raw: string): Target | null {
 
   if (!text) return null;
 
-  return { text, cadence, last, goalTags, done: checkbox.toLowerCase() === "x", raw };
+  return { text, cadence, times, last, goalTags, done: checkbox.toLowerCase() === "x", raw };
 }
 
 /** Render a Target back to a markdown line */
 export function formatTarget(target: Target): string {
   const parts = [`- [${target.done ? "x" : " "}]`, target.text];
-  if (target.cadence) parts.push(`\`cadence:${target.cadence}\``);
+  if (target.cadence) {
+    const value = target.times ? `${target.times}x-${target.cadence}` : target.cadence;
+    parts.push(`\`cadence:${value}\``);
+  }
   if (target.last) parts.push(`\`last:${target.last}\``);
   parts.push(...target.goalTags);
   return parts.join(" ");
@@ -95,20 +126,54 @@ export function readActiveTargets(config: LumisConfig): Target[] {
 /**
  * Add freshness to each target. A target with a cadence but no `last:` counts
  * as overdue — never having started is not the same as being on track.
+ *
+ * `touches` maps lowercased target text to the days it was completed on. It is
+ * only needed for `times` targets, where being on track is a count inside the
+ * period rather than a gap since the last one. Callers without that history can
+ * omit it; those targets then fall back to counting `last:` as a single hit.
  */
-export function computeTargetStatus(targets: Target[], today: string = todayKey()): TargetStatus[] {
+export function computeTargetStatus(
+  targets: Target[],
+  today: string = todayKey(),
+  touches?: Map<string, string[]>,
+): TargetStatus[] {
   return targets.map((target) => {
     const daysSince = target.last ? daysBetween(target.last, today) : null;
-    const overdue = target.cadence
-      ? daysSince === null || daysSince > CADENCE_DAYS[target.cadence]
-      : false;
-    return { ...target, daysSince, overdue };
+
+    if (!target.cadence) return { ...target, daysSince, overdue: false, hits: null };
+
+    const period = CADENCE_DAYS[target.cadence];
+
+    if (target.times === null) {
+      const overdue = daysSince === null || daysSince > period;
+      return { ...target, daysSince, overdue, hits: null };
+    }
+
+    const dates = touches?.get(target.text.toLowerCase())
+      ?? (target.last ? [target.last] : []);
+    const hits = dates.filter((d) => daysBetween(d, today) < period).length;
+
+    return { ...target, daysSince, overdue: hits < target.times, hits };
   });
+}
+
+/** Days each target was stamped on, from the signal log */
+function touchesByTarget(config: LumisConfig): Map<string, string[]> {
+  const map = new Map<string, string[]>();
+  for (const signal of readSignals(config)) {
+    if (signal.type !== "target_touched") continue;
+    const data = signal.data as { target?: string; date?: string };
+    const day = data.date ?? signal.timestamp.slice(0, 10);
+    if (!data.target) continue;
+    const key = data.target.toLowerCase();
+    map.set(key, [...(map.get(key) ?? []), day]);
+  }
+  return map;
 }
 
 /** Read targets from Goals.md with freshness computed */
 export function readTargetStatus(config: LumisConfig, today: string = todayKey()): TargetStatus[] {
-  return computeTargetStatus(readActiveTargets(config), today);
+  return computeTargetStatus(readActiveTargets(config), today, touchesByTarget(config));
 }
 
 /** Replace the `## Active Targets` section body, appending the section if missing */
