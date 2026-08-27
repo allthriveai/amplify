@@ -11,20 +11,21 @@ import { resolveMomentsDir, resolveMeetingsDir, resolveCanvasPath, resolveClippi
 import { serializeFrontmatter } from "./frontmatter.js";
 
 /** Write a moment file to the vault */
+/** Serialize frontmatter + content and write into dir, creating it if needed */
+function writeNote(dir: string, filename: string, frontmatter: object, content: string): string {
+  mkdirSync(dir, { recursive: true });
+  const filepath = join(dir, filename);
+  writeFileSync(filepath, serializeFrontmatter(frontmatter, content), "utf-8");
+  return filepath;
+}
+
 export function writeMoment(
   config: LumisConfig,
   filename: string,
   frontmatter: MomentFrontmatter,
   content: string,
 ): string {
-  const dir = resolveMomentsDir(config);
-  mkdirSync(dir, { recursive: true });
-
-  const filepath = join(dir, filename);
-  const markdown = serializeFrontmatter(frontmatter, content);
-  writeFileSync(filepath, markdown, "utf-8");
-
-  return filepath;
+  return writeNote(resolveMomentsDir(config), filename, frontmatter, content);
 }
 
 /** Write a meeting note to the vault */
@@ -34,14 +35,7 @@ export function writeMeeting(
   frontmatter: MeetingFrontmatter,
   content: string,
 ): string {
-  const dir = resolveMeetingsDir(config);
-  mkdirSync(dir, { recursive: true });
-
-  const filepath = join(dir, filename);
-  const markdown = serializeFrontmatter(frontmatter, content);
-  writeFileSync(filepath, markdown, "utf-8");
-
-  return filepath;
+  return writeNote(resolveMeetingsDir(config), filename, frontmatter, content);
 }
 
 /** Write a raw clipping into the immutable source layer */
@@ -51,14 +45,7 @@ export function writeClipping(
   frontmatter: ClippingFrontmatter,
   content: string,
 ): string {
-  const dir = resolveClippingsDir(config);
-  mkdirSync(dir, { recursive: true });
-
-  const filepath = join(dir, filename);
-  const markdown = serializeFrontmatter(frontmatter, content);
-  writeFileSync(filepath, markdown, "utf-8");
-
-  return filepath;
+  return writeNote(resolveClippingsDir(config), filename, frontmatter, content);
 }
 
 /** Write a wiki page into the subfolder for its kind */
@@ -69,14 +56,7 @@ export function writeWikiPage(
   frontmatter: WikiFrontmatter,
   content: string,
 ): string {
-  const dir = resolveWikiSubdir(config, kind);
-  mkdirSync(dir, { recursive: true });
-
-  const filepath = join(dir, filename);
-  const markdown = serializeFrontmatter(frontmatter, content);
-  writeFileSync(filepath, markdown, "utf-8");
-
-  return filepath;
+  return writeNote(resolveWikiSubdir(config, kind), filename, frontmatter, content);
 }
 
 /** Write a story file to the vault */
@@ -86,14 +66,7 @@ export function writeStory(
   frontmatter: StoryFrontmatter,
   content: string,
 ): string {
-  const dir = resolveStoriesDir(config);
-  mkdirSync(dir, { recursive: true });
-
-  const filepath = join(dir, filename);
-  const markdown = serializeFrontmatter(frontmatter, content);
-  writeFileSync(filepath, markdown, "utf-8");
-
-  return filepath;
+  return writeNote(resolveStoriesDir(config), filename, frontmatter, content);
 }
 
 /** Append an entry to the Practice Log */
