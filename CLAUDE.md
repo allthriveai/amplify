@@ -11,7 +11,7 @@ Lumis is a CLI tool and MCP server that lives in an Obsidian vault. It helps cap
 - **TypeScript + Node.js**, ES modules (`"type": "module"`)
 - **Build**: `npm run build` (tsc). Output goes to `dist/`.
 - **Dev**: `tsx` for running without build
-- **Tests**: `vitest` (not many yet)
+- **Tests**: `vitest` — ~300 tests across config, vault, journal, and canvas
 - **No frontend.** This is a CLI (`lumis`) and MCP server.
 
 ## Key directories
@@ -71,6 +71,10 @@ Lumis has Claude Code skills in `.claude/skills/`:
 - **`/humanizer`** — Removes signs of AI-generated writing. Detects and fixes AI vocabulary, significance inflation, em dash overuse, filler phrases, and structural tells.
 - **`/youtube-description`** — Writes YouTube video descriptions. Hook-first structure optimized for search and click-through. Keyword placement, timestamps, CTA strategy, humanizer rules baked in.
 - **`/linkedin-post`** — Writes LinkedIn posts optimized for saves and dwell time. Hook under 110 chars, multiple post structures (story, listicle, contrarian, before/after), links in first comment, humanizer rules baked in.
+- **`/listen`** — Converts a source note to narrated audio via ElevenLabs.
+- **`/youtube-short`** — Builds a Short (1080x1920, under 60s) from existing video content: safe zones, title cards, CTA, render.
+- **`/youtube-upload`** — Uploads, schedules, and publishes videos to YouTube via the API.
+- **`/heygen-avatar`** and **`/heygen-video`** — Create a persistent HeyGen avatar identity, then generate presenter videos through the v3 pipeline.
 - **`/meeting`** — Processes a Plaud-synced transcript or pasted meeting notes into a structured meeting note. Extracts decisions, action items with owners, discussion topics, and attendees. Reads from the Plaud sync folder (populated by the plaud-sync-for-obsidian Obsidian plugin) or accepts pasted text. Writes to `Sources/Meetings/`, then offers to ingest it into the wiki.
 
 All skills read `.lumisrc` for vault paths and write directly to the Obsidian vault.

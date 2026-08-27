@@ -249,6 +249,8 @@ lumis studio render <slug>  Render a draft cut to branded video
 lumis studio preview        Open Remotion Studio
 lumis storyboard <slug>     Visual storyboard for pre-production
 lumis listen <note>         Convert a source note to audio
+lumis story-craft [develop] Practice or develop storytelling from a moment
+lumis import-sparks --from <path>  Import Amplify content from a manifest
 lumis obs <cmd>             OBS capture (setup, start, stop, scenes)
 ```
 

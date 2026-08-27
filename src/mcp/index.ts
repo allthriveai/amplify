@@ -40,7 +40,7 @@ import { emitSignal, signalId, summarizeSignals } from "../vault/signals.js";
 import { appendSessionEntry, formatSessionTime, readRecentSessions, readPreferences, addPreference } from "../vault/memory.js";
 import { openDay, closeDay, setPriorities, runWeekReview, renderDay, renderWeek } from "../journal/index.js";
 import { JOURNAL_PROMPT, WEEK_PROMPT, COACH_PROMPT } from "./prompts.js";
-import { todayKey, formatTask } from "../vault/daily-notes.js";
+import { todayKey, daysBetween, formatTask } from "../vault/daily-notes.js";
 import { slugify } from "../vault/slug.js";
 import type { LumisConfig } from "../types/config.js";
 import type { ClippingFrontmatter } from "../types/source.js";
@@ -85,8 +85,9 @@ function daysSinceLastPractice(): number | null {
   if (dateMatches.length === 0) return null;
 
   const lastDate = dateMatches.map((m) => m[1]).sort().pop()!;
-  const diff = Date.now() - new Date(lastDate).getTime();
-  return Math.floor(diff / (1000 * 60 * 60 * 24));
+  // daysBetween splits the keys itself — new Date("YYYY-MM-DD") parses as UTC
+  // midnight and lands a day off west of UTC.
+  return daysBetween(lastDate, todayKey());
 }
 
 // ---------------------------------------------------------------------------
@@ -887,7 +888,7 @@ server.registerTool("story_craft_develop", {
 
     // If save is true, write the story file
     if (args.save) {
-      const today = new Date().toISOString().split("T")[0];
+      const today = todayKey();
       const storyTitle = args.title ?? momentTitle;
       const safeTitle = storyTitle
         .replace(/[^\w\s-]/g, "")

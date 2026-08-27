@@ -4,7 +4,7 @@ import type { LumisConfig } from "../types/config.js";
 import type { Cadence, Target, TargetStatus } from "../types/journal.js";
 import { CADENCE_DAYS } from "../types/journal.js";
 import { resolveGoalsPath } from "./paths.js";
-import { daysBetween, todayKey } from "./daily-notes.js";
+import { daysBetween, todayKey, GOAL_TAG } from "./daily-notes.js";
 import { readSignals } from "./signals.js";
 
 /** Heading that holds the machine-readable targets inside Goals.md */
@@ -13,7 +13,6 @@ export const TARGETS_HEADING = "## Active Targets";
 const TARGET_LINE = /^\s*[-*] \[([ xX])\]\s+(.*)$/;
 /** Inline metadata, written as `cadence:weekly` — backticks optional */
 const META_TAG = /`?\b(cadence|last):([\w-]+)`?/g;
-const GOAL_TAG = /#goal\/[\w-]+/g;
 
 function isCadence(value: string): value is Cadence {
   return value in CADENCE_DAYS;
