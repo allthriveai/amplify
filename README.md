@@ -14,7 +14,7 @@ Three commands, three rhythms. Everything else feeds them.
 
 | | | |
 |---|---|---|
-| **Daily** | `/today` or `/journal` | Opens with the receipt, then asks what you're doing about it |
+| **Daily** | `/journal` | Receipt, your unfiltered entry, the five-second moment, patterns across every past entry |
 | **Weekly** | `/week` | The reckoning: what moved, what didn't, three commitments |
 | **Ongoing** | `/goals` | The targets both of the above hold you to |
 
@@ -190,8 +190,8 @@ Run `/today` tomorrow morning and it will already know how you did.
 **The loop**
 
 ```
-/today              Open today: receipt, carried tasks, priorities
-/journal            Same thing — the word you actually use
+/journal            Receipt, entry, five-second moment, patterns
+/today              Alias for /journal
 /today (evening)    Check tasks off, reflect, close the day
 /week               The weekly reckoning and next week's commitments
 /goals              Set your north star and active targets
