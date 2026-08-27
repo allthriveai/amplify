@@ -89,6 +89,45 @@ describe("extractTargetsSection", () => {
   });
 });
 
+describe("extractTargetsSection comments", () => {
+  it("ignores targets inside an HTML comment", () => {
+    const goals = [
+      "## Active Targets",
+      "- [ ] Journal `cadence:daily` #goal/journal",
+      "<!-- parked until the first one sticks:",
+      "- [ ] Practice Spanish `cadence:daily` #goal/spanish",
+      "-->",
+    ].join("\n");
+
+    const section = extractTargetsSection(goals);
+    expect(section).toContain("#goal/journal");
+    expect(section).not.toContain("#goal/spanish");
+  });
+
+  it("ignores a single-line commented target", () => {
+    const goals = [
+      "## Active Targets",
+      "- [ ] Journal `cadence:daily` #goal/journal",
+      "<!-- - [ ] Work out `cadence:weekly` #goal/workout -->",
+    ].join("\n");
+
+    expect(extractTargetsSection(goals)).not.toContain("#goal/workout");
+  });
+
+  it("drops an unterminated comment rather than reopening the section", () => {
+    const goals = [
+      "## Active Targets",
+      "- [ ] Journal `cadence:daily` #goal/journal",
+      "<!-- forgot to close this",
+      "- [ ] Work out `cadence:weekly` #goal/workout",
+    ].join("\n");
+
+    const section = extractTargetsSection(goals);
+    expect(section).toContain("#goal/journal");
+    expect(section).not.toContain("#goal/workout");
+  });
+});
+
 describe("replaceTargetsSection", () => {
   it("appends the section when it does not exist", () => {
     const out = replaceTargetsSection("# Goals\n\n## Targets\nprose", "- [ ] new");

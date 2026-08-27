@@ -54,7 +54,13 @@ export function formatTarget(target: Target): string {
   return parts.join(" ");
 }
 
-/** Extract the body of the `## Active Targets` section, or null when absent */
+/**
+ * Extract the body of the `## Active Targets` section, or null when absent.
+ *
+ * Lines inside HTML comments are dropped. Commenting a target out is the obvious
+ * way to park it without deleting it, and counting it anyway means the daily
+ * receipt holds you to something you deliberately set aside.
+ */
 export function extractTargetsSection(goals: string): string | null {
   const lines = goals.split("\n");
   const start = lines.findIndex((l) => l.trim().toLowerCase() === TARGETS_HEADING.toLowerCase());
@@ -62,7 +68,14 @@ export function extractTargetsSection(goals: string): string | null {
 
   const rest = lines.slice(start + 1);
   const end = rest.findIndex((l) => /^##\s/.test(l));
-  return (end === -1 ? rest : rest.slice(0, end)).join("\n");
+  const body = end === -1 ? rest : rest.slice(0, end);
+
+  return stripComments(body.join("\n"));
+}
+
+/** Remove HTML comment blocks, including ones spanning several lines */
+function stripComments(text: string): string {
+  return text.replace(/<!--[\s\S]*?(?:-->|$)/g, "");
 }
 
 /** Read the targets declared in Goals.md */
