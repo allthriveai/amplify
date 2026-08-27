@@ -102,7 +102,7 @@ So Lumis also owns the pipeline that turns your captured life into things you ca
    │                      THE LOOP                        │
    │                                                      │
    │   every morning     ┌──────────┐                     │
-   │   every evening ───▶│  /today  │                     │
+   │   every evening ───▶│  /today, /journal  │                     │
    │                     └────┬─────┘                     │
    │                          │  receipt · carried tasks  │
    │                          │  quiet targets · drift    │

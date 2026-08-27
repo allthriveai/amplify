@@ -1,6 +1,6 @@
 ---
 name: today
-description: Opens today's journal. Shows what you committed to, what's carried over, and which goal targets have gone quiet — then asks you to write. Run it again in the evening to check tasks off and reflect. Use when the user runs /today, /journal, says "let's journal", "start my day", "close out the day", or asks what they owe themselves.
+description: Opens today's journal. Shows what you committed to, what's carried over, and which goal targets have gone quiet — then asks you to write. Run it again in the evening to check tasks off and reflect. Use when the user runs /today or /journal, says "let's journal", "start my day", "close out the day", or asks what they owe themselves. /journal is an alias skill that defers here.
 ---
 
 # Today
