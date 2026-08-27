@@ -1,5 +1,5 @@
 import type { LumisConfig } from "../types/config.js";
-import type { DailyNote, Task, JournalStats, TargetStatus, Drift } from "../types/journal.js";
+import type { DailyNote, Task, JournalStats, TargetStatus, Drift, DayPreview } from "../types/journal.js";
 import { emitSignal, signalId } from "../vault/signals.js";
 import { appendSessionEntry, formatSessionTime } from "../vault/memory.js";
 import { readTargetStatus, updateTargetLastTouched } from "../vault/targets.js";
@@ -77,6 +77,40 @@ export interface OpenDayResult {
  * tasks forward, and prepends the receipt. Idempotent: if the note already
  * exists it is read back rather than overwritten.
  */
+/**
+ * Everything the receipt needs, without touching disk.
+ *
+ * Opening a day used to create the note whether or not anything was ever written
+ * into it, which produced a folder of empty scaffolds and a streak that counted
+ * days nobody journaled. The receipt is now free to look at; the note is written
+ * when there is an entry to put in it.
+ */
+export function previewDay(config: LumisConfig, date: string = todayKey()): DayPreview {
+  const existing = readDailyNote(config, date);
+
+  // Today counts toward the streak only once something is written. Opening the
+  // day is not the act of journaling; writing is.
+  const dates = listDailyNoteDates(config);
+  const stats = computeStreak(existing ? [...dates, date] : dates, date);
+
+  const targets = readTargetStatus(config, date);
+  const previous = findPreviousDailyNote(config, date);
+  const gapDays = previous ? daysBetween(previous.date, date) : null;
+  const carried = previous ? carryForwardTasks(previous.tasks, gapDays ?? 1) : [];
+
+  return {
+    date,
+    exists: existing !== null,
+    note: existing,
+    stats,
+    carried,
+    targets,
+    gapDays,
+    receipt: buildReceipt({ stats, carried, targets }),
+    drift: detectDrift(config, date),
+  };
+}
+
 export function openDay(config: LumisConfig, date: string = todayKey()): OpenDayResult {
   // Today counts toward the streak: opening the day is the act of journaling.
   // `lastEntryDate` still excludes today, so the gap stays honest.

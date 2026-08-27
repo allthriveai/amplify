@@ -53,7 +53,7 @@ describe("resolvePath", () => {
 describe("resolveMomentsDir", () => {
   it("resolves to the default moments path", () => {
     const config = mockConfig();
-    expect(resolveMomentsDir(config)).toBe("/test/vault/Journal/Moments");
+    expect(resolveMomentsDir(config)).toBe("/test/vault/Life/Moments");
   });
 
   it("respects custom moments path", () => {
@@ -87,15 +87,15 @@ describe("resolveDailyNotePath", () => {
     // "YYYY-MM-DD" as UTC midnight and land on the previous day west of UTC. So the
     // day in the filename is exactly the day asked for, in every timezone.
     const result = resolveDailyNotePath(config, "2024-06-15");
-    expect(result).toBe("/test/vault/Journal/Daily Notes/2024-06-15.md");
+    expect(result).toBe("/test/vault/Life/Journal/2024-06-15.md");
   });
 
   it("resolves with a custom dailyNotes directory", () => {
     const config = mockConfig({
-      paths: { ...DEFAULT_PATHS, dailyNotes: "Journal/Daily" },
+      paths: { ...DEFAULT_PATHS, dailyNotes: "Life/Daily" },
     });
     const result = resolveDailyNotePath(config, "2024-01-01");
-    expect(result).toContain("/test/vault/Journal/Daily/");
+    expect(result).toContain("/test/vault/Life/Daily/");
     expect(result).toMatch(/\.md$/);
   });
 });

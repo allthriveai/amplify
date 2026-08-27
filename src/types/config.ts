@@ -34,13 +34,13 @@ export interface LumisConfig {
 
   /** Configurable paths within the vault (relative to vaultPath) */
   paths: {
-    /** Where moment notes are stored. Default: "Journal/Moments" */
+    /** Where moment notes are stored. Default: "Life/Moments" */
     moments: string;
     /** Where developed stories are stored. Default: "Work/Stories" */
     stories: string;
     /** Path to the pattern map canvas. Default: "Lumis/Pattern Map.canvas" */
     canvas: string;
-    /** Where daily notes live. Default: "Journal/Daily Notes" */
+    /** Where daily notes live. Default: "Life/Journal" */
     dailyNotes: string;
     /** Date format for daily notes. Default: "YYYY-MM-DD" */
     dailyNoteFormat: string;
@@ -64,7 +64,7 @@ export interface LumisConfig {
     memory: string;
     /** Where entity pages (people, orgs, tools) live. Default: "Wiki/Entities" */
     people: string;
-    /** Where challenge logs and promoted challenge notes are stored. Default: "Journal/Challenges" */
+    /** Where challenge logs and promoted challenge notes are stored. Default: "Life/Challenges" */
     challenges: string;
     /** Where brand guidelines and inspiration live. Default: "Lumis/Brand" */
     brand: string;
@@ -74,7 +74,7 @@ export interface LumisConfig {
     goals: string;
     /** Where meeting notes are stored. Default: "Sources/Meetings" */
     meetings: string;
-    /** Where weekly reviews are stored. Default: "Journal/Reviews" */
+    /** Where weekly reviews are stored. Default: "Life/Reviews" */
     reviews: string;
   };
 
@@ -92,10 +92,10 @@ export interface LumisConfig {
 }
 
 export const DEFAULT_PATHS: LumisConfig["paths"] = {
-  moments: "Journal/Moments",
+  moments: "Life/Moments",
   stories: "Work/Stories",
   canvas: "Lumis/Pattern Map.canvas",
-  dailyNotes: "Journal/Daily Notes",
+  dailyNotes: "Life/Journal",
   dailyNoteFormat: "YYYY-MM-DD",
   sources: "Sources",
   wiki: "Wiki",
@@ -107,10 +107,10 @@ export const DEFAULT_PATHS: LumisConfig["paths"] = {
   signals: "Lumis/Signals",
   memory: "Lumis/Memory",
   people: "Wiki/Entities",
-  challenges: "Journal/Challenges",
+  challenges: "Life/Challenges",
   brand: "Lumis/Brand",
   audio: "Sources/Audio",
   goals: "Lumis/Goals.md",
   meetings: "Sources/Meetings",
-  reviews: "Journal/Reviews",
+  reviews: "Life/Reviews",
 };

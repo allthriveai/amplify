@@ -41,10 +41,10 @@ Wiki/Concepts
 Wiki/Entities
 Wiki/Synthesis
 
-Journal/Moments            ← first-person. never ingested into the wiki.
-Journal/Daily Notes
-Journal/Reviews
-Journal/Challenges
+Life/Moments            ← first-person. never ingested into the wiki.
+Life/Journal
+Life/Reviews
+Life/Challenges
 
 Work/Stories               ← projects and pipeline output
 Work/Strategy
@@ -110,11 +110,11 @@ If `.lumisrc` doesn't already exist in the vault root, write it:
     "wiki": "Wiki",
     "meetings": "Sources/Meetings",
     "audio": "Sources/Audio",
-    "moments": "Journal/Moments",
-    "dailyNotes": "Journal/Daily Notes",
+    "moments": "Life/Moments",
+    "dailyNotes": "Life/Journal",
     "dailyNoteFormat": "YYYY-MM-DD",
-    "reviews": "Journal/Reviews",
-    "challenges": "Journal/Challenges",
+    "reviews": "Life/Reviews",
+    "challenges": "Life/Challenges",
     "stories": "Work/Stories",
     "strategyDocs": "Work/Strategy",
     "people": "Wiki/Entities",

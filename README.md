@@ -108,7 +108,7 @@ touching 10-15 pages is normal — that bookkeeping is the part people abandon a
 agent does without getting bored. `/wiki` answers questions from it with citations; `/lint`
 catches orphans, broken links, and contradictions.
 
-**`Journal/` is never ingested.** Your moments, daily notes, and reviews stay out of the wiki
+**`Life/` is never ingested.** Your moments, daily notes, and reviews stay out of the wiki
 entirely, so the content pipeline can read everything it has access to without touching anything
 personal.
 
@@ -145,7 +145,7 @@ personal.
         │                                                │
         │  Sources/   raw, immutable — never rewritten   │
         │  Wiki/      agent-maintained knowledge         │
-        │  Journal/   your days — never ingested         │
+        │  Life/       your days — never ingested         │
         │  Work/      projects, stories, strategy        │
         └───────┬────────────────────────────────┬───────┘
                 │                                │

@@ -37,7 +37,7 @@ Read the config and extract:
 
 ```
 vaultPath        → absolute path to the Obsidian vault
-paths.moments    → moments folder (default: "Journal/Moments")
+paths.moments    → moments folder (default: "Life/Moments")
 paths.stories    → stories folder (default: "Work/Stories")
 paths.signals    → signals folder (default: "Lumis/Signals")
 paths.memory     → memory folder (default: "Lumis/Memory")

@@ -1,9 +1,9 @@
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import { rmSync, mkdirSync, writeFileSync } from "node:fs";
 import { dirname } from "node:path";
-import { openDay, closeDay, setPriorities, insertReceipt, checkboxPriorities } from "./index.js";
+import { openDay, previewDay, closeDay, setPriorities, insertReceipt, checkboxPriorities } from "./index.js";
 import { buildReceipt, describeGap } from "./receipt.js";
-import { writeDailyNote, readDailyNote, parseTasks } from "../vault/daily-notes.js";
+import { writeDailyNote, readDailyNote, parseTasks, listDailyNoteDates } from "../vault/daily-notes.js";
 import { readActiveTargets } from "../vault/targets.js";
 import { readSignals } from "../vault/signals.js";
 import { resolveGoalsPath } from "../vault/paths.js";
@@ -292,5 +292,36 @@ describe("closeDay", () => {
     const result = closeDay(config, "2026-08-19", ["ship the post"]);
     expect(result.touchedTargets).toEqual([]);
     expect(readActiveTargets(config)[0].last).toBe("2026-04-21");
+  });
+});
+
+describe("previewDay", () => {
+  it("does not create a note", () => {
+    const before = listDailyNoteDates(config);
+    const preview = previewDay(config, "2026-08-27");
+    expect(preview.exists).toBe(false);
+    expect(preview.note).toBeNull();
+    expect(listDailyNoteDates(config)).toEqual(before);
+  });
+
+  it("does not count an unwritten day toward the streak", () => {
+    writeDailyNote(config, "2026-08-26", "# yesterday");
+    const preview = previewDay(config, "2026-08-27");
+    expect(preview.stats.currentStreak).toBe(1);
+  });
+
+  it("counts today once something is written", () => {
+    writeDailyNote(config, "2026-08-26", "# yesterday");
+    writeDailyNote(config, "2026-08-27", "# today");
+    const preview = previewDay(config, "2026-08-27");
+    expect(preview.exists).toBe(true);
+    expect(preview.stats.currentStreak).toBe(2);
+  });
+
+  it("still reports carried tasks and the receipt", () => {
+    writeDailyNote(config, "2026-08-26", "# y\n\n- [ ] unfinished thing");
+    const preview = previewDay(config, "2026-08-27");
+    expect(preview.carried.map((t) => t.text)).toContain("unfinished thing");
+    expect(preview.receipt).toContain("Where you are");
   });
 });

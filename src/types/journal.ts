@@ -149,3 +149,22 @@ export interface WeekData {
   targetsTouched: string[];
   drift: Drift;
 }
+
+/**
+ * The day's receipt, computed without writing anything.
+ *
+ * Distinct from OpenDayResult, which reports on a note that now exists on disk.
+ */
+export interface DayPreview {
+  date: string;
+  /** True when a note for this date is already on disk */
+  exists: boolean;
+  /** The existing note, or null when nothing has been written yet */
+  note: DailyNote | null;
+  stats: JournalStats;
+  carried: Task[];
+  targets: TargetStatus[];
+  gapDays: number | null;
+  receipt: string;
+  drift: Drift;
+}

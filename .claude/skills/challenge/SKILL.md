@@ -27,7 +27,7 @@ Read the config and extract:
 
 ```
 vaultPath        -> absolute path to the Obsidian vault
-paths.challenges -> challenges folder (default: "Journal/Challenges")
+paths.challenges -> challenges folder (default: "Life/Challenges")
 paths.signals    -> signals folder (default: "Lumis/Signals")
 paths.memory     -> memory folder (default: "Lumis/Memory")
 paths.voice      -> voice file (default: "Lumis/Voice.md")

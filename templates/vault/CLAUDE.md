@@ -10,7 +10,7 @@ This vault runs the LLM Wiki pattern. Three layers, one rule each.
 
 Everything else in the vault belongs to the person who owns it:
 
-- `Journal/` — first-person. Moments, daily notes, reviews, challenges, personal
+- `Life/` — first-person. Moments, daily notes, reviews, challenges, personal
   material. **Never ingest this into the wiki.** Write here only when asked directly.
 - `Work/` — projects, stories, strategy. Read freely. Write when asked. May be
   ingested into the wiki.

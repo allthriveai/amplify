@@ -16,7 +16,7 @@ agent rewrite this?**
 | The wiki | `Wiki/` | Agent-owned. Created, rewritten, and kept current without asking. |
 | The schema | `CLAUDE.md` | The contract both layers follow. |
 
-Everything else belongs to the person: `Journal/` is first-person and never ingested,
+Everything else belongs to the person: `Life/` is first-person and never ingested,
 `Work/` holds projects and pipeline output, `Lumis/` holds system files.
 
 The split matters because knowledge gets compiled once and kept current, rather than
@@ -46,7 +46,7 @@ Wiki/                   ← AGENT-OWNED. rewritten and kept current.
   Entities/             ← people, organizations, products, tools
   Synthesis/            ← comparisons and cross-cutting analysis
 
-Journal/                ← YOURS. never ingested into the wiki.
+Life/                  ← YOURS. never ingested into the wiki.
   Moments/              ← daily moment notes
   Daily Notes/
   Reviews/              ← weekly reviews
