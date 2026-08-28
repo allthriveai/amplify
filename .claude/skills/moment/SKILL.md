@@ -21,9 +21,9 @@ Read the config and extract:
 
 ```
 vaultPath             → absolute path to the Obsidian vault
-paths.moments         → moments folder relative to vault root (default: "Lumis/Moments")
+paths.moments         → moments folder relative to vault root (default: "Life/Moments")
 paths.canvas          → Pattern Map canvas path relative to vault root (default: "Lumis/Pattern Map.canvas")
-paths.dailyNotes      → daily notes folder relative to vault root (default: "Daily Notes")
+paths.dailyNotes      → daily notes folder relative to vault root (default: "Life/Journal")
 paths.dailyNoteFormat → date format for daily note filenames (default: "YYYY-MM-DD")
 ```
 
@@ -37,10 +37,11 @@ Read all files in `{vaultPath}/{paths.moments}/` to understand the user's existi
 
 If there are many files, read them in parallel batches.
 
-### Step 1b: Read Existing Learnings
+### Step 1b: Read the Wiki Index
 
-Read all files in `{vaultPath}/{paths.learnings}/` (excluding README.md). Extract from each:
-- Filename, title, topic tags, pillar, and the core insight (first paragraph after the `# Title` heading)
+Read `{vaultPath}/{paths.wiki}/index.md` — the one-line-per-page catalog. Note the
+concept titles and their summaries. (The old `paths.learnings` folder no longer
+exists; distilled knowledge lives in the wiki now.)
 
 These will be used in Step 3 to cross-reference with the moment's themes.
 
@@ -76,7 +77,7 @@ Compare the new moment against all existing moments. Look for:
 
 Select the 2-5 most meaningful connections. For each, write a brief note on WHY they connect (not just that they share a tag).
 
-**Cross-reference with learnings:** Also compare the moment's themes against the topic tags from learnings (loaded in Step 1b). If any of the moment's themes overlap with learning topic tags, note these connections for the Step 8 report. Do NOT add learning connections to the moment note's `## Connections` section (that stays moment-to-moment). Learning connections go in the Step 8 report only, as a content signal.
+**Cross-reference with the wiki:** Also compare the moment's themes against the concept titles from the wiki index (loaded in Step 1b). If a theme overlaps a wiki concept, note the connection for the Step 8 report. Do NOT add wiki connections to the moment note's `## Connections` section (that stays moment-to-moment, and the wiki never ingests `Life/`). Wiki connections go in the Step 8 report only, as a content signal.
 
 ### Step 4: Create the Moment Note
 
@@ -243,11 +244,11 @@ Saved to: [[{paths.moments}/YYYY-MM-DD - Title]]
 
 If this is one of the user's first few moments, add encouragement about the practice. If connections are particularly rich, highlight that. If story potential is high, suggest they might want to develop it into a full story later using the Story template.
 
-**Learning connections:** If any learnings overlapped with this moment's themes (from Step 3), include a section in the report:
+**Wiki connections:** If any wiki concepts overlapped with this moment's themes (from Step 3), include a section in the report:
 ```
-**Learning connections**: This moment connects to [N] learnings about [topic tag(s)] ([pillar name] pillar). Your lived experience is backing up what you're reading.
+**Wiki connections**: This moment touches [[Concept]] and [[Other Concept]]. Your lived experience is backing up what you've been reading.
 ```
-List the connected learnings by title with a one-line note on how the moment and learning relate. This is a content signal: when personal experience and professional insight align, there's a post or video in the intersection.
+List the connected concepts by title with a one-line note on how the moment and concept relate. This is a content signal: when personal experience and professional insight align, there's a post or video in the intersection.
 
 ### Step 8b: Log to Session Memory
 

@@ -1,5 +1,5 @@
 import type { LumisConfig } from "../types/config.js";
-import type { DailyNote, Task, JournalStats, TargetStatus, Drift } from "../types/journal.js";
+import type { DailyNote, Task, JournalStats, TargetStatus, Drift, DayPreview } from "../types/journal.js";
 import { emitSignal, signalId } from "../vault/signals.js";
 import { appendSessionEntry, formatSessionTime } from "../vault/memory.js";
 import { readTargetStatus, updateTargetLastTouched } from "../vault/targets.js";
@@ -77,6 +77,40 @@ export interface OpenDayResult {
  * tasks forward, and prepends the receipt. Idempotent: if the note already
  * exists it is read back rather than overwritten.
  */
+/**
+ * Everything the receipt needs, without touching disk.
+ *
+ * Opening a day used to create the note whether or not anything was ever written
+ * into it, which produced a folder of empty scaffolds and a streak that counted
+ * days nobody journaled. The receipt is now free to look at; the note is written
+ * when there is an entry to put in it.
+ */
+export function previewDay(config: LumisConfig, date: string = todayKey()): DayPreview {
+  const existing = readDailyNote(config, date);
+
+  // Today counts toward the streak only once something is written. Opening the
+  // day is not the act of journaling; writing is.
+  const dates = listDailyNoteDates(config);
+  const stats = computeStreak(existing ? [...dates, date] : dates, date);
+
+  const targets = readTargetStatus(config, date);
+  const previous = findPreviousDailyNote(config, date);
+  const gapDays = previous ? daysBetween(previous.date, date) : null;
+  const carried = previous ? carryForwardTasks(previous.tasks, gapDays ?? 1) : [];
+
+  return {
+    date,
+    exists: existing !== null,
+    note: existing,
+    stats,
+    carried,
+    targets,
+    gapDays,
+    receipt: buildReceipt({ stats, carried, targets }),
+    drift: detectDrift(config, date),
+  };
+}
+
 export function openDay(config: LumisConfig, date: string = todayKey()): OpenDayResult {
   // Today counts toward the streak: opening the day is the act of journaling.
   // `lastEntryDate` still excludes today, so the gap stays honest.
@@ -201,6 +235,9 @@ export function closeDay(
 
     const target = matches[0];
     if (touchedTargets.includes(target.text)) continue;
+    // Already stamped for this date — a second close of the same day must not
+    // emit another signal, or Nx-weekly hit counts inflate.
+    if (target.last === date) continue;
 
     if (updateTargetLastTouched(config, target.text, date)) {
       touchedTargets.push(target.text);
@@ -208,7 +245,7 @@ export function closeDay(
         id: signalId(),
         type: "target_touched",
         timestamp: new Date().toISOString(),
-        data: { target: target.text, cadence: target.cadence, daysSince: target.daysSince },
+        data: { target: target.text, cadence: target.cadence, daysSince: target.daysSince, date },
       });
     }
   }
@@ -240,4 +277,39 @@ export function closeDay(
   });
 
   return { note: updated, completed, unmatched, open: openTasks, touchedTargets, ambiguousTags };
+}
+
+/**
+ * Stamp a single target as touched today, by name or #goal tag.
+ *
+ * Exists for work that produces no checkbox — journaling itself is the canonical
+ * case: the entry note has no task list, so closeDay's tag-matching can never
+ * fire for it. Idempotent per day: a second touch on the same date is a no-op,
+ * so hit counts on Nx-cadence targets stay honest.
+ */
+export function touchTarget(
+  config: LumisConfig,
+  nameOrTag: string,
+  date: string = todayKey(),
+): { stamped: boolean; target: string | null; reason?: string } {
+  const targets = readTargetStatus(config, date);
+  const wanted = nameOrTag.trim().toLowerCase();
+
+  const matches = targets.filter(
+    (t) => t.text.toLowerCase() === wanted || t.goalTags.some((g) => g.toLowerCase() === wanted),
+  );
+  if (matches.length === 0) return { stamped: false, target: null, reason: "no matching target" };
+  if (matches.length > 1) return { stamped: false, target: null, reason: "matches more than one target" };
+
+  const target = matches[0];
+  if (target.last === date) return { stamped: false, target: target.text, reason: "already stamped today" };
+
+  updateTargetLastTouched(config, target.text, date);
+  emitSignal(config, {
+    id: signalId(),
+    type: "target_touched",
+    timestamp: new Date().toISOString(),
+    data: { target: target.text, cadence: target.cadence, daysSince: target.daysSince, date },
+  });
+  return { stamped: true, target: target.text };
 }

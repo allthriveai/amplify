@@ -1,6 +1,27 @@
-import { existsSync, mkdirSync, writeFileSync } from "node:fs";
-import { resolve, join } from "node:path";
-import { DEFAULT_PATHS, DEFAULT_RESEARCH_CATEGORIES } from "../../types/config.js";
+import { existsSync, mkdirSync, writeFileSync, copyFileSync } from "node:fs";
+import { resolve, join, dirname } from "node:path";
+import { fileURLToPath } from "node:url";
+import { DEFAULT_PATHS } from "../../types/config.js";
+import { WIKI_SUBDIRS } from "../../types/wiki.js";
+
+// Headings derive from WIKI_SUBDIRS so the index and the folders cannot disagree —
+// a hand-written list here once said "## Sources" while everything else said Summaries.
+const WIKI_INDEX_TEMPLATE = `# Index
+
+Every page in the wiki, one line each. Read this first when answering anything.
+
+${Object.values(WIKI_SUBDIRS).map((sub) => `## ${sub}\n`).join("\n")}`;
+
+const WIKI_LOG_TEMPLATE = `# Log
+
+Append-only. Newest entries at the bottom. Never edit an entry already written.
+`;
+
+/** The lumis repo root, resolved from this module rather than the cwd */
+function packageRoot(): string {
+  // src/cli/commands/init.ts and dist/cli/commands/init.js are both three levels down
+  return resolve(dirname(fileURLToPath(import.meta.url)), "..", "..", "..");
+}
 
 const PREFERENCES_TEMPLATE = `# Preferences
 
@@ -23,12 +44,22 @@ export async function initCommand(targetPath?: string): Promise<void> {
       : `Creating new vault at ${vaultPath}`,
   );
 
-  // Create core directories
+  // The wiki owns its own navigation through index.md, so its folders get no
+  // README. A hand-maintained hub next to a generated index is the exact pattern
+  // that goes stale and starts lying about what the folder holds.
+  const wikiDirs = Object.values(WIKI_SUBDIRS).map((sub) => join(DEFAULT_PATHS.wiki, sub));
+
   const dirs = [
+    join(DEFAULT_PATHS.sources, "Clippings"),
+    join(DEFAULT_PATHS.sources, "assets"),
+    DEFAULT_PATHS.meetings,
+    DEFAULT_PATHS.audio,
     DEFAULT_PATHS.moments,
+    DEFAULT_PATHS.dailyNotes,
+    DEFAULT_PATHS.reviews,
+    DEFAULT_PATHS.challenges,
     DEFAULT_PATHS.stories,
-    DEFAULT_PATHS.research,
-    DEFAULT_PATHS.researchTldr,
+    DEFAULT_PATHS.strategyDocs,
     DEFAULT_PATHS.amplifyStructures,
     DEFAULT_PATHS.amplifyHooks,
     DEFAULT_PATHS.signals,
@@ -37,20 +68,31 @@ export async function initCommand(targetPath?: string): Promise<void> {
     join(DEFAULT_PATHS.brand, "Inspiration"),
   ];
 
-  // Add research category subfolders
-  for (const category of DEFAULT_RESEARCH_CATEGORIES) {
-    dirs.push(join(DEFAULT_PATHS.research, category.folder));
+  for (const dir of [...wikiDirs, ...dirs]) {
+    mkdirSync(join(vaultPath, dir), { recursive: true });
   }
 
   for (const dir of dirs) {
-    const fullPath = join(vaultPath, dir);
-    mkdirSync(fullPath, { recursive: true });
-
-    const readmePath = join(fullPath, "README.md");
+    const readmePath = join(vaultPath, dir, "README.md");
     if (!existsSync(readmePath)) {
       const folderName = dir.split("/").pop() ?? dir;
       writeFileSync(readmePath, `# ${folderName}\n`, "utf-8");
     }
+  }
+
+  // Seed the wiki's two special files
+  const indexPath = join(vaultPath, DEFAULT_PATHS.wiki, "index.md");
+  if (!existsSync(indexPath)) writeFileSync(indexPath, WIKI_INDEX_TEMPLATE, "utf-8");
+
+  const logPath = join(vaultPath, DEFAULT_PATHS.wiki, "log.md");
+  if (!existsSync(logPath)) writeFileSync(logPath, WIKI_LOG_TEMPLATE, "utf-8");
+
+  // Copy the schema. This is what turns a generic agent into a wiki maintainer,
+  // so it matters more than any folder created above.
+  const schemaPath = join(vaultPath, "CLAUDE.md");
+  if (!existsSync(schemaPath)) {
+    copyFileSync(join(packageRoot(), "templates", "vault", "CLAUDE.md"), schemaPath);
+    console.log(`Created CLAUDE.md (the wiki schema)`);
   }
 
   // Write .lumisrc
@@ -64,8 +106,8 @@ export async function initCommand(targetPath?: string): Promise<void> {
         canvas: DEFAULT_PATHS.canvas,
         dailyNotes: DEFAULT_PATHS.dailyNotes,
         dailyNoteFormat: DEFAULT_PATHS.dailyNoteFormat,
-        research: DEFAULT_PATHS.research,
-        researchTldr: DEFAULT_PATHS.researchTldr,
+        sources: DEFAULT_PATHS.sources,
+        wiki: DEFAULT_PATHS.wiki,
         amplifyStructures: DEFAULT_PATHS.amplifyStructures,
         amplifyHooks: DEFAULT_PATHS.amplifyHooks,
         amplifyPersuasion: DEFAULT_PATHS.amplifyPersuasion,
@@ -74,25 +116,31 @@ export async function initCommand(targetPath?: string): Promise<void> {
         signals: DEFAULT_PATHS.signals,
         memory: DEFAULT_PATHS.memory,
         brand: DEFAULT_PATHS.brand,
+        people: DEFAULT_PATHS.people,
+        challenges: DEFAULT_PATHS.challenges,
+        audio: DEFAULT_PATHS.audio,
+        goals: DEFAULT_PATHS.goals,
+        meetings: DEFAULT_PATHS.meetings,
+        reviews: DEFAULT_PATHS.reviews,
       },
-      researchCategories: DEFAULT_RESEARCH_CATEGORIES,
     };
     writeFileSync(lumisrcPath, JSON.stringify(config, null, 2), "utf-8");
     console.log(`Created .lumisrc`);
   }
 
   console.log(`Scaffolded Lumis in ${vaultPath}`);
-  console.log(`  Moments:  ${DEFAULT_PATHS.moments}`);
-  console.log(`  Stories:  ${DEFAULT_PATHS.stories}`);
-  console.log(`  Research: ${DEFAULT_PATHS.research}`);
-  for (const cat of DEFAULT_RESEARCH_CATEGORIES) {
-    console.log(`    - ${cat.name}: ${join(DEFAULT_PATHS.research, cat.folder)}`);
+  console.log(`  Sources: ${DEFAULT_PATHS.sources}  (raw, immutable)`);
+  console.log(`    Clippings: ${join(DEFAULT_PATHS.sources, "Clippings")}`);
+  console.log(`    Meetings:  ${DEFAULT_PATHS.meetings}`);
+  console.log(`  Wiki:    ${DEFAULT_PATHS.wiki}  (agent-maintained)`);
+  for (const sub of Object.values(WIKI_SUBDIRS)) {
+    console.log(`    ${sub}`);
   }
-  console.log(`  TL;DR:    ${DEFAULT_PATHS.researchTldr}`);
+  console.log(`  Journal: ${DEFAULT_PATHS.moments}, ${DEFAULT_PATHS.dailyNotes}, ${DEFAULT_PATHS.reviews}`);
+  console.log(`  Work:    ${DEFAULT_PATHS.stories}, ${DEFAULT_PATHS.strategyDocs}`);
   console.log(`  Amplify:`);
   console.log(`    Structures: ${DEFAULT_PATHS.amplifyStructures}`);
   console.log(`    Hooks:      ${DEFAULT_PATHS.amplifyHooks}`);
-  console.log(`  Studio:  videos output to each story folder`);
 
   // Write Voice.md template
   const voicePath = join(vaultPath, DEFAULT_PATHS.voice);

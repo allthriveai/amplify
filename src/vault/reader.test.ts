@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import { rmSync } from "node:fs";
 import { join } from "node:path";
-import { readMoments, readMoment, readResearchNotes, readStory, readStories, readCanvas } from "./reader.js";
+import { readMoments, readMoment, readClippings, readStory, readStories, readCanvas } from "./reader.js";
 import { createTestConfig, writeTestFile } from "./test-helpers.js";
 import type { LumisConfig } from "../types/config.js";
 
@@ -188,18 +188,17 @@ describe("readMoment", () => {
 });
 
 // ---------------------------------------------------------------------------
-// readResearchNotes
+// readClippings
 // ---------------------------------------------------------------------------
-describe("readResearchNotes", () => {
-  it("returns empty array when research dir does not exist", () => {
-    expect(readResearchNotes(config)).toEqual([]);
+describe("readClippings", () => {
+  it("returns empty array when the clippings dir does not exist", () => {
+    expect(readClippings(config)).toEqual([]);
   });
 
-  it("reads from root research directory", () => {
-    const researchDir = join(config.vaultPath, config.paths.research);
+  it("reads every clipping from the flat source layer", () => {
+    const clippingsDir = join(config.vaultPath, config.paths.sources, "Clippings");
 
-    // Write a note in the root research dir
-    writeTestFile(researchDir, "root-note.md", [
+    writeTestFile(clippingsDir, "root-note.md", [
       "---",
       "title: Root Note",
       "source: https://example.com",
@@ -212,7 +211,7 @@ describe("readResearchNotes", () => {
       "Root content.",
     ].join("\n"));
 
-    writeTestFile(researchDir, "second-note.md", [
+    writeTestFile(clippingsDir, "second-note.md", [
       "---",
       "title: Second Note",
       "source: https://example.com/2",
@@ -225,10 +224,15 @@ describe("readResearchNotes", () => {
       "Second content.",
     ].join("\n"));
 
-    const notes = readResearchNotes(config);
+    const notes = readClippings(config);
     expect(notes).toHaveLength(2);
-    const filenames = notes.map((n) => n.filename).sort();
-    expect(filenames).toEqual(["root-note.md", "second-note.md"]);
+    expect(notes.map((n) => n.filename).sort()).toEqual(["root-note.md", "second-note.md"]);
+  });
+
+  it("skips README.md so folder hubs never read as sources", () => {
+    const clippingsDir = join(config.vaultPath, config.paths.sources, "Clippings");
+    writeTestFile(clippingsDir, "README.md", "# Clippings\n");
+    expect(readClippings(config)).toEqual([]);
   });
 });
 

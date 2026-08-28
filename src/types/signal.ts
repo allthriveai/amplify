@@ -236,6 +236,14 @@ export interface TargetTouchedSignal extends BaseSignal {
     cadence: string | null;
     /** Days since the target was last touched, before this stamp */
     daysSince: number | null;
+    /**
+     * The journal day this touch belongs to, YYYY-MM-DD.
+     *
+     * Distinct from `timestamp`, which is when the signal was written. Closing out
+     * an earlier day stamps the target against that day, not against today, so a
+     * weekly review has to group on this field to see it.
+     */
+    date: string;
   };
 }
 

@@ -5,48 +5,122 @@ Lumis writes to an Obsidian vault configured in `.lumisrc`. The vault is NOT thi
 2. `VAULT_PATH` env var
 3. If neither is set, Lumis asks rather than guessing
 
+## The three layers
+
+The vault runs the LLM Wiki pattern. The folder tree encodes one question: **may the
+agent rewrite this?**
+
+| Layer | Folder | Ownership |
+|---|---|---|
+| Raw sources | `Sources/` | Immutable. Read and cited, never rewritten. |
+| The wiki | `Wiki/` | Agent-owned. Created, rewritten, and kept current without asking. |
+| The schema | `CLAUDE.md` | The contract both layers follow. |
+
+Everything else belongs to the person: `Life/` is first-person and never ingested,
+`Work/` holds projects and pipeline output, `Lumis/` holds system files.
+
+The split matters because knowledge gets compiled once and kept current, rather than
+re-derived from raw material on every question. The bookkeeping that makes that work —
+cross-references, index lines, log entries — is exactly what people abandon and what an
+agent does without getting bored.
+
 ## Structure
 
 All paths configurable in `.lumisrc`:
 
 ```
-Lumis/
-  Moments/           ← daily moment notes
-  Stories/            ← developed stories (each in its own folder)
+CLAUDE.md              ← the schema. page shapes, workflows, the orphan rule.
+Home.md                ← thin human hub, points at Wiki/index.md
+
+Sources/                ← IMMUTABLE. read, never rewritten.
+  Clippings/            ← one file per article, paper, or page saved
+  Meetings/             ← transcripts and meeting notes
+  Audio/                ← narrations
+  assets/               ← images pulled from clippings
+
+Wiki/                   ← AGENT-OWNED. rewritten and kept current.
+  index.md              ← catalog: every page, one line, under 120 chars
+  log.md                ← append-only: ingests, queries, lint passes
+  Summaries/            ← one distilled page per raw source
+  Concepts/             ← ideas, frameworks, patterns
+  Entities/             ← people, organizations, products, tools
+  Synthesis/            ← comparisons and cross-cutting analysis
+
+Life/                  ← YOURS. never ingested into the wiki.
+  Moments/              ← daily moment notes
+  Daily Notes/
+  Reviews/              ← weekly reviews
+  Challenges/           ← /challenge logs and promoted notes
+
+Work/                   ← projects and pipeline output
+  Stories/              ← developed stories, each in its own folder
     {slug}/
-      raw.md          ← free write + interview answers (from /craft-content)
-      story.md        ← clean narrative draft (from /craft-content)
-      timeline.md     ← Draft timeline (from /draft-video)
-      carousel.md     ← carousel cards with copy and image direction (from /draft-carousel)
-      article.md      ← long-form blog post (from /draft-article)
-    Practice Log.md   ← storytelling practice history
-  Research/           ← full research notes
-    TL;DR/            ← companion summaries
-    AI & Agents/      ← categorized by topic
-    Tools & Software/
-    Books/
-    Articles/
-    Courses & Learning/
-  Amplify/            ← personalized content creation toolkit
-    Hooks/            ← 8 hook types (contrarian, curiosity-gap, story-entry, etc.)
-    Structures/       ← 18 content frameworks
-    Persuasion-Glossary.md ← 10 persuasion principles
-  Thinking/           ← challenge logs and promoted thinking notes
-    Challenge Log.md  ← history of /challenge sessions
-  Voice.md            ← who you are, your mission, audience, beliefs, and voice
-  Pattern Map.canvas  ← visual connections between moments
-  Signals/            ← structured event log (signals.json)
-  Memory/             ← session history and preferences
-    sessions/         ← daily session logs (YYYY-MM-DD.md)
-    preferences.md    ← user preferences (markdown)
-  Studio/
-    Outputs/          ← finished branded videos
-2 - Areas/
-  Personal/
-    People Who Inspire Me/ ← notes on people who inspire you (from /add-inspiration)
-    Thinking/              ← promoted challenge notes (from /challenge)
-  Strategy/                ← strategy docs (content pillars, strategy, social plan)
+      raw.md            ← free write + interview answers (from /craft-content)
+      story.md          ← clean narrative draft (from /craft-content)
+      timeline.md       ← shot-by-shot timeline (from /draft-video)
+      carousel.md       ← carousel cards (from /draft-carousel)
+      article.md        ← long-form post (from /draft-article)
+    Practice Log.md     ← storytelling practice history
+  Strategy/             ← content pillars, messaging, social plan
+
+Lumis/                  ← system files
+  Voice.md              ← who you are and how you sound
+  Goals.md              ← what you're building toward
+  Pattern Map.canvas    ← visual connections between moments
+  Amplify/              ← personalized content toolkit
+    Hooks/              ← 8 hook types
+    Structures/         ← 18 content frameworks
+    Persuasion-Glossary.md
+  Brand/                ← visual identity
+    Brand.md
+    Inspiration/
+  Signals/              ← structured event log (signals.json)
+  Memory/               ← session history and preferences
+    sessions/           ← daily session logs (YYYY-MM-DD.md)
+    preferences.md
 ```
+
+## Wiki page format
+
+Every wiki page carries the same frontmatter regardless of kind. The uniformity is the
+point — four incompatible per-folder schemas is what made cross-cutting queries
+impossible before.
+
+```yaml
+---
+tags: [retrieval, evaluation]
+sources: [some-clipped-article.md, 2026-01-14-planning-call.md]
+created: 2026-01-15
+updated: 2026-02-02
+---
+```
+
+`sources` names filenames in `Sources/`, not paths and not URLs. It is the audit trail
+back to raw material, and a page with an empty `sources` list is unsupported opinion.
+
+Note the naming. The raw layer is `Sources/` and the `sources` field points there; a page
+*about* a source is a **summary**, filed in `Wiki/Summaries/`. Naming both folders
+`Sources` reads fine in a diagram and is genuinely confusing in a file tree.
+
+Filenames are kebab-case, page titles are Title Case, and `[[links]]` use the **title**
+rather than the filename.
+
+**The orphan rule: every new page must link to at least one existing page.** A page
+nothing points at is a page nobody finds again — without the rule, the typical vault
+ends up with most of its notes carrying zero inbound links.
+
+## Why there are no research categories
+
+Sources used to be keyword-matched into category subfolders. It sounds tidy and does not
+survive a real vault: most sources match nothing and pile up at the root, while configured
+categories go uncreated. `Sources/Clippings/` is flat, and `tags` plus `Wiki/index.md` do
+the categorizing.
+
+## Config drift
+
+`npm run check:vault` loads the real `.lumisrc` and asserts every resolved path exists.
+Drift is otherwise silent — a renamed folder leaves a resolver pointing at nothing, and
+the skill that uses it quietly creates an empty directory rather than failing.
 
 ## Private Moments
 

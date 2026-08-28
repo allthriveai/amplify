@@ -1,4 +1,3 @@
-import type { ResearchCategory } from "./research.js";
 import type { StudioConfig } from "./studio.js";
 import type { BrandConfig } from "./brand.js";
 
@@ -35,27 +34,27 @@ export interface LumisConfig {
 
   /** Configurable paths within the vault (relative to vaultPath) */
   paths: {
-    /** Where moment notes are stored. Default: "Lumis/Moments" */
+    /** Where moment notes are stored. Default: "Life/Moments" */
     moments: string;
-    /** Where developed stories are stored. Default: "Lumis/Stories" */
+    /** Where developed stories are stored. Default: "Work/Stories" */
     stories: string;
     /** Path to the pattern map canvas. Default: "Lumis/Pattern Map.canvas" */
     canvas: string;
-    /** Where daily notes live. Default: "Daily Notes" */
+    /** Where daily notes live. Default: "Life/Journal" */
     dailyNotes: string;
     /** Date format for daily notes. Default: "YYYY-MM-DD" */
     dailyNoteFormat: string;
-    /** Where research notes are stored. Default: "Lumis/Research" */
-    research: string;
-    /** Where TL;DR companion notes are stored. Default: "Lumis/Research/TL;DR" */
-    researchTldr: string;
+    /** Raw source layer. Immutable: read, never rewritten. Default: "Sources" */
+    sources: string;
+    /** LLM-maintained wiki layer. Fully agent-owned. Default: "Wiki" */
+    wiki: string;
     /** Where content structures are stored. Default: "Lumis/Amplify/Structures" */
     amplifyStructures: string;
     /** Where hook type files are stored. Default: "Lumis/Amplify/Hooks" */
     amplifyHooks: string;
     /** Where the persuasion glossary lives. Default: "Lumis/Amplify" */
     amplifyPersuasion: string;
-    /** Where strategy docs live. Default: "Strategy" */
+    /** Where strategy docs live. Default: "Work/Strategy" */
     strategyDocs: string;
     /** Your voice/identity file. Default: "Lumis/Voice.md" */
     voice: string;
@@ -63,24 +62,21 @@ export interface LumisConfig {
     signals: string;
     /** Where memory (sessions + preferences) lives. Default: "Lumis/Memory" */
     memory: string;
-    /** Where people/inspiration notes are stored. Default: "Lumis/People Who Inspire Me" */
+    /** Where entity pages (people, orgs, tools) live. Default: "Wiki/Entities" */
     people: string;
-    /** Where challenge logs and promoted challenge notes are stored. Default: "Lumis/Challenges" */
+    /** Where challenge logs and promoted challenge notes are stored. Default: "Life/Challenges" */
     challenges: string;
-    /** Where brand guidelines and inspiration live. Default: "Brand" */
+    /** Where brand guidelines and inspiration live. Default: "Lumis/Brand" */
     brand: string;
-    /** Where audio narrations are stored. Default: "3 - Resources/Research/Audio" */
+    /** Where audio narrations are stored. Default: "Sources/Audio" */
     audio: string;
     /** Your goals/north star file. Default: "Lumis/Goals.md" */
     goals: string;
-    /** Where meeting notes are stored. Default: "Meetings" */
+    /** Where meeting notes are stored. Default: "Sources/Meetings" */
     meetings: string;
-    /** Where weekly reviews are stored. Default: "Reviews" */
+    /** Where weekly reviews are stored. Default: "Life/Reviews" */
     reviews: string;
   };
-
-  /** Categories for auto-classifying research notes */
-  researchCategories: ResearchCategory[];
 
   /** Optional brand config for visual identity (active/default brand) */
   brand?: BrandConfig;
@@ -96,27 +92,25 @@ export interface LumisConfig {
 }
 
 export const DEFAULT_PATHS: LumisConfig["paths"] = {
-  moments: "Moments",
-  stories: "Stories",
+  moments: "Life/Moments",
+  stories: "Work/Stories",
   canvas: "Lumis/Pattern Map.canvas",
-  dailyNotes: "Daily Notes",
+  dailyNotes: "Life/Journal",
   dailyNoteFormat: "YYYY-MM-DD",
-  research: "Research",
-  researchTldr: "Research/TL;DR",
+  sources: "Sources",
+  wiki: "Wiki",
   amplifyStructures: "Lumis/Amplify/Structures",
   amplifyHooks: "Lumis/Amplify/Hooks",
   amplifyPersuasion: "Lumis/Amplify",
-  strategyDocs: "Strategy",
+  strategyDocs: "Work/Strategy",
   voice: "Lumis/Voice.md",
   signals: "Lumis/Signals",
   memory: "Lumis/Memory",
-  people: "People",
-  challenges: "Challenges",
+  people: "Wiki/Entities",
+  challenges: "Life/Challenges",
   brand: "Lumis/Brand",
-  audio: "Research/Audio",
+  audio: "Sources/Audio",
   goals: "Lumis/Goals.md",
-  meetings: "Meetings",
-  reviews: "Reviews",
+  meetings: "Sources/Meetings",
+  reviews: "Life/Reviews",
 };
-
-export const DEFAULT_RESEARCH_CATEGORIES: ResearchCategory[] = [];

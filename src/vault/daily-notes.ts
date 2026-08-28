@@ -24,7 +24,8 @@ export function renderTemplate(template: string, dateKey: string): string {
 
 const TASK_LINE = /^(\s*)[-*] \[([ xX])\]\s+(.*)$/;
 const AGE_MARKER = /\s*\(moved (\d+) days?\)\s*$/;
-const GOAL_TAG = /#goal\/[\w-]+/g;
+/** Matches #goal/* tags. Shared with targets.ts so the two parsers cannot drift. */
+export const GOAL_TAG = /#goal\/[\w-]+/g;
 
 /** Extract every markdown checkbox from a note */
 export function parseTasks(content: string): Task[] {

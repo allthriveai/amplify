@@ -14,7 +14,7 @@ Three commands, three rhythms. Everything else feeds them.
 
 | | | |
 |---|---|---|
-| **Daily** | `/today` | Opens with the receipt, then asks what you're doing about it |
+| **Daily** | `/journal` | Receipt, your unfiltered entry, the five-second moment, patterns across every past entry |
 | **Weekly** | `/week` | The reckoning: what moved, what didn't, three commitments |
 | **Ongoing** | `/goals` | The targets both of the above hold you to |
 
@@ -32,7 +32,7 @@ Last entry: 4 days ago · streak 0 · longest 3 · 12 total
 
 **Targets going quiet**
 - Publish a post — 118 days (weekly)
-- Write a long-form piece — 34 days (monthly)
+- Work out — 1 of 3 this week
 
 Drift
   1 task carried a week or more: "Draft the launch post" (6d)
@@ -50,10 +50,13 @@ No encouragement, no streak-recovery narrative, no reframing four missed days as
 ```markdown
 ## Active Targets
 - [ ] Publish a post `cadence:weekly` `last:2026-04-21` #goal/writing
+- [ ] Work out `cadence:3x-weekly` #goal/workout
 - [ ] Ship the redesign #goal/product
 ```
 
 Recurring targets get a cadence and surface the moment they go quiet. Milestones omit cadence so they never nag. Finish a daily task tagged `#goal/writing` and the matching target gets stamped automatically — targets stay current because real work moved them, not because you remembered to update a tracker.
+
+`3x-weekly` means three times a week rather than once. Those are scored on completions inside the period, so the receipt says "1 of 3 this week" instead of a days-since figure — the right question for something you never intended to do daily. Missing one doesn't count as drift; missing all three does.
 
 **Drift is visible across weeks, not inside them.** Any single day looks fine. Lumis counts what only shows up in aggregate: tasks carried past a week, targets abandoned rather than merely slipping, themes you keep circling in your moments, days that went silent. `/week` puts them in front of you and asks what you're going to do.
 
@@ -65,7 +68,9 @@ The coach is only as good as the evidence. These put real material in the vault:
 
 - **`/moment`** — Captures a moment from your day and finds the "5-second moment," the instant something shifted. Connects it to past moments and rebuilds the Pattern Map. Over months this becomes the record of what actually happened to you, which is what `/week` reads when it asks why the same theme keeps coming up.
 - **`/challenge`** — Pressure-tests an idea with critical thinking prompts and honest feedback. When a task has been carried for three weeks, the block is usually a belief, not a schedule problem.
-- **`/add-research`** — Saves articles, PDFs, and videos as categorized notes with TL;DR companions.
+- **`/ingest`** — Saves a source immutably, distills a wiki page from it, and updates every entity and concept it touches.
+- **`/wiki`** — Answers a question from the wiki, with citations back to the pages.
+- **`/lint`** — Health-checks the wiki: orphans, broken links, contradictions, stale claims, index drift.
 - **`/add-inspiration`** — Researches someone you admire and links them back into your vault.
 - **`/meeting`** — Turns a transcript or pasted notes into decisions, action items, and attendees.
 - **`/voice`** and **`/brand`** — Who you are and how you look. Read by everything that writes.
@@ -84,6 +89,29 @@ So Lumis also owns the pipeline that turns your captured life into things you ca
 
 > **Heads up:** this half is being split into its own repo. Lumis is becoming the coach; the content flywheel becomes a separate tool that reads the same vault. Nothing is going away — the seam is the vault, not the code. The tag `v0.1.0-pre-split` marks the last version with both halves together.
 
+## The vault has three layers
+
+The coach needs evidence, and evidence accumulates. Lumis borrows [Andrej Karpathy's LLM Wiki
+pattern](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f) for the half of the
+vault that holds what you know, so the folder tree answers one question: **may the agent rewrite
+this?**
+
+| Layer | Folder | Ownership |
+|---|---|---|
+| Raw sources | `Sources/` | Immutable. Read and cited, never rewritten. |
+| The wiki | `Wiki/` | Agent-owned. Created, rewritten, kept current. |
+| The schema | `CLAUDE.md` | The contract both layers follow. |
+
+`/ingest` saves a source to `Sources/` untouched, distills a page into `Wiki/Summaries/`, then
+updates every concept and entity page it touches plus `index.md` and `log.md`. One source
+touching 10-15 pages is normal — that bookkeeping is the part people abandon and the part an
+agent does without getting bored. `/wiki` answers questions from it with citations; `/lint`
+catches orphans, broken links, and contradictions.
+
+**`Life/` is never ingested.** Your moments, daily notes, and reviews stay out of the wiki
+entirely, so the content pipeline can read everything it has access to without touching anything
+personal.
+
 ## How it works
 
 ```
@@ -99,12 +127,12 @@ So Lumis also owns the pipeline that turns your captured life into things you ca
    ┌──────────────────────────────────────────────────────┐
    │                      THE LOOP                        │
    │                                                      │
-   │   every morning     ┌──────────┐                     │
-   │   every evening ───▶│  /today  │                     │
-   │                     └────┬─────┘                     │
-   │                          │  receipt · carried tasks  │
-   │                          │  quiet targets · drift    │
-   │                          ▼                           │
+   │   every morning     ┌────────────────────┐           │
+   │   every evening ───▶│  /today   /journal │           │
+   │                     └─────────┬──────────┘           │
+   │                               │  receipt · carried   │
+   │                               │  quiet targets       │
+   │                               ▼                      │
    │   every sunday   ────▶┌──────────┐                   │
    │                       │  /week   │                   │
    │                       └────┬─────┘                   │
@@ -113,17 +141,19 @@ So Lumis also owns the pipeline that turns your captured life into things you ca
    └────────────────────────────┼─────────────────────────┘
                                 │
         ┌───────────────────────┴────────────────────────┐
-        │                    Vault                       │
-        │                  (Obsidian)                    │
-        │  daily notes · reviews · moments · research    │
-        │  goals · voice · signals · patterns            │
+        │                Vault (Obsidian)                │
+        │                                                │
+        │  Sources/   raw, immutable — never rewritten   │
+        │  Wiki/      agent-maintained knowledge         │
+        │  Life/       your days — never ingested         │
+        │  Work/      projects, stories, strategy        │
         └───────┬────────────────────────────────┬───────┘
                 │                                │
       evidence in                        visibility out
                 │                                │
    ┌────────────┴─────────────┐    ┌─────────────┴──────────────┐
    │ /moment    /challenge    │    │ /craft-content             │
-   │ /add-research /meeting   │    │ /draft-video /draft-article│
+   │ /ingest /meeting /wiki   │    │ /draft-video /draft-article│
    │ /add-inspiration         │    │ /draft-carousel  /draft-*  │
    └──────────────────────────┘    └─────────────┬──────────────┘
                                                  │
@@ -141,6 +171,7 @@ git clone https://github.com/allthriveai/lumis.git
 cd lumis
 npm install
 npm run build
+npm link          # puts the `lumis` command on your PATH
 claude
 /init
 ```
@@ -159,18 +190,26 @@ Run `/today` tomorrow morning and it will already know how you did.
 **The loop**
 
 ```
-/today              Open today: receipt, carried tasks, priorities
+/journal            Receipt, entry, five-second moment, patterns
+/today              Alias for /journal
 /today (evening)    Check tasks off, reflect, close the day
 /week               The weekly reckoning and next week's commitments
 /goals              Set your north star and active targets
 ```
+
+Goals are tracked through tagged tasks, not by editing `Goals.md`. Write a priority as
+`- [ ] gym before work #goal/workout`, then close the day with
+`lumis today --done "gym before work"`. That checks the box and stamps the target. You never
+update the tracker by hand.
 
 **Evidence**
 
 ```
 /moment             Capture a moment and find the 5-second shift
 /challenge          Pressure-test an idea with honest feedback
-/add-research       Save and categorize research
+/ingest             Save a source and distill it into the wiki
+/wiki               Ask the wiki a question, with citations
+/lint               Health-check the wiki
 /add-inspiration    Capture a person who inspires you
 /meeting            Turn a transcript into decisions and action items
 /voice              Fill in or redo your Voice.md
@@ -193,7 +232,7 @@ Run `/today` tomorrow morning and it will already know how you did.
 /youtube-short      Build a Short from existing video
 /youtube-upload     Upload, schedule, and publish to YouTube
 /humanizer          Strip AI-writing tells from any prose
-/listen             Convert a research note to narrated audio
+/listen             Convert a source note to narrated audio
 ```
 
 **CLI**
@@ -209,7 +248,9 @@ lumis studio list           List all draft cuts with status
 lumis studio render <slug>  Render a draft cut to branded video
 lumis studio preview        Open Remotion Studio
 lumis storyboard <slug>     Visual storyboard for pre-production
-lumis listen <note>         Convert a research note to audio
+lumis listen <note>         Convert a source note to audio
+lumis story-craft [develop] Practice or develop storytelling from a moment
+lumis import-sparks --from <path>  Import Amplify content from a manifest
 lumis obs <cmd>             OBS capture (setup, start, stop, scenes)
 ```
 
@@ -231,11 +272,16 @@ personal half; the repo holds only the tool.
 npm install          # also installs the pre-commit hook
 npm run check:personal
 npm run lint && npm test
+npm run check:vault  # asserts every configured vault path exists
 ```
 
 The pre-commit hook blocks home paths, emails, API keys, and hardcoded vault
 locations. Add real names you want caught to `.personal-patterns` (gitignored).
 Examples in docs and skills must use invented data.
+
+`check:vault` catches the other silent failure: a renamed folder leaves a resolver pointing at
+nothing, and the skill using it quietly creates an empty directory instead of erroring. Run it
+after any change to `paths` in `.lumisrc` or `DEFAULT_PATHS`.
 
 ## Tech stack
 

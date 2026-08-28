@@ -1,16 +1,21 @@
 import { describe, it, expect } from "vitest";
 import { join } from "node:path";
 import type { LumisConfig } from "../types/config.js";
-import { DEFAULT_PATHS, DEFAULT_RESEARCH_CATEGORIES } from "../types/config.js";
+import { DEFAULT_PATHS } from "../types/config.js";
 import {
   resolvePath,
   resolveMomentsDir,
   resolveStoriesDir,
   resolveCanvasPath,
   resolveDailyNotePath,
-  resolveResearchDir,
-  resolveTldrDir,
-  resolveResearchCategoryDir,
+  resolveSourcesDir,
+  resolveClippingsDir,
+  resolveSourceAssetsDir,
+  resolveWikiDir,
+  resolveWikiSubdir,
+  resolveWikiPagePath,
+  resolveWikiIndexPath,
+  resolveWikiLogPath,
   resolveSignalsDir,
   resolveSignalsPath,
   resolveMemoryDir,
@@ -27,7 +32,6 @@ function mockConfig(overrides?: Partial<LumisConfig>): LumisConfig {
     vaultPath: "/test/vault",
     anthropicApiKey: "test-key",
     paths: { ...DEFAULT_PATHS },
-    researchCategories: DEFAULT_RESEARCH_CATEGORIES,
     ...overrides,
   };
 }
@@ -49,7 +53,7 @@ describe("resolvePath", () => {
 describe("resolveMomentsDir", () => {
   it("resolves to the default moments path", () => {
     const config = mockConfig();
-    expect(resolveMomentsDir(config)).toBe("/test/vault/Moments");
+    expect(resolveMomentsDir(config)).toBe("/test/vault/Life/Moments");
   });
 
   it("respects custom moments path", () => {
@@ -63,7 +67,7 @@ describe("resolveMomentsDir", () => {
 describe("resolveStoriesDir", () => {
   it("resolves to the default stories path", () => {
     const config = mockConfig();
-    expect(resolveStoriesDir(config)).toBe("/test/vault/Stories");
+    expect(resolveStoriesDir(config)).toBe("/test/vault/Work/Stories");
   });
 });
 
@@ -79,46 +83,71 @@ describe("resolveCanvasPath", () => {
 describe("resolveDailyNotePath", () => {
   it("resolves with a specific date and default format", () => {
     const config = mockConfig();
-    // resolveDailyNotePath parses the date string with new Date(), which
-    // interprets "YYYY-MM-DD" as UTC. The formatter then uses local getMonth/getDate,
-    // so we construct the expected result the same way the implementation does.
+    // The key is split on "-" rather than passed to new Date(), which would parse
+    // "YYYY-MM-DD" as UTC midnight and land on the previous day west of UTC. So the
+    // day in the filename is exactly the day asked for, in every timezone.
     const result = resolveDailyNotePath(config, "2024-06-15");
-    expect(result).toMatch(/^\/test\/vault\/Daily Notes\/2024-06-\d{2}\.md$/);
-    // Verify it uses the default dailyNotes directory
-    expect(result).toContain("/test/vault/Daily Notes/");
+    expect(result).toBe("/test/vault/Life/Journal/2024-06-15.md");
   });
 
   it("resolves with a custom dailyNotes directory", () => {
     const config = mockConfig({
-      paths: { ...DEFAULT_PATHS, dailyNotes: "Journal/Daily" },
+      paths: { ...DEFAULT_PATHS, dailyNotes: "Life/Daily" },
     });
     const result = resolveDailyNotePath(config, "2024-01-01");
-    expect(result).toContain("/test/vault/Journal/Daily/");
+    expect(result).toContain("/test/vault/Life/Daily/");
     expect(result).toMatch(/\.md$/);
   });
 });
 
-describe("resolveResearchDir", () => {
-  it("resolves to the default research path", () => {
-    const config = mockConfig();
-    expect(resolveResearchDir(config)).toBe("/test/vault/Research");
+describe("source layer", () => {
+  it("resolves the sources root", () => {
+    expect(resolveSourcesDir(mockConfig())).toBe("/test/vault/Sources");
+  });
+
+  it("resolves clippings under the sources root", () => {
+    expect(resolveClippingsDir(mockConfig())).toBe("/test/vault/Sources/Clippings");
+  });
+
+  it("resolves source assets under the sources root", () => {
+    expect(resolveSourceAssetsDir(mockConfig())).toBe("/test/vault/Sources/assets");
+  });
+
+  it("follows a relocated sources root", () => {
+    const config = mockConfig({ paths: { ...DEFAULT_PATHS, sources: "Raw" } });
+    expect(resolveClippingsDir(config)).toBe("/test/vault/Raw/Clippings");
   });
 });
 
-describe("resolveTldrDir", () => {
-  it("resolves to the default TL;DR path", () => {
-    const config = mockConfig();
-    expect(resolveTldrDir(config)).toBe("/test/vault/Research/TL;DR");
+describe("wiki layer", () => {
+  it("resolves the wiki root", () => {
+    expect(resolveWikiDir(mockConfig())).toBe("/test/vault/Wiki");
   });
-});
 
-describe("resolveResearchCategoryDir", () => {
-  it("resolves a category subfolder under the research dir", () => {
+  it("maps each page kind to its subfolder", () => {
     const config = mockConfig();
-    const category = { name: "AI & Agents", folder: "AI & Agents", keywords: ["ai"] };
-    expect(resolveResearchCategoryDir(config, category)).toBe(
-      "/test/vault/Research/AI & Agents",
+    expect(resolveWikiSubdir(config, "summary")).toBe("/test/vault/Wiki/Summaries");
+    expect(resolveWikiSubdir(config, "concept")).toBe("/test/vault/Wiki/Concepts");
+    expect(resolveWikiSubdir(config, "entity")).toBe("/test/vault/Wiki/Entities");
+    expect(resolveWikiSubdir(config, "synthesis")).toBe("/test/vault/Wiki/Synthesis");
+  });
+
+  it("resolves a page path inside its kind's subfolder", () => {
+    expect(resolveWikiPagePath(mockConfig(), "concept", "vector-search.md")).toBe(
+      "/test/vault/Wiki/Concepts/vector-search.md",
     );
+  });
+
+  it("resolves the index and the log at the wiki root", () => {
+    const config = mockConfig();
+    expect(resolveWikiIndexPath(config)).toBe("/test/vault/Wiki/index.md");
+    expect(resolveWikiLogPath(config)).toBe("/test/vault/Wiki/log.md");
+  });
+
+  it("follows a relocated wiki root", () => {
+    const config = mockConfig({ paths: { ...DEFAULT_PATHS, wiki: "KB" } });
+    expect(resolveWikiIndexPath(config)).toBe("/test/vault/KB/index.md");
+    expect(resolveWikiSubdir(config, "entity")).toBe("/test/vault/KB/Entities");
   });
 });
 
@@ -174,7 +203,7 @@ describe("resolveStrategyDocsDir", () => {
   it("resolves to the default strategy docs path", () => {
     const config = mockConfig();
     expect(resolveStrategyDocsDir(config)).toBe(
-      "/test/vault/Strategy",
+      "/test/vault/Work/Strategy",
     );
   });
 });
@@ -183,7 +212,7 @@ describe("resolvePracticeLogPath", () => {
   it("resolves to Practice Log.md inside the stories directory", () => {
     const config = mockConfig();
     expect(resolvePracticeLogPath(config)).toBe(
-      "/test/vault/Stories/Practice Log.md",
+      "/test/vault/Work/Stories/Practice Log.md",
     );
   });
 });

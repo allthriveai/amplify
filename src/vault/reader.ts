@@ -3,21 +3,24 @@ import { join } from "node:path";
 import type { LumisConfig } from "../types/config.js";
 import type { Moment, MomentFrontmatter } from "../types/moment.js";
 import type { Meeting, MeetingFrontmatter } from "../types/meeting.js";
-import type { ResearchNote, ResearchFrontmatter } from "../types/research.js";
+import type { Clipping, ClippingFrontmatter } from "../types/source.js";
 import type { Story, StoryFrontmatter, StoryElements } from "../types/story.js";
 import type { CanvasFile } from "../types/canvas.js";
-import { resolveMomentsDir, resolveMeetingsDir, resolveCanvasPath, resolveResearchDir, resolveResearchCategoryDir, resolveStoriesDir } from "./paths.js";
+import { resolveMomentsDir, resolveMeetingsDir, resolveCanvasPath, resolveClippingsDir, resolveStoriesDir } from "./paths.js";
 import { parseFrontmatter } from "./frontmatter.js";
+
+/** List markdown files in a dir and read each through readOne, dropping failures */
+function readAll<T>(dir: string, readOne: (filename: string) => T | null, exclude: string[] = []): T[] {
+  if (!existsSync(dir)) return [];
+  return readdirSync(dir)
+    .filter((f) => f.endsWith(".md") && f !== "README.md" && !exclude.includes(f))
+    .map(readOne)
+    .filter((x): x is T => x !== null);
+}
 
 /** Read all moment files from the configured moments directory */
 export function readMoments(config: LumisConfig): Moment[] {
-  const dir = resolveMomentsDir(config);
-  if (!existsSync(dir)) return [];
-
-  return readdirSync(dir)
-    .filter((f) => f.endsWith(".md") && f !== "README.md")
-    .map((filename) => readMoment(config, filename))
-    .filter((m): m is Moment => m !== null);
+  return readAll(resolveMomentsDir(config), (f) => readMoment(config, f));
 }
 
 /** Read a single moment file by filename */
@@ -55,13 +58,7 @@ export function readMoment(config: LumisConfig, filename: string): Moment | null
 
 /** Read all meeting notes from the configured meetings directory */
 export function readMeetings(config: LumisConfig): Meeting[] {
-  const dir = resolveMeetingsDir(config);
-  if (!existsSync(dir)) return [];
-
-  return readdirSync(dir)
-    .filter((f) => f.endsWith(".md") && f !== "README.md")
-    .map((filename) => readMeeting(config, filename))
-    .filter((m): m is Meeting => m !== null);
+  return readAll(resolveMeetingsDir(config), (f) => readMeeting(config, f));
 }
 
 /** Read a single meeting note by filename */
@@ -82,56 +79,26 @@ export function readMeeting(config: LumisConfig, filename: string): Meeting | nu
   };
 }
 
-/** Read all research notes across all category folders and the research root */
-export function readResearchNotes(config: LumisConfig): ResearchNote[] {
-  const notes: ResearchNote[] = [];
-
-  // Read from research root
-  const rootDir = resolveResearchDir(config);
-  if (existsSync(rootDir)) {
-    notes.push(...readResearchNotesFromDir(rootDir, config.paths.research));
-  }
-
-  // Read from each category subfolder
-  for (const category of config.researchCategories) {
-    const categoryDir = resolveResearchCategoryDir(config, category);
-    if (existsSync(categoryDir)) {
-      const relativePath = join(config.paths.research, category.folder);
-      notes.push(...readResearchNotesFromDir(categoryDir, relativePath));
-    }
-  }
-
-  return notes;
-}
-
-function readResearchNotesFromDir(
-  dir: string,
-  relativePath: string,
-): ResearchNote[] {
-  return readdirSync(dir)
-    .filter((f) => f.endsWith(".md") && f !== "README.md")
-    .map((filename) => {
-      const filepath = join(dir, filename);
-      const raw = readFileSync(filepath, "utf-8");
-      const { frontmatter, content } = parseFrontmatter<ResearchFrontmatter>(raw);
-      return {
-        filename,
-        path: join(relativePath, filename),
-        frontmatter,
-        content,
-      };
-    });
+/**
+ * Read every raw clipping from the source layer.
+ *
+ * Flat by design. Clippings used to be split across keyword-matched category
+ * folders, which left most of them uncategorized at the root anyway; tags in
+ * frontmatter and the wiki index do that job now.
+ */
+export function readClippings(config: LumisConfig): Clipping[] {
+  const dir = resolveClippingsDir(config);
+  const relativePath = join(config.paths.sources, "Clippings");
+  return readAll(dir, (filename) => {
+    const raw = readFileSync(join(dir, filename), "utf-8");
+    const { frontmatter, content } = parseFrontmatter<ClippingFrontmatter>(raw);
+    return { filename, path: join(relativePath, filename), frontmatter, content };
+  });
 }
 
 /** Read all story files from the configured stories directory */
 export function readStories(config: LumisConfig): Story[] {
-  const dir = resolveStoriesDir(config);
-  if (!existsSync(dir)) return [];
-
-  return readdirSync(dir)
-    .filter((f) => f.endsWith(".md") && f !== "README.md" && f !== "Practice Log.md")
-    .map((filename) => readStory(config, filename))
-    .filter((s): s is Story => s !== null);
+  return readAll(resolveStoriesDir(config), (f) => readStory(config, f), ["Practice Log.md"]);
 }
 
 /** Read a single story file by filename */

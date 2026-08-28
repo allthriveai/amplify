@@ -75,6 +75,7 @@ async function main() {
 Commands:
   lumis today                        Open today's journal (receipt + carried tasks)
   lumis today --done "task"          Check tasks off and close the day
+  lumis today --touch "target"       Stamp a goal target directly (no checkbox needed)
   lumis week                         Write this week's review
   lumis moment "..."                 Capture a moment
   lumis patterns                     Regenerate the Pattern Map

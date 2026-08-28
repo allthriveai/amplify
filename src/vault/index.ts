@@ -1,13 +1,18 @@
-export { readMoments, readMoment, readMeetings, readMeeting, readResearchNotes, readStories, readStory } from "./reader.js";
-export { writeMoment, writeMeeting, writeCanvas, writeResearchNote, writeTldrNote, writeStory, appendPracticeLog } from "./writer.js";
+export { readMoments, readMoment, readMeetings, readMeeting, readClippings, readStories, readStory } from "./reader.js";
+export { writeMoment, writeMeeting, writeCanvas, writeClipping, writeWikiPage, writeStory, appendPracticeLog } from "./writer.js";
 export { parseFrontmatter, serializeFrontmatter } from "./frontmatter.js";
 export {
   resolvePath,
   resolveCanvasPath,
   resolveMomentsDir,
-  resolveResearchDir,
-  resolveTldrDir,
-  resolveResearchCategoryDir,
+  resolveSourcesDir,
+  resolveClippingsDir,
+  resolveSourceAssetsDir,
+  resolveWikiDir,
+  resolveWikiSubdir,
+  resolveWikiPagePath,
+  resolveWikiIndexPath,
+  resolveWikiLogPath,
   resolveAmplifyStructuresDir,
   resolveAmplifyHooksDir,
   resolveAmplifyPersuasionPath,

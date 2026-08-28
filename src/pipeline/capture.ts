@@ -11,6 +11,7 @@ import { resolveMomentsDir } from "../vault/paths.js";
 import { emitSignal, signalId } from "../vault/signals.js";
 import { appendSessionEntry, formatSessionTime } from "../vault/memory.js";
 import type { MomentCapturedSignal } from "../types/signal.js";
+import { todayKey } from "../vault/dates.js";
 
 /**
  * Full moment capture pipeline:
@@ -60,7 +61,7 @@ export async function captureMoment(
   const humanizedContent = await humanize(content, config.anthropicApiKey);
 
   // 5. Build frontmatter
-  const today = new Date().toISOString().split("T")[0];
+  const today = todayKey();
   const frontmatter: MomentFrontmatter = {
     date: today,
     "moment-type": analysis.momentType,

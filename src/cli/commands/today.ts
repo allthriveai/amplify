@@ -1,5 +1,5 @@
 import { loadConfig } from "../../config.js";
-import { openDay, closeDay, setPriorities } from "../../journal/index.js";
+import { openDay, previewDay, closeDay, setPriorities, touchTarget } from "../../journal/index.js";
 import { todayKey, formatTask } from "../../vault/daily-notes.js";
 
 function printReceipt(receipt: string): void {
@@ -19,6 +19,21 @@ export async function todayCommand(args: string[]): Promise<void> {
 
   const doneIndex = args.indexOf("--done");
   const prioIndex = args.indexOf("--priorities");
+  const touchIndex = args.indexOf("--touch");
+
+  if (touchIndex !== -1) {
+    const names = args.slice(touchIndex + 1).filter((a) => !a.startsWith("--"));
+    if (names.length === 0) {
+      console.error('Usage: lumis today --touch "target name or #goal/tag"');
+      process.exit(1);
+    }
+    for (const name of names) {
+      const result = touchTarget(config, name, date);
+      if (result.stamped) console.log(`Stamped: ${result.target}`);
+      else console.log(`Not stamped — ${name}: ${result.reason}`);
+    }
+    return;
+  }
 
   if (doneIndex !== -1) {
     const completed = args.slice(doneIndex + 1).filter((a) => !a.startsWith("--"));
@@ -42,11 +57,15 @@ export async function todayCommand(args: string[]): Promise<void> {
     return;
   }
 
-  const result = openDay(config, date);
+  // Look, don't write. An empty scaffold is not a journal entry, and creating one
+  // makes the streak lie about days nobody wrote on.
+  const result = previewDay(config, date);
 
   if (prioIndex !== -1) {
     const texts = args.slice(prioIndex + 1).filter((a) => !a.startsWith("--"));
     if (texts.length > 0) {
+      // Setting priorities is content, so this is the point the note earns its file.
+      if (!result.exists) openDay(config, date);
       setPriorities(config, date, texts);
       console.log(`Priorities set for ${date}:`);
       for (const t of texts) console.log(`  - ${t}`);
@@ -54,7 +73,7 @@ export async function todayCommand(args: string[]): Promise<void> {
     }
   }
 
-  console.log(result.created ? `Created ${result.note.path}` : `${result.note.path} already exists`);
+  console.log(result.exists ? result.note!.path : `No entry yet for ${date}.`);
   printReceipt(result.receipt);
 
   const { drift } = result;

@@ -26,7 +26,7 @@ export interface DailyNote {
 
 export type Cadence = "daily" | "weekly" | "monthly" | "quarterly";
 
-/** Days allowed to pass before a target of each cadence is considered overdue */
+/** Days in the period each cadence names */
 export const CADENCE_DAYS: Record<Cadence, number> = {
   daily: 1,
   weekly: 7,
@@ -38,6 +38,15 @@ export const CADENCE_DAYS: Record<Cadence, number> = {
 export interface Target {
   /** Target text, stripped of the checkbox and inline key:value tags */
   text: string;
+  /**
+   * How many times per period, for targets written `cadence:3x-weekly`.
+   *
+   * Null means the plain form: do it at least once per period. A count changes
+   * what overdue means — not "how long since the last one" but "how many in the
+   * window so far", which is the only way to express something like working out
+   * three days a week without demanding it daily.
+   */
+  times: number | null;
   cadence: Cadence | null;
   /** YYYY-MM-DD of the last time this target was touched */
   last: string | null;
@@ -50,8 +59,16 @@ export interface Target {
 export interface TargetStatus extends Target {
   /** Days since `last`. Null when the target has never been touched. */
   daysSince: number | null;
-  /** True when daysSince exceeds the cadence window, or last is unset */
+  /**
+   * True when the target has fallen behind.
+   *
+   * For a plain cadence that means `daysSince` exceeds the period, or `last` is
+   * unset. For a `times` target it means fewer completions in the trailing
+   * period than the count asks for.
+   */
   overdue: boolean;
+  /** Completions inside the trailing period. Null unless `times` is set. */
+  hits: number | null;
 }
 
 /** Journaling history, computed from the daily notes folder */
@@ -130,5 +147,24 @@ export interface WeekData {
   targets: TargetStatus[];
   /** Target texts stamped during the week, from signals */
   targetsTouched: string[];
+  drift: Drift;
+}
+
+/**
+ * The day's receipt, computed without writing anything.
+ *
+ * Distinct from OpenDayResult, which reports on a note that now exists on disk.
+ */
+export interface DayPreview {
+  date: string;
+  /** True when a note for this date is already on disk */
+  exists: boolean;
+  /** The existing note, or null when nothing has been written yet */
+  note: DailyNote | null;
+  stats: JournalStats;
+  carried: Task[];
+  targets: TargetStatus[];
+  gapDays: number | null;
+  receipt: string;
   drift: Drift;
 }

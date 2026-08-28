@@ -1,6 +1,7 @@
 import { join } from "node:path";
 import { loadConfig } from "../../config.js";
-import { readResearchNotes } from "../../vault/reader.js";
+import { readClippings } from "../../vault/reader.js";
+import type { Clipping } from "../../types/source.js";
 import { createElevenLabsClient } from "../../studio/elevenlabs.js";
 import { narrateToAudio, estimateDuration } from "../../studio/narrate.js";
 import { resolveAudioDir } from "../../vault/paths.js";
@@ -50,11 +51,11 @@ export async function listenCommand(args: string[]): Promise<void> {
     process.exit(1);
   }
 
-  // Find matching research note
-  const notes = readResearchNotes(config);
+  // Find a matching clipping in the source layer
+  const notes = readClippings(config);
   const normalizedSearch = searchTerm.toLowerCase().replace(/\.md$/, "");
 
-  const match = notes.find((n) => {
+  const match = notes.find((n: Clipping) => {
     const name = n.filename.toLowerCase().replace(/\.md$/, "");
     const title = (n.frontmatter.title ?? "").toLowerCase();
     return (
@@ -66,8 +67,8 @@ export async function listenCommand(args: string[]): Promise<void> {
   });
 
   if (!match) {
-    console.error(`No research note found matching "${searchTerm}".`);
-    console.error(`Found ${notes.length} research notes total.`);
+    console.error(`No source found matching "${searchTerm}".`);
+    console.error(`Found ${notes.length} clippings total.`);
     process.exit(1);
   }
 

@@ -53,4 +53,4 @@ User runs `/listen`, optionally followed by a note name, path, or "latest".
 
 - `listenVoiceId` is separate from `elevenlabsVoiceId` (used for video voiceovers)
 - If only `elevenlabsVoiceId` is set and `listenVoiceId` is not, the CLI falls back to `elevenlabsVoiceId`
-- Audio files are saved to `{vaultPath}/{paths.audio}/` (default: `3 - Resources/Research/Audio/`)
+- Audio files are saved to `{vaultPath}/{paths.audio}/` (default: `Sources/Audio/`)

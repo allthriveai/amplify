@@ -3,27 +3,29 @@ import { join, dirname } from "node:path";
 import type { LumisConfig } from "../types/config.js";
 import type { MomentFrontmatter } from "../types/moment.js";
 import type { MeetingFrontmatter } from "../types/meeting.js";
-import type { ResearchFrontmatter, TldrFrontmatter, ResearchCategory } from "../types/research.js";
+import type { ClippingFrontmatter } from "../types/source.js";
+import type { WikiFrontmatter, WikiPageKind } from "../types/wiki.js";
 import type { StoryFrontmatter } from "../types/story.js";
 import type { CanvasFile } from "../types/canvas.js";
-import { resolveMomentsDir, resolveMeetingsDir, resolveCanvasPath, resolveResearchDir, resolveTldrDir, resolveResearchCategoryDir, resolveStoriesDir, resolvePracticeLogPath } from "./paths.js";
+import { resolveMomentsDir, resolveMeetingsDir, resolveCanvasPath, resolveClippingsDir, resolveWikiSubdir, resolveStoriesDir, resolvePracticeLogPath } from "./paths.js";
 import { serializeFrontmatter } from "./frontmatter.js";
 
 /** Write a moment file to the vault */
+/** Serialize frontmatter + content and write into dir, creating it if needed */
+function writeNote(dir: string, filename: string, frontmatter: object, content: string): string {
+  mkdirSync(dir, { recursive: true });
+  const filepath = join(dir, filename);
+  writeFileSync(filepath, serializeFrontmatter(frontmatter, content), "utf-8");
+  return filepath;
+}
+
 export function writeMoment(
   config: LumisConfig,
   filename: string,
   frontmatter: MomentFrontmatter,
   content: string,
 ): string {
-  const dir = resolveMomentsDir(config);
-  mkdirSync(dir, { recursive: true });
-
-  const filepath = join(dir, filename);
-  const markdown = serializeFrontmatter(frontmatter, content);
-  writeFileSync(filepath, markdown, "utf-8");
-
-  return filepath;
+  return writeNote(resolveMomentsDir(config), filename, frontmatter, content);
 }
 
 /** Write a meeting note to the vault */
@@ -33,51 +35,28 @@ export function writeMeeting(
   frontmatter: MeetingFrontmatter,
   content: string,
 ): string {
-  const dir = resolveMeetingsDir(config);
-  mkdirSync(dir, { recursive: true });
-
-  const filepath = join(dir, filename);
-  const markdown = serializeFrontmatter(frontmatter, content);
-  writeFileSync(filepath, markdown, "utf-8");
-
-  return filepath;
+  return writeNote(resolveMeetingsDir(config), filename, frontmatter, content);
 }
 
-/** Write a research note to the vault, optionally into a category subfolder */
-export function writeResearchNote(
+/** Write a raw clipping into the immutable source layer */
+export function writeClipping(
   config: LumisConfig,
   filename: string,
-  frontmatter: ResearchFrontmatter,
+  frontmatter: ClippingFrontmatter,
   content: string,
-  category?: ResearchCategory,
 ): string {
-  const dir = category
-    ? resolveResearchCategoryDir(config, category)
-    : resolveResearchDir(config);
-  mkdirSync(dir, { recursive: true });
-
-  const filepath = join(dir, filename);
-  const markdown = serializeFrontmatter(frontmatter, content);
-  writeFileSync(filepath, markdown, "utf-8");
-
-  return filepath;
+  return writeNote(resolveClippingsDir(config), filename, frontmatter, content);
 }
 
-/** Write a TL;DR companion note to the central TL;DR folder */
-export function writeTldrNote(
+/** Write a wiki page into the subfolder for its kind */
+export function writeWikiPage(
   config: LumisConfig,
+  kind: WikiPageKind,
   filename: string,
-  frontmatter: TldrFrontmatter,
+  frontmatter: WikiFrontmatter,
   content: string,
 ): string {
-  const dir = resolveTldrDir(config);
-  mkdirSync(dir, { recursive: true });
-
-  const filepath = join(dir, filename);
-  const markdown = serializeFrontmatter(frontmatter, content);
-  writeFileSync(filepath, markdown, "utf-8");
-
-  return filepath;
+  return writeNote(resolveWikiSubdir(config, kind), filename, frontmatter, content);
 }
 
 /** Write a story file to the vault */
@@ -87,14 +66,7 @@ export function writeStory(
   frontmatter: StoryFrontmatter,
   content: string,
 ): string {
-  const dir = resolveStoriesDir(config);
-  mkdirSync(dir, { recursive: true });
-
-  const filepath = join(dir, filename);
-  const markdown = serializeFrontmatter(frontmatter, content);
-  writeFileSync(filepath, markdown, "utf-8");
-
-  return filepath;
+  return writeNote(resolveStoriesDir(config), filename, frontmatter, content);
 }
 
 /** Append an entry to the Practice Log */

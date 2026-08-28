@@ -8,7 +8,7 @@
  *   capture_moment         — Capture a daily moment
  *   get_moments            — Read moments from the vault
  *   get_patterns           — Get the Pattern Map
- *   add_research           — Save research to the vault
+ *   ingest_source          — Save a raw source into the immutable source layer
  *   social_coach           — Recommend what to post and where
  *   record_signal          — Record user feedback signals
  *   remember               — Save a user preference
@@ -33,16 +33,17 @@ import { join } from "node:path";
 import { loadConfig } from "../config.js";
 import { captureMoment } from "../pipeline/capture.js";
 import { readMoments, readCanvas, readStories } from "../vault/reader.js";
-import { writeResearchNote, writeStory, appendPracticeLog } from "../vault/writer.js";
+import { writeClipping, writeStory, appendPracticeLog } from "../vault/writer.js";
 import { parseFrontmatter } from "../vault/frontmatter.js";
-import { resolveVoicePath, resolveStoriesDir, resolvePracticeLogPath, resolveMomentsDir } from "../vault/paths.js";
+import { resolveVoicePath, resolveStoriesDir, resolvePracticeLogPath, resolveMomentsDir, resolveClippingsDir } from "../vault/paths.js";
 import { emitSignal, signalId, summarizeSignals } from "../vault/signals.js";
 import { appendSessionEntry, formatSessionTime, readRecentSessions, readPreferences, addPreference } from "../vault/memory.js";
-import { openDay, closeDay, setPriorities, runWeekReview, renderDay, renderWeek } from "../journal/index.js";
+import { openDay, previewDay, closeDay, setPriorities, touchTarget, runWeekReview, renderDay, renderWeek } from "../journal/index.js";
 import { JOURNAL_PROMPT, WEEK_PROMPT, COACH_PROMPT } from "./prompts.js";
-import { todayKey, formatTask } from "../vault/daily-notes.js";
+import { todayKey, daysBetween, formatTask } from "../vault/daily-notes.js";
+import { slugify } from "../vault/slug.js";
 import type { LumisConfig } from "../types/config.js";
-import type { ResearchFrontmatter, ResearchCategory } from "../types/research.js";
+import type { ClippingFrontmatter } from "../types/source.js";
 import type { CanvasFile, CanvasNode, CanvasEdge } from "../types/canvas.js";
 import type { Signal, StoryDevelopedSignal, StoryPracticeSignal } from "../types/signal.js";
 import type { StoryFrontmatter } from "../types/story.js";
@@ -84,8 +85,9 @@ function daysSinceLastPractice(): number | null {
   if (dateMatches.length === 0) return null;
 
   const lastDate = dateMatches.map((m) => m[1]).sort().pop()!;
-  const diff = Date.now() - new Date(lastDate).getTime();
-  return Math.floor(diff / (1000 * 60 * 60 * 24));
+  // daysBetween splits the keys itself — new Date("YYYY-MM-DD") parses as UTC
+  // midnight and lands a day off west of UTC.
+  return daysBetween(lastDate, todayKey());
 }
 
 // ---------------------------------------------------------------------------
@@ -270,80 +272,69 @@ server.registerTool("get_patterns", {
 });
 
 // ---------------------------------------------------------------------------
-// Tool 4: add_research
+// Tool 4: ingest_source
 // ---------------------------------------------------------------------------
 
-server.registerTool("add_research", {
+server.registerTool("ingest_source", {
   description:
-    "Save research from a URL or text. Categorizes it, writes a full note to the vault, and returns metadata.",
+    "Save a raw source (article, paper, transcript) into the immutable source layer. "
+    + "Returns the path so the caller can distill it into wiki pages. Writing the "
+    + "clipping is all this does — it never touches the wiki.",
   inputSchema: {
-    url: z.string().optional().describe("Source URL of the research"),
-    title: z.string().describe("Title of the research note"),
-    content: z.string().describe("The research content (markdown)"),
-    resourceType: z.string().optional().describe("Type of resource: article, paper, guide, video, book, tool, course, podcast, documentation"),
+    url: z.string().optional().describe("Canonical URL of the source"),
+    title: z.string().describe("Title of the source"),
+    content: z.string().describe("The full source content (markdown)"),
+    author: z.string().optional().describe("Author name(s)"),
+    published: z.string().optional().describe("Publish date, YYYY-MM-DD"),
+    resourceType: z.string().optional().describe("article, paper, guide, video, book, tool, course, podcast, documentation, meeting"),
+    tags: z.array(z.string()).optional().describe("Topic tags in kebab-case"),
   },
-}, async ({ url, title, content, resourceType }) => {
+}, async ({ url, title, content, author, published, resourceType, tags }) => {
   try {
-    // Auto-categorize based on content keywords
-    const lowerContent = (title + " " + content).toLowerCase();
-    let matchedCategory: ResearchCategory | undefined;
-    let bestScore = 0;
-
-    for (const category of config.researchCategories) {
-      const score = category.keywords.reduce((count, keyword) => {
-        return count + (lowerContent.includes(keyword) ? 1 : 0);
-      }, 0);
-      if (score > bestScore) {
-        bestScore = score;
-        matchedCategory = category;
-      }
-    }
-
-    // Extract tags from content (simple keyword extraction)
-    const tags: string[] = ["research"];
-    if (resourceType) {
-      tags.push(resourceType);
-    }
-    if (matchedCategory) {
-      tags.push(matchedCategory.name.toLowerCase().replace(/ & /g, "-").replace(/ /g, "-"));
-    }
-
-    // Build frontmatter
-    const today = new Date().toISOString().split("T")[0];
-    const frontmatter: ResearchFrontmatter = {
+    const frontmatter: ClippingFrontmatter = {
       title,
       source: url ?? "",
-      author: "",
-      published: "",
-      created: today,
-      tags,
+      author: author ?? "",
+      published: published ?? "",
+      created: todayKey(),
+      tags: [
+        ...(resourceType ? [`resource/${resourceType}`] : []),
+        ...(tags ?? []),
+      ],
     };
 
-    // Build filename
-    const safeTitle = title
-      .replace(/[^\w\s-]/g, "")
-      .replace(/\s+/g, " ")
-      .trim()
-      .slice(0, 80);
-    const filename = `${safeTitle}.md`;
+    // Kebab-case, so a clipping and the wiki page distilled from it share a name.
+    const filename = `${slugify(title)}.md`;
 
-    // Write the note
-    const filepath = writeResearchNote(config, filename, frontmatter, content, matchedCategory);
+    // The source layer is immutable — a slug collision must never silently
+    // replace raw material that wiki pages already cite.
+    const existing = join(resolveClippingsDir(config), filename);
+    if (existsSync(existing)) {
+      return {
+        content: [{
+          type: "text" as const,
+          text: `A clipping already exists at ${existing}. The source layer is immutable — `
+            + `if this is the same source, cite the existing file instead of re-ingesting; `
+            + `if it is a different source that happens to share the title, re-run with a `
+            + `more specific title so the slug differs.`,
+        }],
+        isError: true,
+      };
+    }
 
-    // Log to session memory
-    const now = new Date();
-    const timeStr = formatSessionTime(now);
+    const filepath = writeClipping(config, filename, frontmatter, content);
+
     appendSessionEntry(config, {
-      time: timeStr,
-      action: "research_added",
-      detail: `Saved "${title}" to ${matchedCategory?.name ?? "Uncategorized"}, tags: ${tags.join(", ")}`,
+      time: formatSessionTime(new Date()),
+      action: "source_ingested",
+      detail: `Saved "${title}" to the source layer, tags: ${frontmatter.tags.join(", ") || "none"}`,
     });
 
     const result = {
       filepath,
       filename,
-      category: matchedCategory?.name ?? "Uncategorized",
-      tags,
+      tags: frontmatter.tags,
+      next: "Distill into Wiki/Summaries, update entity and concept pages, then index.md and log.md",
     };
 
     return {
@@ -352,13 +343,12 @@ server.registerTool("add_research", {
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
     return {
-      content: [{ type: "text" as const, text: `Error saving research: ${message}` }],
+      content: [{ type: "text" as const, text: `Error saving source: ${message}` }],
       isError: true,
     };
   }
 });
 
-// ---------------------------------------------------------------------------
 // Tool 5: social_coach
 // ---------------------------------------------------------------------------
 
@@ -915,7 +905,7 @@ server.registerTool("story_craft_develop", {
 
     // If save is true, write the story file
     if (args.save) {
-      const today = new Date().toISOString().split("T")[0];
+      const today = todayKey();
       const storyTitle = args.title ?? momentTitle;
       const safeTitle = storyTitle
         .replace(/[^\w\s-]/g, "")
@@ -1053,22 +1043,36 @@ server.registerTool("story_craft_develop", {
 
 server.registerTool("journal_today", {
   description:
-    "Open or close today's journal. Action 'open' creates today's daily note, carries unfinished tasks forward with age markers, and returns the receipt: days since the last entry, streak, carried tasks, and goal targets that have gone quiet. Action 'priorities' writes the day's top tasks. Action 'close' checks off completed tasks and stamps any goal targets they served. Use when the user wants to journal, start their day, set priorities, or close out the day.",
+    "Open or close today's journal. Action 'open' returns the receipt WITHOUT creating a note — an empty scaffold is not a journal entry. It carries unfinished tasks forward and reports: days since the last entry, streak, carried tasks, and goal targets that have gone quiet. Action 'priorities' writes the day's top tasks. Action 'close' checks off completed tasks and stamps any goal targets they served. Use when the user wants to journal, start their day, set priorities, or close out the day.",
   inputSchema: {
     action: z
-      .enum(["open", "priorities", "close"])
-      .describe("open = morning pass, priorities = write today's tasks, close = evening pass"),
+      .enum(["open", "priorities", "close", "touch"])
+      .describe("open = receipt (creates nothing), priorities = write today's tasks, close = evening pass, touch = stamp one target directly"),
+    target: z
+      .string()
+      .optional()
+      .describe("For 'touch': target name or #goal/* tag. For work with no checkbox — journaling itself is the canonical case."),
     tasks: z
       .array(z.string())
       .optional()
       .describe("For 'priorities', the tasks to write. For 'close', the task texts that got done."),
     date: z.string().optional().describe("YYYY-MM-DD. Defaults to today."),
   },
-}, async ({ action, tasks, date }) => {
+}, async ({ action, tasks, target, date }) => {
   try {
     const day = date ?? todayKey();
 
+    if (action === "touch") {
+      if (!target) throw new Error("'touch' needs a target name or #goal/* tag");
+      const result = touchTarget(config, target, day);
+      return {
+        content: [{ type: "text" as const, text: JSON.stringify({ date: day, ...result }, null, 2) }],
+      };
+    }
+
     if (action === "priorities") {
+      // Priorities are content, so this is where the note earns its file.
+      openDay(config, day);
       const note = setPriorities(config, day, tasks ?? []);
       return {
         content: [{
@@ -1099,7 +1103,9 @@ server.registerTool("journal_today", {
       };
     }
 
-    const result = openDay(config, day);
+    // Preview only — the CLI stopped writing empty scaffolds on open, and the MCP
+    // path must agree or the two report contradictory streaks.
+    const result = previewDay(config, day);
     return {
       content: [{
         type: "text" as const,
@@ -1107,8 +1113,8 @@ server.registerTool("journal_today", {
           // Show this block to the user verbatim before saying anything else
           display: renderDay(result),
           date: day,
-          created: result.created,
-          path: result.note.path,
+          exists: result.exists,
+          path: result.note?.path ?? null,
           receipt: result.receipt,
           daysSinceLastEntry: result.stats.daysSinceLastEntry,
           currentStreak: result.stats.currentStreak,

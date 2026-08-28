@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { resolve } from "node:path";
-import { DEFAULT_PATHS, DEFAULT_RESEARCH_CATEGORIES } from "./types/config.js";
+import { DEFAULT_PATHS } from "./types/config.js";
 
 // Mock dotenv before importing config
 vi.mock("dotenv", () => ({
@@ -34,7 +34,6 @@ describe("loadConfig", () => {
     expect(config.vaultPath).toBe(resolve(""));
     expect(config.anthropicApiKey).toBe("");
     expect(config.paths).toEqual(DEFAULT_PATHS);
-    expect(config.researchCategories).toEqual(DEFAULT_RESEARCH_CATEGORIES);
   });
 
   it("uses explicit overrides", () => {
@@ -121,12 +120,12 @@ describe("loadConfig", () => {
     const config = loadConfig({
       paths: {
         ...DEFAULT_PATHS,
-        research: "My Research",
+        sources: "My Sources",
         signals: "My Signals",
       },
     });
 
-    expect(config.paths.research).toBe("My Research");
+    expect(config.paths.sources).toBe("My Sources");
     expect(config.paths.signals).toBe("My Signals");
     expect(config.paths.moments).toBe(DEFAULT_PATHS.moments);
     expect(config.paths.voice).toBe(DEFAULT_PATHS.voice);
