@@ -1,5 +1,5 @@
 import { loadConfig } from "../../config.js";
-import { openDay, previewDay, closeDay, setPriorities, touchTarget } from "../../journal/index.js";
+import { openDay, previewDay, closeDay, setPriorities, touchTarget, unanalyzedEntries } from "../../journal/index.js";
 import { todayKey, formatTask } from "../../vault/daily-notes.js";
 
 function printReceipt(receipt: string): void {
@@ -75,6 +75,15 @@ export async function todayCommand(args: string[]): Promise<void> {
 
   console.log(result.exists ? result.note!.path : `No entry yet for ${date}.`);
   printReceipt(result.receipt);
+
+  // Entries written elsewhere — typically typed on the phone — that still need
+  // the five-second moment and the pattern pass.
+  const pending = unanalyzedEntries(config);
+  if (pending.length > 0) {
+    const label = pending.length === 1 ? "entry" : "entries";
+    console.log(`${pending.length} ${label} awaiting analysis: ${pending.join(", ")}`);
+    console.log("  Run /journal to analyze.");
+  }
 
   const { drift } = result;
   const notes: string[] = [];

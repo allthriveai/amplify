@@ -215,6 +215,15 @@ export function readDailyNoteTemplate(config: LumisConfig): string | null {
 }
 
 /** Fallback template, used when the vault has no Daily Note template */
+/**
+ * Used when the vault has no Templates/Daily Note.md.
+ *
+ * Deliberately bare. A template full of headings to fill in reads as a form, and
+ * a form invites compliance rather than writing — the two notes that predate this
+ * were created from a scaffolded template and contain zero words. The receipt,
+ * the five-second moment, and the patterns are all appended by the journal flow,
+ * so none of them belong here.
+ */
 export const FALLBACK_TEMPLATE = `---
 date: {{date}}
 tags: [daily]
@@ -222,32 +231,64 @@ tags: [daily]
 
 # {{date:dddd, MMMM D, YYYY}}
 
-## Morning
-### How am I feeling?
-
-
-### Top 3 Priorities
-1.
-2.
-3.
-
----
-
-## Notes & Capture
-
-
----
-
-## Evening Reflection
-### Homework for Life
-> If I had to tell a five-minute story about today, what would it be?
-
-### What went well today?
-
-
-### What could be better?
-
-
-### Tomorrow I want to...
+## Entry
 
 `;
+
+/** The heading the day's own words live under */
+export const ENTRY_HEADING = "## Entry";
+/** Written by the journal flow once an entry has been analyzed */
+export const MOMENT_HEADING = "## The Five-Second Moment";
+
+/** True when the note has an Entry section with actual words in it */
+export function hasEntry(content: string): boolean {
+  const start = content.indexOf(ENTRY_HEADING);
+  if (start === -1) return false;
+  const rest = content.slice(start + ENTRY_HEADING.length);
+  const body = rest.split(/^## /m)[0];
+  return body.trim().length > 0;
+}
+
+/** True when the five-second moment has already been written for this note */
+export function hasMoment(content: string): boolean {
+  return content.includes(MOMENT_HEADING);
+}
+
+/**
+ * Append text to the note's Entry section, creating the note if absent.
+ *
+ * writeDailyNote is a blind overwrite, which was safe while the desktop was the
+ * only writer. With a phone in the loop two devices can touch the same day, so
+ * anything that adds to an existing note has to merge rather than replace —
+ * everything already below Entry (moment, patterns) must survive.
+ */
+export function appendToEntry(config: LumisConfig, date: string, text: string): string {
+  const existing = readDailyNote(config, date);
+
+  if (!existing) {
+    const template = readDailyNoteTemplate(config) ?? FALLBACK_TEMPLATE;
+    const seeded = renderTemplate(template, date);
+    const withEntry = seeded.includes(ENTRY_HEADING)
+      ? seeded
+      : `${seeded.trimEnd()}\n\n${ENTRY_HEADING}\n`;
+    return writeDailyNote(config, date, insertIntoEntry(withEntry, text));
+  }
+
+  return writeDailyNote(config, date, insertIntoEntry(existing.content, text));
+}
+
+/** Place text at the end of the Entry section, leaving later sections untouched */
+function insertIntoEntry(content: string, text: string): string {
+  const start = content.indexOf(ENTRY_HEADING);
+  if (start === -1) return `${content.trimEnd()}\n\n${ENTRY_HEADING}\n${text}\n`;
+
+  const after = start + ENTRY_HEADING.length;
+  const rest = content.slice(after);
+  const nextHeading = rest.search(/^## /m);
+
+  const body = (nextHeading === -1 ? rest : rest.slice(0, nextHeading)).trimEnd();
+  const tail = nextHeading === -1 ? "" : rest.slice(nextHeading);
+  const joined = body ? `${body}\n\n${text}` : `\n${text}`;
+
+  return `${content.slice(0, after)}${joined}\n\n${tail}`.trimEnd() + "\n";
+}

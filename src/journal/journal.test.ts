@@ -1,9 +1,9 @@
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import { rmSync, mkdirSync, writeFileSync } from "node:fs";
 import { dirname } from "node:path";
-import { openDay, previewDay, closeDay, setPriorities, insertReceipt, checkboxPriorities } from "./index.js";
+import { openDay, previewDay, closeDay, setPriorities, insertReceipt, checkboxPriorities, unanalyzedEntries } from "./index.js";
 import { buildReceipt, describeGap } from "./receipt.js";
-import { writeDailyNote, readDailyNote, parseTasks, listDailyNoteDates } from "../vault/daily-notes.js";
+import { writeDailyNote, readDailyNote, parseTasks, listDailyNoteDates, appendToEntry, hasEntry, hasMoment } from "../vault/daily-notes.js";
 import { readActiveTargets } from "../vault/targets.js";
 import { readSignals } from "../vault/signals.js";
 import { resolveGoalsPath } from "../vault/paths.js";
@@ -323,5 +323,63 @@ describe("previewDay", () => {
     const preview = previewDay(config, "2026-08-27");
     expect(preview.carried.map((t) => t.text)).toContain("unfinished thing");
     expect(preview.receipt).toContain("Where you are");
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Capture from elsewhere — a phone writes the entry, the desk analyzes it later
+// ---------------------------------------------------------------------------
+describe("unanalyzedEntries", () => {
+  const withEntry = (text: string) => `---\ndate: 2026-08-29\ntags: [daily]\n---\n\n# Sat\n\n## Entry\n${text}\n`;
+
+  it("lists a day with an entry and no five-second moment", () => {
+    writeDailyNote(config, "2026-08-29", withEntry("typed this on the train"));
+    expect(unanalyzedEntries(config)).toEqual(["2026-08-29"]);
+  });
+
+  it("does not list a day that has already been analyzed", () => {
+    writeDailyNote(config, "2026-08-29", withEntry("words") + "\n## The Five-Second Moment\nthe bit that shifted\n");
+    expect(unanalyzedEntries(config)).toEqual([]);
+  });
+
+  it("does not list an empty scaffold", () => {
+    writeDailyNote(config, "2026-08-29", withEntry(""));
+    expect(unanalyzedEntries(config)).toEqual([]);
+  });
+
+  it("returns oldest first so a backlog is worked in order", () => {
+    writeDailyNote(config, "2026-08-30", withEntry("later"));
+    writeDailyNote(config, "2026-08-29", withEntry("earlier"));
+    expect(unanalyzedEntries(config)).toEqual(["2026-08-29", "2026-08-30"]);
+  });
+});
+
+describe("appendToEntry", () => {
+  it("creates the note from the template when the day is untouched", () => {
+    appendToEntry(config, "2026-08-29", "first words of the day");
+    const note = readDailyNote(config, "2026-08-29");
+    expect(note?.content).toContain("## Entry");
+    expect(note?.content).toContain("first words of the day");
+  });
+
+  it("appends without clobbering sections written below the entry", () => {
+    writeDailyNote(config, "2026-08-29",
+      "---\ndate: 2026-08-29\n---\n\n# Sat\n\n## Entry\nmorning thought\n\n## The Five-Second Moment\nalready analyzed\n");
+
+    appendToEntry(config, "2026-08-29", "evening thought");
+    const content = readDailyNote(config, "2026-08-29")!.content;
+
+    expect(content).toContain("morning thought");
+    expect(content).toContain("evening thought");
+    expect(content).toContain("already analyzed");
+    // the new text belongs to Entry, not to the section after it
+    expect(content.indexOf("evening thought")).toBeLessThan(content.indexOf("## The Five-Second Moment"));
+  });
+
+  it("round-trips through hasEntry and hasMoment", () => {
+    appendToEntry(config, "2026-08-29", "something happened");
+    const content = readDailyNote(config, "2026-08-29")!.content;
+    expect(hasEntry(content)).toBe(true);
+    expect(hasMoment(content)).toBe(false);
   });
 });

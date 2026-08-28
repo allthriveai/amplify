@@ -1,5 +1,6 @@
 export { readMoments, readMoment, readMeetings, readMeeting, readClippings, readStories, readStory } from "./reader.js";
 export { writeMoment, writeMeeting, writeCanvas, writeClipping, writeWikiPage, writeStory, appendPracticeLog } from "./writer.js";
+export { appendToEntry, hasEntry, hasMoment, ENTRY_HEADING, MOMENT_HEADING } from "./daily-notes.js";
 export { parseFrontmatter, serializeFrontmatter } from "./frontmatter.js";
 export {
   resolvePath,

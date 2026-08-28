@@ -10,6 +10,8 @@ import {
   parseTasks,
   readDailyNote,
   readDailyNoteTemplate,
+  hasEntry,
+  hasMoment,
   readJournalStats,
   listDailyNoteDates,
   computeStreak,
@@ -47,8 +49,16 @@ export function insertReceipt(content: string, receipt: string): string {
  */
 export function checkboxPriorities(content: string, texts: string[] = []): string {
   const lines = content.split("\n");
-  const start = lines.findIndex((l) => l.trim() === PRIORITIES_HEADING);
-  if (start === -1) return content;
+  let start = lines.findIndex((l) => l.trim() === PRIORITIES_HEADING);
+
+  // The daily template is deliberately bare — just a date and a place to write.
+  // Priorities are a thing you opt into, so the section gets created the first
+  // time someone actually sets one rather than sitting empty in every note.
+  if (start === -1) {
+    if (texts.length === 0) return content;
+    lines.push("", PRIORITIES_HEADING);
+    start = lines.length - 1;
+  }
 
   let end = start + 1;
   while (end < lines.length && !/^(#{2,3}\s|---)/.test(lines[end])) end++;
@@ -109,6 +119,24 @@ export function previewDay(config: LumisConfig, date: string = todayKey()): DayP
     receipt: buildReceipt({ stats, carried, targets }),
     drift: detectDrift(config, date),
   };
+}
+
+/**
+ * Days with an entry written but never analyzed, oldest first.
+ *
+ * An entry typed on the phone is a plain file write — no five-second moment, no
+ * patterns, because those need a model and the phone cannot reach one. So the
+ * desk has to notice them later. The whole state machine is "has an Entry, has
+ * no Five-Second Moment"; no cursor and no state file, the same way /meeting
+ * finds unprocessed notes by reading them.
+ */
+export function unanalyzedEntries(config: LumisConfig): string[] {
+  return listDailyNoteDates(config)
+    .filter((date) => {
+      const note = readDailyNote(config, date);
+      return note !== null && hasEntry(note.content) && !hasMoment(note.content);
+    })
+    .sort();
 }
 
 export function openDay(config: LumisConfig, date: string = todayKey()): OpenDayResult {

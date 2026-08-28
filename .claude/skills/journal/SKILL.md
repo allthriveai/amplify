@@ -26,6 +26,9 @@ That prints the receipt and **creates nothing**. An empty scaffold is not an
 entry, and one written every morning makes the streak count days nobody wrote on.
 The note gets written in Step 3, once there is something to put in it.
 
+It also reports entries captured elsewhere that have not been analyzed yet — see
+Step 1.5.
+
 ## Step 1: Show the receipt
 
 Run `lumis today` and show what it says, verbatim. Do not soften the numbers, do
@@ -38,6 +41,26 @@ Then say what is actually there in a line or two:
 
 If a task has moved more than five days, name it and ask one question: is this
 still real, or is it done pretending?
+
+## Step 1.5: Check for entries written elsewhere
+
+`lumis today` reports any days that have an entry but were never analyzed —
+typically typed into Obsidian on a phone, where there is no model to find the
+five-second moment.
+
+```
+2 entries awaiting analysis: 2026-08-29, 2026-08-30
+```
+
+If there are any, handle them **before** asking anything. Read each note, take the
+`## Entry` text exactly as written, and run Steps 4 and 5 against it. Work oldest
+first so the pattern pass sees the days in the order they happened.
+
+**Never ask what happened on a day that already has an entry.** They already
+answered; asking again says nobody read it. Read the note instead.
+
+If today is among them, that is the whole session — analyze it, stamp the target,
+report, and stop. Do not then ask what happened today.
 
 ## Step 2: Ask for the entry
 
@@ -175,6 +198,11 @@ means, and do not end on encouragement.
 If the note already exists and they are closing out the day, append to the
 existing `## Entry` rather than replacing it, then redo Steps 4 and 5 across the
 whole day's text.
+
+Appending is a merge, not a rewrite: everything already below the entry — the
+moment, the patterns — has to survive. `appendToEntry()` in
+`src/vault/daily-notes.ts` does this correctly. Do not read the note, concatenate,
+and write it back by hand; a phone and a desk can both touch the same day now.
 
 ## What this skill never does
 
