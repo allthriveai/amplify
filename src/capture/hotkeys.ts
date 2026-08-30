@@ -80,9 +80,9 @@ export function installHotkeys(
   const hotkeyEntries: Record<string, string> = {
     "OBSBasic.StartRecording": formatBinding(bindings.startRecording),
     "OBSBasic.StopRecording": formatBinding(bindings.stopRecording),
-    'OBSBasic.SelectScene.Lumis\\: Screen + Camera': formatBinding(bindings.sceneScreenCamera),
-    'OBSBasic.SelectScene.Lumis\\: Screen Only': formatBinding(bindings.sceneScreenOnly),
-    'OBSBasic.SelectScene.Lumis\\: Camera Only': formatBinding(bindings.sceneCameraOnly),
+    'OBSBasic.SelectScene.Amplify\\: Screen + Camera': formatBinding(bindings.sceneScreenCamera),
+    'OBSBasic.SelectScene.Amplify\\: Screen Only': formatBinding(bindings.sceneScreenOnly),
+    'OBSBasic.SelectScene.Amplify\\: Camera Only': formatBinding(bindings.sceneCameraOnly),
   };
 
   // Check if [Hotkeys] section exists
@@ -102,7 +102,7 @@ export function installHotkeys(
       ? hotkeysIdx + "[Hotkeys]".length + (nextSectionMatch.index ?? afterHotkeys.length)
       : content.length;
 
-    // Remove existing Lumis hotkey lines to avoid duplicates
+    // Remove existing Amplify hotkey lines to avoid duplicates
     const before = content.slice(0, insertPos);
     const after = content.slice(insertPos);
     const cleanedBefore = before

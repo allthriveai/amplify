@@ -1,100 +1,54 @@
-# Lumis
+# Amplify
 
-<img src="lumis.jpg" alt="Lumis" width="200" align="left">
+### Turn your second brain into published content.
 
-### Your AI life coach. Lumis makes you show up every day, holds you to the goals you set, and uses your own life as the evidence.
+You already read things. You already take notes. Amplify is the machine that turns that
+pile into a wiki, turns the wiki into stories, and turns the stories into a finished
+video, carousel, or article with your own voice and your own face on it.
 
-Most journaling tools are write-only. You pour things in and nothing ever comes back. Lumis is built the other way around: every session opens with what you said you'd do, how long it's been sitting, and which of your goals have gone quiet.
+**Amplify stores nothing.** It is a CLI and an MCP server that connects to your Obsidian
+vault. Every source, page, story, and script lives in your vault, in plain markdown, on
+your disk. Delete this repo tomorrow and you still have everything.
 
-<br clear="left"/>
-
-## The loop
-
-Three commands, three rhythms. Everything else feeds them.
-
-| | | |
-|---|---|---|
-| **Daily** | `/journal` | Receipt, your unfiltered entry, the five-second moment, patterns across every past entry |
-| **Weekly** | `/week` | The reckoning: what moved, what didn't, three commitments |
-| **Ongoing** | `/goals` | The targets both of the above hold you to |
-
-## What a morning looks like
+## The flywheel
 
 ```
-$ lumis today
-
-Where you are
-Last entry: 4 days ago · streak 0 · longest 3 · 12 total
-
-**Carried over**
-- [ ] Draft the launch post (moved 6 days)
-- [ ] Reply to Sam (moved 2 days)
-
-**Targets going quiet**
-- Publish a post — 118 days (weekly)
-- Work out — 1 of 3 this week
-
-Drift
-  1 task carried a week or more: "Draft the launch post" (6d)
-  9 of the last 30 days had no entry
+  you read something
+         │
+         ▼
+   ┌───────────┐     ┌───────────┐     ┌───────────┐     ┌───────────┐
+   │  Sources  │ ──▶ │   Wiki    │ ──▶ │   Story   │ ──▶ │  Formats  │
+   │ immutable │     │ agent-run │     │ the asset │     │  the ask  │
+   └───────────┘     └───────────┘     └───────────┘     └───────────┘
+     /ingest           /wiki             /craft-content    /draft-video
+     /meeting          /lint                               /draft-carousel
+                                                           /draft-article
+                                                           /draft-diagram
+                                                                 │
+                                                                 ▼
+                                                        ┌────────────────┐
+                                                        │  ElevenLabs    │  voice
+                                                        │  HeyGen        │  digital twin
+                                                        │  Google Imagen │  images
+                                                        │  Remotion      │  render
+                                                        └────────────────┘
+                                                          amplify studio render
+                                                                 │
+                                                                 ▼
+                                                            published
+                                                                 │
+                              engagement signals ◀───────────────┘
+                              feed the next suggestion
 ```
 
-No encouragement, no streak-recovery narrative, no reframing four missed days as a fresh start. The numbers do the work.
+The loop closes. What you publish emits a signal, signals shape what `suggest_content`
+recommends next, and the wiki gets thicker every time you ingest. That is the flywheel:
+each turn is cheaper than the last because the synthesis is already done.
 
-## Why this works when reminders don't
+## The second brain
 
-**Tasks age, and the number is public.** An unfinished task comes back tomorrow as `(moved 6 days)`, aged by the real gap — skip three days and it jumps three. A task that has moved ten days isn't a task anymore, it's a decision you haven't made. Lumis will offer to kill it, and killing it is a legitimate answer.
-
-**Goals are checked, not just stored.** `Goals.md` holds your prose. An `## Active Targets` section holds the machine-readable half:
-
-```markdown
-## Active Targets
-- [ ] Publish a post `cadence:weekly` `last:2026-04-21` #goal/writing
-- [ ] Work out `cadence:3x-weekly` #goal/workout
-- [ ] Ship the redesign #goal/product
-```
-
-Recurring targets get a cadence and surface the moment they go quiet. Milestones omit cadence so they never nag. Finish a daily task tagged `#goal/writing` and the matching target gets stamped automatically — targets stay current because real work moved them, not because you remembered to update a tracker.
-
-`3x-weekly` means three times a week rather than once. Those are scored on completions inside the period, so the receipt says "1 of 3 this week" instead of a days-since figure — the right question for something you never intended to do daily. Missing one doesn't count as drift; missing all three does.
-
-**Drift is visible across weeks, not inside them.** Any single day looks fine. Lumis counts what only shows up in aggregate: tasks carried past a week, targets abandoned rather than merely slipping, themes you keep circling in your moments, days that went silent. `/week` puts them in front of you and asks what you're going to do.
-
-**It never writes your reflection for you.** Lumis transcribes your words and fixes grammar. It doesn't improve your thinking or tell you how to feel about a bad week.
-
-## Feeding the loop
-
-The coach is only as good as the evidence. These put real material in the vault:
-
-- **`/moment`** — Captures a moment from your day and finds the "5-second moment," the instant something shifted. Connects it to past moments and rebuilds the Pattern Map. Over months this becomes the record of what actually happened to you, which is what `/week` reads when it asks why the same theme keeps coming up.
-- **`/challenge`** — Pressure-tests an idea with critical thinking prompts and honest feedback. When a task has been carried for three weeks, the block is usually a belief, not a schedule problem.
-- **`/ingest`** — Saves a source immutably, distills a wiki page from it, and updates every entity and concept it touches.
-- **`/wiki`** — Answers a question from the wiki, with citations back to the pages.
-- **`/lint`** — Health-checks the wiki: orphans, broken links, contradictions, stale claims, index drift.
-- **`/add-inspiration`** — Researches someone you admire and links them back into your vault.
-- **`/meeting`** — Turns a transcript or pasted notes into decisions, action items, and attendees.
-- **`/voice`** and **`/brand`** — Who you are and how you look. Read by everything that writes.
-
-## The visibility arm
-
-For a lot of people, one of the goals is *be seen doing the work*. That's a target like any other, and it's the one that's hardest to fake — you either published or you didn't.
-
-So Lumis also owns the pipeline that turns your captured life into things you can publish:
-
-- **`/craft-content`** — Free write, find the story, shape the narrative. The story is the asset.
-- **`/draft-video`** · **`/draft-carousel`** · **`/draft-article`** · **`/draft-images`** · **`/draft-diagram`** — Remix one story into platform-ready formats.
-- **`/linkedin-post`** · **`/youtube-description`** · **`/youtube-short`** — Platform-native writing with hook rules baked in.
-- **`/humanizer`** — Strips AI vocabulary, filler, em dash overuse, and structural tells from any prose.
-- **`lumis studio render`** — HeyGen avatar clips, ElevenLabs voiceover, Remotion assembly, branded `.mp4`.
-
-> **Heads up:** this half is being split into its own repo. Lumis is becoming the coach; the content flywheel becomes a separate tool that reads the same vault. Nothing is going away — the seam is the vault, not the code. The tag `v0.1.0-pre-split` marks the last version with both halves together.
-
-## The vault has three layers
-
-The coach needs evidence, and evidence accumulates. Lumis borrows [Andrej Karpathy's LLM Wiki
-pattern](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f) for the half of the
-vault that holds what you know, so the folder tree answers one question: **may the agent rewrite
-this?**
+Amplify runs [Andrej Karpathy's LLM Wiki pattern](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f).
+Three layers, and the folder tree answers exactly one question: **may the agent rewrite this?**
 
 | Layer | Folder | Ownership |
 |---|---|---|
@@ -102,200 +56,126 @@ this?**
 | The wiki | `Wiki/` | Agent-owned. Created, rewritten, kept current. |
 | The schema | `CLAUDE.md` | The contract both layers follow. |
 
-`/ingest` saves a source to `Sources/` untouched, distills a page into `Wiki/Summaries/`, then
-updates every concept and entity page it touches plus `index.md` and `log.md`. One source
-touching 10-15 pages is normal — that bookkeeping is the part people abandon and the part an
-agent does without getting bored. `/wiki` answers questions from it with citations; `/lint`
-catches orphans, broken links, and contradictions.
+`/ingest` saves a source to `Sources/` untouched, distills a page into `Wiki/Summaries/`,
+then updates every concept and entity page it touches plus `index.md` and `log.md`. One
+source touching 10-15 pages is normal. That bookkeeping is the part people abandon and
+the part an agent does without getting bored.
 
-**`Life/` is never ingested.** Your moments, daily notes, and reviews stay out of the wiki
-entirely, so the content pipeline can read everything it has access to without touching anything
-personal.
+This matters for content because a wiki page is already the hard part of a draft. It has
+a claim, sources behind it, and links to everything related. `suggest_content` ranks
+pages by how well-sourced and how undrafted they are, which is a better answer to "what
+should I post" than staring at a blank editor.
 
-## How it works
+## The digital twin
 
-```
-                     ┌──────────────────┐
-                     │     Goals.md     │
-                     │                  │
-                     │  the job you     │◀────── edit when a target
-                     │  want, targets   │        keeps getting missed
-                     │  with a cadence  │
-                     └────────┬─────────┘
-                              │ holds you to it
-                              ▼
-   ┌──────────────────────────────────────────────────────┐
-   │                      THE LOOP                        │
-   │                                                      │
-   │   every morning     ┌────────────────────┐           │
-   │   every evening ───▶│  /today   /journal │           │
-   │                     └─────────┬──────────┘           │
-   │                               │  receipt · carried   │
-   │                               │  quiet targets       │
-   │                               ▼                      │
-   │   every sunday   ────▶┌──────────┐                   │
-   │                       │  /week   │                   │
-   │                       └────┬─────┘                   │
-   │                            │  what moved, what didn't│
-   │                            │  three commitments      │
-   └────────────────────────────┼─────────────────────────┘
-                                │
-        ┌───────────────────────┴────────────────────────┐
-        │                Vault (Obsidian)                │
-        │                                                │
-        │  Sources/   raw, immutable — never rewritten   │
-        │  Wiki/      agent-maintained knowledge         │
-        │  Life/       your days — never ingested         │
-        │  Work/      projects, stories, strategy        │
-        └───────┬────────────────────────────────┬───────┘
-                │                                │
-      evidence in                        visibility out
-                │                                │
-   ┌────────────┴─────────────┐    ┌─────────────┴──────────────┐
-   │ /moment    /challenge    │    │ /craft-content             │
-   │ /ingest /meeting /wiki   │    │ /draft-video /draft-article│
-   │ /add-inspiration         │    │ /draft-carousel  /draft-*  │
-   └──────────────────────────┘    └─────────────┬──────────────┘
-                                                 │
-                                                 ▼
-                                      HeyGen · ElevenLabs
-                                      Remotion → branded .mp4
-```
+`amplify studio render` assembles a finished video from a timeline in your vault:
 
-This repo is the engine. Your [Obsidian](https://obsidian.md) vault is where your days, goals, moments, and stories live. They stay separate so your personal writing never ends up in a code repo.
+- **ElevenLabs** for voice. Your cloned voice reads the script.
+- **HeyGen** for the avatar. A persistent face and voice identity, built once with
+  `/heygen-avatar`, reused in every video through the v3 pipeline.
+- **Google Imagen** for generated stills, via `/draft-images`.
+- **Remotion** for assembly. React components, real compositing, branded `.mp4` out.
 
-## Setup
+`/draft-video` builds the shot-by-shot timeline and opens a storyboard for inline editing
+before a single API call is spent. Approval is a gate, not an afterthought.
+
+## Install
 
 ```bash
-git clone https://github.com/allthriveai/lumis.git
-cd lumis
+git clone https://github.com/allthriveai/amplify.git
+cd amplify
 npm install
 npm run build
-npm link          # puts the `lumis` command on your PATH
-claude
-/init
+npm link            # puts `amplify` on your PATH
 ```
 
-`/init` scaffolds your vault, writes `.lumisrc`, and interviews you to populate Voice.md. Then:
+Then point it at your vault:
 
-```
-/goals      set the targets the coach will hold you to
-/today      start the loop
+```bash
+amplify init ~/path/to/your/obsidian-vault
 ```
 
-Run `/today` tomorrow morning and it will already know how you did.
+That scaffolds the folders, copies the wiki schema into your vault's `CLAUDE.md`, and
+writes an `.amplifyrc` **inside the vault**. Config lives with your notes, not in this
+repo. Copy `.amplifyrc.example` if you would rather write it by hand.
+
+API keys go in `.env` (see `.env.example`). Everything except `/ingest`, `/wiki`, and
+`/lint` is optional — the second brain works with no keys at all.
 
 ## Commands
 
-**The loop**
-
-```
-/journal            Receipt, entry, five-second moment, patterns
-/today              Alias for /journal
-/today (evening)    Check tasks off, reflect, close the day
-/week               The weekly reckoning and next week's commitments
-/goals              Set your north star and active targets
-```
-
-Goals are tracked through tagged tasks, not by editing `Goals.md`. Write a priority as
-`- [ ] gym before work #goal/workout`, then close the day with
-`lumis today --done "gym before work"`. That checks the box and stamps the target. You never
-update the tracker by hand.
-
-**Evidence**
-
-```
-/moment             Capture a moment and find the 5-second shift
-/challenge          Pressure-test an idea with honest feedback
-/ingest             Save a source and distill it into the wiki
-/wiki               Ask the wiki a question, with citations
-/lint               Health-check the wiki
-/add-inspiration    Capture a person who inspires you
-/meeting            Turn a transcript into decisions and action items
-/voice              Fill in or redo your Voice.md
-/brand              Set up your visual brand identity
-/init               Set up vault, voice, and Amplify toolkit
+```bash
+amplify init [path]                  Connect Amplify to an Obsidian vault
+amplify studio list                  List director cuts across stories
+amplify studio render <slug>         Render a story's timeline to video
+amplify studio preview               Open the Remotion preview
+amplify storyboard <slug>            Visual storyboard editor
+amplify listen <note>                Narrate a wiki page with ElevenLabs
+amplify obs <cmd>                    Screen capture through OBS
+amplify import-sparks --from <path>  Import content from a sparks manifest
 ```
 
-**Visibility**
+## Skills
 
-```
-/craft-content      Free write, find the story, shape the narrative
-/craft-storytelling Practice or develop storytelling from moments
-/draft-video        Shot-by-shot timeline, storyboard, produce video
-/draft-carousel     LinkedIn carousel from a story
-/draft-article      Long-form article from a story
-/draft-images       AI images for any draft format
-/draft-diagram      Interactive React Flow diagram from a story
-/linkedin-post      LinkedIn post optimized for saves and dwell time
-/youtube-description  YouTube description optimized for search
-/youtube-short      Build a Short from existing video
-/youtube-upload     Upload, schedule, and publish to YouTube
-/humanizer          Strip AI-writing tells from any prose
-/listen             Convert a source note to narrated audio
+Claude Code skills in `.claude/skills/`. All of them read `.amplifyrc` and write to your
+vault.
+
+**Second brain**
+- `/ingest` — Save a URL, PDF, or article immutably, distill a wiki page, update every entity and concept it touches.
+- `/meeting` — Turn a Plaud transcript or pasted notes into decisions, action items, and attendees. Then offer to ingest it.
+- `/wiki` — Answer a question from the wiki, with `[[wikilink]]` citations.
+- `/lint` — Orphans, broken links, contradictions, stale claims, index drift.
+- `/add-inspiration` — Research someone you admire and link them into the wiki.
+
+**Story**
+- `/craft-content` — Find the story in the material and shape it into a clean narrative draft. The story is the asset; everything below remixes it.
+
+**Formats**
+- `/draft-video` — Shot-by-shot timeline plus a storyboard for approval, then HeyGen clips and Remotion assembly.
+- `/draft-carousel` — LinkedIn carousel, card by card, with image direction.
+- `/draft-article` — Long-form post from the narrative arc.
+- `/draft-diagram` — Interactive React Flow diagram, standalone HTML plus a PNG.
+- `/draft-images` — Google Imagen stills for any of the above, wired back into the source files.
+
+**Publish**
+- `/linkedin-post` · `/youtube-description` · `/youtube-short` · `/youtube-upload`
+- `/listen` — ElevenLabs narration of a wiki page.
+- `/humanizer` — Strip AI vocabulary, filler, em dash overuse, and structural tells.
+
+**Identity**
+- `/voice` — Who you are and how you sound. Read by everything that writes.
+- `/brand` — Colors, type, visual style. Read by everything that renders.
+- `/heygen-avatar` · `/heygen-video` — Build the digital twin, then use it.
+
+## MCP server
+
+```bash
+npm run serve
 ```
 
-**CLI**
+Five tools: `ingest_source`, `suggest_content`, `record_signal`, `remember`, `recall`.
+Claude Desktop config and per-tool detail are in [docs/mcp.md](docs/mcp.md).
 
-```
-lumis today                 Open today's journal
-lumis today --done "task"   Check tasks off and close the day
-lumis week [YYYY-MM-DD]     Write a weekly review
-lumis moment "..."          Capture a moment
-lumis patterns              Regenerate the Pattern Map
-lumis init [path]           Set up Lumis in a vault
-lumis studio list           List all draft cuts with status
-lumis studio render <slug>  Render a draft cut to branded video
-lumis studio preview        Open Remotion Studio
-lumis storyboard <slug>     Visual storyboard for pre-production
-lumis listen <note>         Convert a source note to audio
-lumis story-craft [develop] Practice or develop storytelling from a moment
-lumis import-sparks --from <path>  Import Amplify content from a manifest
-lumis obs <cmd>             OBS capture (setup, start, stop, scenes)
-```
+## Your data is yours
+
+This repo holds code and templates. It holds no notes, no sources, no stories, and no
+keys.
+
+- The vault path lives in `.amplifyrc`, which is written into your vault and gitignored here.
+- `npm run check:personal` scans tracked and untracked files for anything personal, and a
+  pre-commit hook in `.githooks/` blocks a commit on a hit.
+- Docs and skill examples use invented data. Never paste a real note, name, or vault path
+  into one.
 
 ## Docs
 
-- **[Vault structure](docs/vault.md)** — how the vault is organized, Voice.md, Amplify toolkit
-- **[Signals](docs/signals.md)** — event log connecting every stage
-- **[Memory](docs/memory.md)** — session history and preferences
-- **[MCP Server](docs/mcp.md)** — all tools and Claude Desktop config
-- **[Studio](docs/studio.md)** — video pipeline, image generation, API setup
-- **[OBS Capture](docs/obs.md)** — screen and camera recording
-
-## Contributing
-
-This repo is public and must stay free of personal data. Your vault holds the
-personal half; the repo holds only the tool.
-
-```bash
-npm install          # also installs the pre-commit hook
-npm run check:personal
-npm run lint && npm test
-npm run check:vault  # asserts every configured vault path exists
-npm run lint:wiki    # wiki structure: broken links, orphans, index drift
-```
-
-The pre-commit hook blocks home paths, emails, API keys, and hardcoded vault
-locations. Add real names you want caught to `.personal-patterns` (gitignored).
-Examples in docs and skills must use invented data.
-
-`check:vault` catches the other silent failure: a renamed folder leaves a resolver pointing at
-nothing, and the skill using it quietly creates an empty directory instead of erroring. Run it
-after any change to `paths` in `.lumisrc` or `DEFAULT_PATHS`.
-
-## Tech stack
-
-- **Node.js + TypeScript** with ES modules
-- **Claude API** for moment analysis and story development
-- **MCP SDK** — 12 tools, works in Claude Code and Claude Desktop
-- **gray-matter** for YAML frontmatter
-- **Remotion** for programmatic video rendering
-- **HeyGen** for AI avatar video
-- **ElevenLabs** for text-to-speech
-- **Google Imagen** for image generation
-- **React Flow** for interactive diagrams (CDN, no npm dependency)
+- [Vault](docs/vault.md) — structure, the three layers, Voice.md
+- [Signals](docs/signals.md) — the event log that closes the loop
+- [Memory](docs/memory.md) — session history and preferences
+- [MCP Server](docs/mcp.md) — tools and Claude Desktop setup
+- [Studio](docs/studio.md) — video pipeline, API setup, Remotion
+- [OBS Capture](docs/obs.md) — screen and camera recording
 
 ## License
 
-MIT. See [LICENSE](./LICENSE).
+MIT

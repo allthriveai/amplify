@@ -1,22 +1,22 @@
 # Memory
 
-Lumis maintains session history and user preferences in `Lumis/Memory/`.
+Amplify maintains session history and user preferences in `Amplify/Memory/`.
 
 ## Session Logs
 
-`Lumis/Memory/sessions/YYYY-MM-DD.md`: timestamped entries for each action taken during a session. Every pipeline stage appends an entry.
+`Amplify/Memory/sessions/YYYY-MM-DD.md`: timestamped entries for each action taken during a session. Every pipeline stage appends an entry.
 
 ```markdown
 # Session: 2026-02-28
 
-- **15:00** — moment_captured: Captured "The question I couldn't answer" (high potential, themes: parenthood, identity)
+- **15:00** — source_ingested: Ingested "Scaling Retrieval Evaluation" (touched 11 wiki pages)
 - **15:05** — research_added: Saved "Building Agents with MCP" to AI & Agents, extracted 2 learnings
 - **16:00** — coaching_done: Created 3 recommendations for linkedin, x, youtube
 ```
 
 ## Preferences
 
-`Lumis/Memory/preferences.md`: markdown file with section headings. Browsable in Obsidian. Updated via the `remember` MCP tool.
+`Amplify/Memory/preferences.md`: markdown file with section headings. Browsable in Obsidian. Updated via the `remember` MCP tool.
 
 ```markdown
 # Preferences
@@ -39,7 +39,7 @@ Lumis maintains session history and user preferences in `Lumis/Memory/`.
 
 ## Implementation
 
-Config uses a single `memory` path (default: `Lumis/Memory`). The module derives `sessions/` and `preferences.md` internally.
+Config uses a single `memory` path (default: `Amplify/Memory`). The module derives `sessions/` and `preferences.md` internally.
 
 Core module: `src/vault/memory.ts`. Types: `src/types/memory.ts`.
 

@@ -96,7 +96,7 @@ Always follow this pipeline when producing a final video:
    # Pass 2: apply (use measured values from pass 1)
    ffmpeg -y -i raw.mp4 -af loudnorm=I=-14:TP=-1:LRA=11:measured_I=X:measured_TP=Y:measured_LRA=Z:measured_thresh=W:offset=O:linear=true -c:v copy output.mp4
    ```
-3. **Save to vault**, not lumis repo. Output to `Stories/{slug}/assets/`.
+3. **Save to vault**, not amplify repo. Output to `Stories/{slug}/assets/`.
 
 ## ElevenLabs Audio Speed
 

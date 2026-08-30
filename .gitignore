@@ -1,7 +1,7 @@
 node_modules/
 dist/
 .env
-.lumisrc
+.amplifyrc
 *.tsbuildinfo
 .DS_Store
 

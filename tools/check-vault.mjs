@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Assert that every path Lumis resolves actually exists in the vault.
+ * Assert that every path Amplify resolves actually exists in the vault.
  *
  * Config drift is silent: a renamed folder or a category that was configured but
  * never created leaves the resolver pointing at nothing, and the skill that uses
@@ -18,20 +18,18 @@ const config = loadConfig();
 
 if (!config.vaultPath || !existsSync(config.vaultPath)) {
   console.error(`Vault path does not exist: ${config.vaultPath || "(unset)"}`);
-  console.error("Set vaultPath in .lumisrc or the VAULT_PATH env var.");
+  console.error("Set vaultPath in .amplifyrc or the VAULT_PATH env var.");
   process.exit(1);
 }
 
 /** Paths that name a file rather than a directory */
-const FILE_KEYS = new Set(["canvas", "voice", "goals"]);
+const FILE_KEYS = new Set(["voice"]);
 /**
- * Files created by later workflows, not by init — the canvas by the first
- * /moment, Goals.md by /goals. Missing on a fresh vault is expected, so these
- * warn instead of failing the check.
+ * Files created by later workflows, not by init — Voice.md by /voice. Missing on
+ * a fresh vault is expected, so these warn instead of failing the check.
  */
-const LATER_KEYS = new Set(["canvas", "goals"]);
-/** Not a path at all */
-const SKIP_KEYS = new Set(["dailyNoteFormat"]);
+const LATER_KEYS = new Set(["voice"]);
+const SKIP_KEYS = new Set([]);
 
 const checks = [];
 

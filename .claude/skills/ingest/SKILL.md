@@ -12,7 +12,7 @@ A single ingest touching 10-15 wiki pages is normal. That is the pattern working
 
 ## Step 0: Load configuration
 
-Read `.lumisrc` from the cwd or vault root:
+Read `.amplifyrc` from the cwd or vault root:
 
 ```
 paths.sources   → raw layer root (default: "Sources")

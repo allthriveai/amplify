@@ -2,10 +2,10 @@ import { mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { mkdtempSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { DEFAULT_PATHS, type LumisConfig } from "../types/config.js";
+import { DEFAULT_PATHS, type AmplifyConfig } from "../types/config.js";
 
-export function createTestConfig(vaultPath?: string): LumisConfig {
-  const vault = vaultPath ?? mkdtempSync(join(tmpdir(), "lumis-test-"));
+export function createTestConfig(vaultPath?: string): AmplifyConfig {
+  const vault = vaultPath ?? mkdtempSync(join(tmpdir(), "amplify-test-"));
   return {
     vaultPath: vault,
     anthropicApiKey: "test-key",

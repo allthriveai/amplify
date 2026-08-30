@@ -12,7 +12,7 @@ export async function listenCommand(args: string[]): Promise<void> {
 
   // Check for ElevenLabs API key
   if (!config.studio?.elevenlabsApiKey) {
-    console.error("Missing ElevenLabs API key. Set studio.elevenlabsApiKey in .lumisrc or ELEVENLABS_API_KEY env var.");
+    console.error("Missing ElevenLabs API key. Set studio.elevenlabsApiKey in .amplifyrc or ELEVENLABS_API_KEY env var.");
     process.exit(1);
   }
 
@@ -34,7 +34,7 @@ export async function listenCommand(args: string[]): Promise<void> {
     : config.studio.listenVoiceId ?? config.studio.elevenlabsVoiceId;
 
   if (!voiceId) {
-    console.error("No voice ID configured. Set studio.listenVoiceId in .lumisrc, use --voice <id>, or run `lumis listen --voices` to see options.");
+    console.error("No voice ID configured. Set studio.listenVoiceId in .amplifyrc, use --voice <id>, or run `amplify listen --voices` to see options.");
     process.exit(1);
   }
 
@@ -45,9 +45,9 @@ export async function listenCommand(args: string[]): Promise<void> {
   const searchTerm = searchArgs.join(" ").trim();
 
   if (!searchTerm) {
-    console.error("Usage: lumis listen <note-name-or-path>");
-    console.error("       lumis listen --voices");
-    console.error("       lumis listen --voice <id> <note-name>");
+    console.error("Usage: amplify listen <note-name-or-path>");
+    console.error("       amplify listen --voices");
+    console.error("       amplify listen --voice <id> <note-name>");
     process.exit(1);
   }
 

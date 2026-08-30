@@ -11,10 +11,10 @@ When the user runs `/draft-carousel`, optionally followed by a story slug:
 
 ### Step 0: Load Context
 
-Find the `.lumisrc` config file. Check these locations in order:
+Find the `.amplifyrc` config file. Check these locations in order:
 
-1. `.lumisrc` in the current working directory
-2. `.lumisrc` at the path specified by `VAULT_PATH` environment variable
+1. `.amplifyrc` in the current working directory
+2. `.amplifyrc` at the path specified by `VAULT_PATH` environment variable
 
 Read the config and resolve the vault path.
 
@@ -224,7 +224,7 @@ Write `{stories}/{slug}/carousel-{hook}-{slug}-{YYYY-MM-DD}.md` (e.g., `carousel
 title: "Story Title"
 type: carousel
 status: draft
-source: "[[Lumis/Stories/slug/story.md]]"
+source: "[[Amplify/Stories/slug/story.md]]"
 hook: curiosity-gap
 structure: problem-solution
 persuasion: [contrast-principle, social-proof]
@@ -303,7 +303,7 @@ After saving, emit a `carousel_created` signal to `{vaultPath}/{paths.signals}/s
   "timestamp": "[ISO timestamp]",
   "data": {
     "slug": "[story-slug]",
-    "storySource": "[[Lumis/Stories/slug/story.md]]",
+    "storySource": "[[Amplify/Stories/slug/story.md]]",
     "hook": "[hook-type]",
     "structure": "[structure-name]",
     "platform": "linkedin",
@@ -322,7 +322,7 @@ Log to session memory at `{vaultPath}/{paths.memory}/sessions/YYYY-MM-DD.md`:
 
 After saving the carousel markdown, render a PDF for LinkedIn upload.
 
-1. Read the brand config from `.lumisrc` (the `brand` object).
+1. Read the brand config from `.amplifyrc` (the `brand` object).
 2. Map brand tokens to `CarouselBrand`:
    - `brand.primary` → `primary`
    - `brand.secondary` → `secondary`

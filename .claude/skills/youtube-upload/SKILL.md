@@ -9,7 +9,7 @@ description: Upload videos to YouTube via the API. Supports single uploads, batc
 
 ### Step 0: Load Config
 
-Load `.env` for `YOUTUBE_REFRESH_TOKEN`. Credentials file is at `youtube-credentials.json` in the lumis project root.
+Load `.env` for `YOUTUBE_REFRESH_TOKEN`. Credentials file is at `youtube-credentials.json` in the amplify project root.
 
 If `YOUTUBE_REFRESH_TOKEN` is missing, run: `npx tsx scripts/youtube-auth.ts`
 

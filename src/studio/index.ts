@@ -1,7 +1,7 @@
 import { join } from "node:path";
 import { mkdir } from "node:fs/promises";
 
-import type { LumisConfig } from "../types/config.js";
+import type { AmplifyConfig } from "../types/config.js";
 import { resolveStoryDir } from "../vault/paths.js";
 import { createHeyGenClient } from "./heygen.js";
 import { renderVideo } from "./render.js";
@@ -35,14 +35,14 @@ const MAX_POLLS = 120;
  * 6. Return the final output path
  */
 export async function produceVideo(
-  config: LumisConfig,
+  config: AmplifyConfig,
   script: { filename: string; content: string; frontmatter: { title: string } },
 ): Promise<string> {
   // 1. Validate studio config
   const studio = config.studio;
   if (!studio) {
     throw new Error(
-      "Studio config missing. Add a 'studio' section to .lumisrc with heygenApiKey and heygenAvatarId.",
+      "Studio config missing. Add a 'studio' section to .amplifyrc with heygenApiKey and heygenAvatarId.",
     );
   }
   if (!studio.heygenApiKey) {

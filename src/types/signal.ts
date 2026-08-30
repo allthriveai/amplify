@@ -3,26 +3,21 @@
 // ---------------------------------------------------------------------------
 
 export type SignalType =
-  | "moment_captured"
+  | "source_ingested"
   | "recommendation_rejected"
   | "content_posted"
   | "engagement_updated"
   | "story_developed"
-  | "story_practice"
   | "timeline_created"
   | "video_rendered"
   | "carousel_created"
   | "article_created"
   | "inspiration_added"
-  | "challenge_completed"
   | "images_generated"
   | "diagram_created"
   | "diagram_video_rendered"
   | "audio_generated"
-  | "meeting_synced"
-  | "journal_entry"
-  | "target_touched"
-  | "week_reviewed";
+  | "meeting_synced";
 
 interface BaseSignal {
   id: string;
@@ -30,14 +25,16 @@ interface BaseSignal {
   timestamp: string;
 }
 
-export interface MomentCapturedSignal extends BaseSignal {
-  type: "moment_captured";
+export interface SourceIngestedSignal extends BaseSignal {
+  type: "source_ingested";
   data: {
+    /** Filename in the source layer */
     filename: string;
-    themes: string[];
-    storyPotential: string;
-    momentType: string;
-    fiveSecondMoment: string;
+    /** Title of the summary page written to the wiki */
+    title: string;
+    /** Wiki page titles this source created or updated */
+    wikiPages: string[];
+    tags: string[];
   };
 }
 
@@ -81,13 +78,6 @@ export interface StoryDevelopedSignal extends BaseSignal {
   };
 }
 
-export interface StoryPracticeSignal extends BaseSignal {
-  type: "story_practice";
-  data: {
-    momentTitle: string;
-    element: string;
-  };
-}
 
 export interface TimelineCreatedSignal extends BaseSignal {
   type: "timeline_created";
@@ -146,15 +136,6 @@ export interface InspirationAddedSignal extends BaseSignal {
   };
 }
 
-export interface ChallengeCompletedSignal extends BaseSignal {
-  type: "challenge_completed";
-  data: {
-    idea: string;
-    prompts: string[];
-    promoted: boolean;
-    path: string;
-  };
-}
 
 export interface ImagesGeneratedSignal extends BaseSignal {
   type: "images_generated";
@@ -212,76 +193,25 @@ export interface MeetingSyncedSignal extends BaseSignal {
   };
 }
 
-export interface JournalEntrySignal extends BaseSignal {
-  type: "journal_entry";
-  data: {
-    /** YYYY-MM-DD of the note */
-    date: string;
-    path: string;
-    /** "morning" creates the note, "evening" closes it out */
-    run: "morning" | "evening";
-    /** Days since the previous entry. Null on the first entry ever. */
-    gapDays: number | null;
-    tasksCarried: number;
-    tasksCompleted: number;
-    tasksOpen: number;
-    currentStreak: number;
-  };
-}
 
-export interface TargetTouchedSignal extends BaseSignal {
-  type: "target_touched";
-  data: {
-    target: string;
-    cadence: string | null;
-    /** Days since the target was last touched, before this stamp */
-    daysSince: number | null;
-    /**
-     * The journal day this touch belongs to, YYYY-MM-DD.
-     *
-     * Distinct from `timestamp`, which is when the signal was written. Closing out
-     * an earlier day stamps the target against that day, not against today, so a
-     * weekly review has to group on this field to see it.
-     */
-    date: string;
-  };
-}
 
-export interface WeekReviewedSignal extends BaseSignal {
-  type: "week_reviewed";
-  data: {
-    /** Monday that starts the reviewed week */
-    weekOf: string;
-    path: string;
-    daysJournaled: number;
-    tasksCompleted: number;
-    tasksOpen: number;
-    momentsCaptured: number;
-    targetsMoved: number;
-  };
-}
 
 export type Signal =
-  | MomentCapturedSignal
+  | SourceIngestedSignal
   | RecommendationRejectedSignal
   | ContentPostedSignal
   | EngagementUpdatedSignal
   | StoryDevelopedSignal
-  | StoryPracticeSignal
   | TimelineCreatedSignal
   | VideoRenderedSignal
   | CarouselCreatedSignal
   | ArticleCreatedSignal
   | InspirationAddedSignal
-  | ChallengeCompletedSignal
   | ImagesGeneratedSignal
   | DiagramCreatedSignal
   | DiagramVideoRenderedSignal
   | AudioGeneratedSignal
-  | MeetingSyncedSignal
-  | JournalEntrySignal
-  | TargetTouchedSignal
-  | WeekReviewedSignal;
+  | MeetingSyncedSignal;
 
 export interface SignalsFile {
   version: 1;

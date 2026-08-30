@@ -2,7 +2,7 @@ import { existsSync } from "node:fs";
 import { join } from "node:path";
 import { copyFile, mkdir } from "node:fs/promises";
 
-import type { LumisConfig } from "../types/config.js";
+import type { AmplifyConfig } from "../types/config.js";
 import type { Shot } from "../types/director.js";
 import { resolveStoryDir } from "../vault/paths.js";
 
@@ -19,7 +19,7 @@ export function detectAssetType(filename: string): "video" | "image" | "unknown"
 
 /** Resolve an asset filename to its absolute path in the story's assets/ folder */
 export function resolveAssetPath(
-  config: LumisConfig,
+  config: AmplifyConfig,
   slug: string,
   assetFilename: string,
 ): string | null {
@@ -43,7 +43,7 @@ export async function copyAssetToRaw(
 
 /** Validate all assets in a timeline exist before production starts */
 export function validateAssets(
-  config: LumisConfig,
+  config: AmplifyConfig,
   slug: string,
   shots: Shot[],
 ): { valid: boolean; missing: string[] } {

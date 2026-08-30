@@ -9,12 +9,12 @@ import {
 import { slugify } from "../../vault/slug.js";
 import { todayKey } from "../../vault/dates.js";
 
-/** `lumis import-sparks --from <path>` — import sparks from a manifest */
+/** `amplify import-sparks --from <path>` — import sparks from a manifest */
 export async function importSparksCommand(fromPath: string): Promise<void> {
   const config = loadConfig();
 
   if (!config.vaultPath) {
-    console.error("No vault path configured. Run `lumis init` first.");
+    console.error("No vault path configured. Run `amplify init` first.");
     process.exit(1);
   }
 
@@ -26,7 +26,7 @@ export async function importSparksCommand(fromPath: string): Promise<void> {
     scaffoldEmptyStructure(config.vaultPath);
     console.log(`\nTo import sparks:`);
     console.log(`  1. Create sparks.json in: ${sourcePath}`);
-    console.log(`  2. Run: lumis import-sparks --from "${fromPath}"`);
+    console.log(`  2. Run: amplify import-sparks --from "${fromPath}"`);
     return;
   }
 
@@ -104,8 +104,8 @@ export async function importSparksCommand(fromPath: string): Promise<void> {
 
 function scaffoldEmptyStructure(vaultPath: string): void {
   const dirs = [
-    "Lumis/Amplify/Structures",
-    "Lumis/Amplify/Hooks",
+    "Amplify/Structures",
+    "Amplify/Hooks",
   ];
 
   for (const dir of dirs) {

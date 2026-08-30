@@ -4,7 +4,7 @@ export {
   configureOutput,
   setOutputPath,
   switchScene,
-  getLumisSceneNames,
+  getAmplifySceneNames,
   listScenes,
   setSourceVisibility,
   toggleSourceVisibility,

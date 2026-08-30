@@ -10,12 +10,15 @@ This vault runs the LLM Wiki pattern. Three layers, one rule each.
 
 Everything else in the vault belongs to the person who owns it:
 
-- `Life/` — first-person. Moments, daily notes, reviews, challenges, personal
-  material. **Never ingest this into the wiki.** Write here only when asked directly.
 - `Work/` — projects, stories, strategy. Read freely. Write when asked. May be
   ingested into the wiki.
-- `Lumis/` — system files: `Voice.md`, `Goals.md`, `Amplify/`, `Brand/`, `Signals/`,
+- `Amplify/` — system files: `Voice.md`, `Brand/`, `Structures/`, `Hooks/`, `Signals/`,
   `Memory/`. Read freely. Write only through the skill that owns each one.
+
+**Any other folder in this vault is private by default.** Journals, personal notes,
+anything first-person: do not read it into the wiki, do not draft content from it, and
+do not write into it. If a folder's purpose is unclear, ask before touching it rather
+than assuming it is fair game.
 
 ## Wiki layout
 

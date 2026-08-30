@@ -2,7 +2,7 @@
 /**
  * Personal-data guard for a public repo.
  *
- * Lumis is open source. Everything personal — moments, goals, journal entries,
+ * Amplify is open source. Everything personal — moments, goals, journal entries,
  * names, vault paths — belongs in the user's private Obsidian vault, never here.
  * This blocks the common ways that boundary gets crossed by accident.
  *
@@ -76,7 +76,7 @@ const RULES = [
     severity: "error",
     // A specific vault directory name pinned into source
     re: /\b(?:Sites|Documents|Dropbox|Obsidian)\/[A-Za-z0-9._-]*(?:vault|brain|notes)\b/gi,
-    hint: "Hardcoded vault location. Read it from .lumisrc.",
+    hint: "Hardcoded vault location. Read it from .amplifyrc.",
   },
 ];
 

@@ -1,6 +1,6 @@
 # OBS Capture
 
-Lumis integrates with OBS Studio to record screen captures and presenter footage directly into story asset folders. Recordings flow into the Studio pipeline as `screen-capture` shots without manual file management.
+Amplify integrates with OBS Studio to record screen captures and presenter footage directly into story asset folders. Recordings flow into the Studio pipeline as `screen-capture` shots without manual file management.
 
 ## Prerequisites
 
@@ -9,26 +9,26 @@ Lumis integrates with OBS Studio to record screen captures and presenter footage
 - Or download from https://obsproject.com
 - **WebSocket server enabled** in OBS: Settings > WebSocket Server Settings > Enable WebSocket Server
 
-If you set a password in OBS's WebSocket settings, add it to your `.lumisrc` (see Configuration below).
+If you set a password in OBS's WebSocket settings, add it to your `.amplifyrc` (see Configuration below).
 
 ## Quick start
 
 ```bash
 # 1. Open OBS
 # 2. Run setup (creates scenes, sets resolution)
-lumis obs setup
+amplify obs setup
 
 # 3. Install keyboard shortcuts into OBS config (OBS must be closed)
-lumis obs hotkeys
+amplify obs hotkeys
 
 # 4. Reopen OBS, start recording for a story
-lumis obs start my-story
+amplify obs start my-story
 
 # 5. Record your screen/camera, then stop
-lumis obs stop
+amplify obs stop
 
 # 6. Check what was captured
-lumis obs list my-story
+amplify obs list my-story
 ```
 
 ## Architecture
@@ -41,45 +41,45 @@ src/capture/
   index.ts     ← Public API re-exports
 ```
 
-Lumis talks to OBS over WebSocket (`obs-websocket-js`). OBS runs as a separate app. Lumis controls it programmatically: creating scenes, setting output paths, starting/stopping recording.
+Amplify talks to OBS over WebSocket (`obs-websocket-js`). OBS runs as a separate app. Amplify controls it programmatically: creating scenes, setting output paths, starting/stopping recording.
 
 ## Commands
 
 ```bash
-lumis obs setup          # Connect to OBS, create Lumis scenes, configure output
-lumis obs start <slug>   # Set output to stories/{slug}/assets/, start recording
-lumis obs stop           # Stop recording, print the saved file path
-lumis obs list <slug>    # Show captured assets for a story
-lumis obs scene <name>   # Switch OBS scene
-lumis obs hotkeys        # Install keyboard shortcuts into OBS config
+amplify obs setup          # Connect to OBS, create Amplify scenes, configure output
+amplify obs start <slug>   # Set output to stories/{slug}/assets/, start recording
+amplify obs stop           # Stop recording, print the saved file path
+amplify obs list <slug>    # Show captured assets for a story
+amplify obs scene <name>   # Switch OBS scene
+amplify obs hotkeys        # Install keyboard shortcuts into OBS config
 ```
 
 ### `capture setup`
 
 Connects to OBS via WebSocket and does three things:
 
-1. **Creates three Lumis scenes** (skips any that already exist):
+1. **Creates three Amplify scenes** (skips any that already exist):
 
 | Scene | Sources | Use case |
 |-------|---------|----------|
-| Lumis: Screen + Camera | Display capture + webcam (corner PIP) | Demo walkthroughs with your face |
-| Lumis: Screen Only | Display capture | Clean screen recordings |
-| Lumis: Camera Only | Webcam (full frame) | Presenter footage (alternative to HeyGen avatars) |
+| Amplify: Screen + Camera | Display capture + webcam (corner PIP) | Demo walkthroughs with your face |
+| Amplify: Screen Only | Display capture | Clean screen recordings |
+| Amplify: Camera Only | Webcam (full frame) | Presenter footage (alternative to HeyGen avatars) |
 
 2. **Configures output** for 4K YouTube-quality capture: 3840x2160, 60fps, Apple hardware H.264, lossless quality.
 
-3. **Prints recommended keyboard shortcuts** with a pointer to `lumis obs hotkeys`.
+3. **Prints recommended keyboard shortcuts** with a pointer to `amplify obs hotkeys`.
 
 ### `capture start <slug>`
 
 Sets OBS's recording output path to `{stories}/{slug}/assets/`, switches to the default scene, and starts recording. The assets directory is created if it doesn't exist.
 
-The default scene is `Lumis: Screen + Camera`. Change it in `.lumisrc`:
+The default scene is `Amplify: Screen + Camera`. Change it in `.amplifyrc`:
 
 ```json
 {
   "capture": {
-    "defaultScene": "Lumis: Screen Only"
+    "defaultScene": "Amplify: Screen Only"
   }
 }
 ```
@@ -98,11 +98,11 @@ Switches the active OBS scene. Accepts short aliases:
 
 | Alias | Scene |
 |-------|-------|
-| `screen+camera` | Lumis: Screen + Camera |
-| `screen` | Lumis: Screen Only |
-| `camera` | Lumis: Camera Only |
+| `screen+camera` | Amplify: Screen + Camera |
+| `screen` | Amplify: Screen Only |
+| `camera` | Amplify: Camera Only |
 
-Or pass the full scene name: `lumis obs scene "Lumis: Camera Only"`.
+Or pass the full scene name: `amplify obs scene "Amplify: Camera Only"`.
 
 ### `capture hotkeys`
 
@@ -114,7 +114,7 @@ If OBS isn't installed or the config directory isn't found, prints manual setup 
 
 ## Keyboard shortcuts
 
-Default bindings (customizable in `.lumisrc`):
+Default bindings (customizable in `.amplifyrc`):
 
 | Key | Action |
 |-----|--------|
@@ -128,7 +128,7 @@ These are OBS global hotkeys. They work from any app, no terminal needed.
 
 ### Customizing shortcuts
 
-Override any binding in `.lumisrc` using OBS key identifiers:
+Override any binding in `.amplifyrc` using OBS key identifiers:
 
 ```json
 {
@@ -148,24 +148,24 @@ OBS key identifiers follow the pattern `OBS_KEY_<keyname>`. Common ones: `OBS_KE
 
 ### Manual setup (alternative)
 
-If `lumis obs hotkeys` can't find the OBS config, set shortcuts manually:
+If `amplify obs hotkeys` can't find the OBS config, set shortcuts manually:
 
 1. Open OBS > Settings > Hotkeys
 2. Find "Start Recording" and assign F9
 3. Find "Stop Recording" and assign F10
-4. Find each "Lumis:" scene under "Switch to Scene" and assign F5/F6/F7
+4. Find each "Amplify:" scene under "Switch to Scene" and assign F5/F6/F7
 5. Click OK
 
 ## Configuration
 
-Add a `capture` section to `.lumisrc`:
+Add a `capture` section to `.amplifyrc`:
 
 ```json
 {
   "capture": {
     "obsWebsocketUrl": "ws://localhost:4455",
     "obsWebsocketPassword": "",
-    "defaultScene": "Lumis: Screen + Camera",
+    "defaultScene": "Amplify: Screen + Camera",
     "hotkeys": {
       "startRecording": "OBS_KEY_F9",
       "stopRecording": "OBS_KEY_F10",
@@ -181,7 +181,7 @@ Add a `capture` section to `.lumisrc`:
 |-------|---------|-------------|
 | `obsWebsocketUrl` | `ws://localhost:4455` | OBS WebSocket server address. Change if using a non-default port. |
 | `obsWebsocketPassword` | `""` (none) | Must match the password set in OBS WebSocket Server Settings. |
-| `defaultScene` | `Lumis: Screen + Camera` | Scene to activate when `capture start` runs. |
+| `defaultScene` | `Amplify: Screen + Camera` | Scene to activate when `capture start` runs. |
 | `hotkeys` | See table above | OBS key identifiers for each action. |
 
 Environment variables `OBS_WEBSOCKET_URL` and `OBS_WEBSOCKET_PASSWORD` also work as fallbacks.
@@ -206,24 +206,24 @@ shots:
     voiceoverSource: elevenlabs
 ```
 
-- `asset` is the filename from `lumis obs list <slug>`
+- `asset` is the filename from `amplify obs list <slug>`
 - Video files play inline in the rendered output
 - Image files get a Ken Burns zoom effect
 - Add `voiceover` + `voiceoverSource: elevenlabs` to narrate over the clip
 
 ### Asset validation
 
-`lumis studio render <slug>` validates all `screen-capture` assets exist before starting. Missing files are reported up front so you can capture them before rendering.
+`amplify studio render <slug>` validates all `screen-capture` assets exist before starting. Missing files are reported up front so you can capture them before rendering.
 
 ### Typical workflow
 
 ```
 /craft-content         → write your story
 /draft-video        → build the timeline (mark screen-capture shots)
-lumis obs setup    → one-time OBS setup
-lumis obs start <slug>  → record the screen demo
-lumis obs stop     → stop recording
-lumis studio render <slug>  → assemble everything into final video
+amplify obs setup    → one-time OBS setup
+amplify obs start <slug>  → record the screen demo
+amplify obs stop     → stop recording
+amplify studio render <slug>  → assemble everything into final video
 ```
 
 ## Lessons learned
@@ -245,22 +245,22 @@ lumis studio render <slug>  → assemble everything into final video
 **"Could not connect to OBS"**
 - Is OBS running?
 - Is the WebSocket server enabled? (Settings > WebSocket Server Settings > Enable)
-- Check the port. Default is 4455. If you changed it, update `obsWebsocketUrl` in `.lumisrc`.
-- If you set a password in OBS, add it to `obsWebsocketPassword` in `.lumisrc`.
+- Check the port. Default is 4455. If you changed it, update `obsWebsocketUrl` in `.amplifyrc`.
+- If you set a password in OBS, add it to `obsWebsocketPassword` in `.amplifyrc`.
 
 **"OBS is already recording"**
-- A recording is in progress. Run `lumis obs stop` first, or stop it from OBS directly.
+- A recording is in progress. Run `amplify obs stop` first, or stop it from OBS directly.
 
 **"OBS is not currently recording"**
 - No active recording to stop. You may have already stopped it, or it was stopped from OBS.
 
-**Hotkeys not working after `lumis obs hotkeys`**
+**Hotkeys not working after `amplify obs hotkeys`**
 - Did you close OBS before running the command? OBS overwrites config on exit.
 - Reopen OBS after running the command.
 - Check for conflicts: OBS > Settings > Hotkeys. Look for duplicate bindings.
 
-**Recordings not appearing in `lumis obs list`**
-- Did you run `lumis obs start <slug>` before recording? Without it, OBS saves to its default output folder, not the story assets folder.
+**Recordings not appearing in `amplify obs list`**
+- Did you run `amplify obs start <slug>` before recording? Without it, OBS saves to its default output folder, not the story assets folder.
 - Check OBS Settings > Output > Recording Path to see where files went.
 
 **Source not available on this platform**

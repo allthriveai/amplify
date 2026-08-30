@@ -52,7 +52,7 @@ export async function renderDiagramVideo(
   });
 
   // 2. Set up temp directory
-  const tmpDir = await mkdtemp(join(tmpdir(), "lumis-diagram-video-"));
+  const tmpDir = await mkdtemp(join(tmpdir(), "amplify-diagram-video-"));
   const htmlPath = join(tmpDir, "diagram.html");
   const framesDir = join(tmpDir, "frames");
   await mkdir(framesDir);

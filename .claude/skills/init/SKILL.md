@@ -1,9 +1,9 @@
 ---
 name: init
-description: Interactively sets up Lumis in an Obsidian vault. Asks for the vault path, scaffolds all directories, writes .lumisrc, then walks through the voice interview to populate Voice.md. Use when the user runs /init, wants to set up Lumis, or is starting fresh.
+description: Interactively sets up Amplify in an Obsidian vault. Asks for the vault path, scaffolds all directories, writes .amplifyrc, then walks through the voice interview to populate Voice.md. Use when the user runs /init, wants to set up Amplify, or is starting fresh.
 ---
 
-# Initialize Lumis
+# Initialize Amplify
 
 ## Instructions
 
@@ -41,20 +41,15 @@ Wiki/Concepts
 Wiki/Entities
 Wiki/Synthesis
 
-Life/Moments            ← first-person. never ingested into the wiki.
-Life/Journal
-Life/Reviews
-Life/Challenges
-
 Work/Stories               ← projects and pipeline output
 Work/Strategy
 
-Lumis/Amplify/Hooks        ← system files
-Lumis/Amplify/Structures
-Lumis/Signals
-Lumis/Memory/sessions
-Lumis/Brand
-Lumis/Brand/Inspiration
+Amplify/Hooks        ← system files
+Amplify/Structures
+Amplify/Signals
+Amplify/Memory/sessions
+Amplify/Brand
+Amplify/Brand/Inspiration
 ```
 
 Add a `README.md` with `# {folder-name}\n` to each directory that doesn't have one —
@@ -88,7 +83,7 @@ Append-only. Newest entries at the bottom. Never edit an entry already written.
 
 ### Step 2b: Copy the schema
 
-Copy `templates/vault/CLAUDE.md` from the Lumis repo to `{vaultPath}/CLAUDE.md`.
+Copy `templates/vault/CLAUDE.md` from the Amplify repo to `{vaultPath}/CLAUDE.md`.
 
 This is the most important file in the vault. It defines the three layers, the single
 frontmatter schema, the page shapes, the ingest and query and lint workflows, and the
@@ -98,9 +93,9 @@ maintains itself.
 Don't overwrite an existing `CLAUDE.md` — if one is there, show the user the template
 and ask whether to merge.
 
-### Step 3: Write .lumisrc
+### Step 3: Write .amplifyrc
 
-If `.lumisrc` doesn't already exist in the vault root, write it:
+If `.amplifyrc` doesn't already exist in the vault root, write it:
 
 ```json
 {
@@ -110,23 +105,16 @@ If `.lumisrc` doesn't already exist in the vault root, write it:
     "wiki": "Wiki",
     "meetings": "Sources/Meetings",
     "audio": "Sources/Audio",
-    "moments": "Life/Moments",
-    "dailyNotes": "Life/Journal",
-    "dailyNoteFormat": "YYYY-MM-DD",
-    "reviews": "Life/Reviews",
-    "challenges": "Life/Challenges",
     "stories": "Work/Stories",
     "strategyDocs": "Work/Strategy",
     "people": "Wiki/Entities",
-    "canvas": "Lumis/Pattern Map.canvas",
-    "voice": "Lumis/Voice.md",
-    "goals": "Lumis/Goals.md",
-    "amplifyHooks": "Lumis/Amplify/Hooks",
-    "amplifyStructures": "Lumis/Amplify/Structures",
-    "amplifyPersuasion": "Lumis/Amplify",
-    "signals": "Lumis/Signals",
-    "memory": "Lumis/Memory",
-    "brand": "Lumis/Brand"
+    "voice": "Amplify/Voice.md",
+    "amplifyHooks": "Amplify/Hooks",
+    "amplifyStructures": "Amplify/Structures",
+    "amplifyPersuasion": "Amplify",
+    "signals": "Amplify/Signals",
+    "memory": "Amplify/Memory",
+    "brand": "Amplify/Brand"
   },
   "studio": {
     "heygenApiKey": "",
@@ -142,11 +130,11 @@ Note there are no research categories. Keyword-matching sources into folders sou
 tidy and doesn't survive contact with a real vault — most sources match nothing and
 pile up at the root. Tags in frontmatter and `Wiki/index.md` do that job instead.
 
-If `.lumisrc` already exists, read it and confirm the vault path matches. If it doesn't match, ask the user which to keep.
+If `.amplifyrc` already exists, read it and confirm the vault path matches. If it doesn't match, ask the user which to keep.
 
 ### Step 4: Write preferences.md
 
-If `Lumis/Memory/preferences.md` doesn't exist, write:
+If `Amplify/Memory/preferences.md` doesn't exist, write:
 
 ```markdown
 # Preferences
@@ -164,7 +152,7 @@ Now walk through the voice interview. Ask these five questions **one at a time**
 
 Introduce it:
 
-"Let's set up your voice. This shapes everything Lumis writes for you. Skip any question by saying 'skip'."
+"Let's set up your voice. This shapes everything Amplify writes for you. Skip any question by saying 'skip'."
 
 **Question 1: Who I am**
 "What's your name, what do you do, and what's your background?"
@@ -197,7 +185,7 @@ For each question:
 
 ### Step 6: Write Voice.md
 
-Build and write `{vaultPath}/Lumis/Voice.md`:
+Build and write `{vaultPath}/Amplify/Voice.md`:
 
 ```markdown
 # Voice
@@ -222,23 +210,23 @@ Preserve the user's words exactly. Clean up grammar only if needed. Don't rewrit
 
 ### Step 7: Amplify Toolkit
 
-After Voice.md is written, copy the generic Amplify templates from the Lumis repo into the vault and personalize them using the user's voice.
+After Voice.md is written, copy the generic Amplify templates from the Amplify repo into the vault and personalize them using the user's voice.
 
 **7a. Copy templates**
 
-Copy all files from the Lumis source templates into the vault's Amplify directories:
+Copy all files from the Amplify source templates into the vault's Amplify directories:
 
 ```
-Source: {lumisRepoRoot}/templates/amplify/
-Destination: {vaultPath}/Lumis/Amplify/
+Source: {amplifyRepoRoot}/templates/amplify/
+Destination: {vaultPath}/Amplify/
 
 Copy:
-- Hooks/*.md → {vaultPath}/Lumis/Amplify/Hooks/
-- Structures/*.md → {vaultPath}/Lumis/Amplify/Structures/
-- Persuasion-Glossary.md → {vaultPath}/Lumis/Amplify/Persuasion-Glossary.md
+- Hooks/*.md → {vaultPath}/Amplify/Hooks/
+- Structures/*.md → {vaultPath}/Amplify/Structures/
+- Persuasion-Glossary.md → {vaultPath}/Amplify/Persuasion-Glossary.md
 ```
 
-The `lumisRepoRoot` is the directory where Lumis source code lives (the repo containing this skill file). Resolve it from the skill's own location: `{skillDir}/../../..` which gives the Lumis project root.
+The `amplifyRepoRoot` is the directory where Amplify source code lives (the repo containing this skill file). Resolve it from the skill's own location: `{skillDir}/../../..` which gives the Amplify project root.
 
 Use `cp` to copy each file. Don't overwrite files that already exist in the vault (use `cp -n`).
 
@@ -279,7 +267,7 @@ Options:
 - Set up now
 - Skip for now
 
-If they choose to set up, run the brand interview inline (same as `/brand` Setup Mode Steps 1-4). This writes the `.lumisrc` brand section and Brand.md.
+If they choose to set up, run the brand interview inline (same as `/brand` Setup Mode Steps 1-4). This writes the `.amplifyrc` brand section and Brand.md.
 
 If they skip, move on. They can run `/brand` later.
 
@@ -287,7 +275,7 @@ If they skip, move on. They can run `/brand` later.
 
 Ask if they want to set up video production:
 
-"Want to set up video production? This lets Lumis produce branded videos with an AI avatar from your stories. You'll need accounts with HeyGen and ElevenLabs. Skip if you're not ready."
+"Want to set up video production? This lets Amplify produce branded videos with an AI avatar from your stories. You'll need accounts with HeyGen and ElevenLabs. Skip if you're not ready."
 
 Options:
 - Set up now
@@ -317,7 +305,7 @@ For each value:
 - If the user says "skip", leave it empty.
 - Validate that keys look reasonable (non-empty strings, no whitespace).
 
-After collecting, update the `studio` section in the `.lumisrc` file with the provided values. If a `.lumisrc` already exists, merge the `studio` key into it without overwriting other config.
+After collecting, update the `studio` section in the `.amplifyrc` file with the provided values. If a `.amplifyrc` already exists, merge the `studio` key into it without overwriting other config.
 
 If all four values were skipped, don't write the studio section.
 
@@ -326,16 +314,16 @@ If all four values were skipped, don't write the studio section.
 Give a summary:
 
 ```
-Lumis initialized in {vaultPath}
+Amplify initialized in {vaultPath}
 
 Directories: {count} created
-Config: .lumisrc written
+Config: .amplifyrc written
 Voice: {filled}/5 sections filled
 Amplify: {count} templates installed (8 hook types, 18 structures, persuasion glossary)
 Brand: {configured|skipped}
 Studio: {configured|skipped}
 
-You're ready. Try /moment to capture your first moment.
+You're ready. Try /ingest on something you have read — the flywheel needs input before it can turn.
 ```
 
 If any voice sections were skipped, add: "Run /voice anytime to fill in the rest."

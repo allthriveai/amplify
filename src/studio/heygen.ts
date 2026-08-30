@@ -54,7 +54,7 @@ export function createHeyGenClient(
       const body: Record<string, unknown> = {
         type: "avatar",
         avatar_id: avatarId,
-        title: opts.title ?? (opts.script?.slice(0, 80) || "Lumis video"),
+        title: opts.title ?? (opts.script?.slice(0, 80) || "Amplify video"),
         aspect_ratio: opts.aspectRatio ?? "16:9",
       };
 

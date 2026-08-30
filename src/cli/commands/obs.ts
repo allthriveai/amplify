@@ -1,26 +1,26 @@
 import { loadConfig } from "../../config.js";
 
-const USAGE = `lumis obs — OBS screen/camera capture
+const USAGE = `amplify obs — OBS screen/camera capture
 
 Commands:
-  lumis obs setup               Connect to OBS, create Lumis scenes + profile
-  lumis obs start <slug>        Start recording to stories/{slug}/assets/
-  lumis obs stop                Stop recording, show captured file
-  lumis obs pause               Pause active recording
-  lumis obs resume              Resume paused recording
-  lumis obs status              Show recording state and timecode
-  lumis obs list <slug>         Show captured assets for a story
-  lumis obs scenes              List all OBS scenes and sources
-  lumis obs scene <name>        Switch OBS scene (screen+camera, screen, camera)
-  lumis obs show <source>       Show a source in the active scene
-  lumis obs hide <source>       Hide a source in the active scene
-  lumis obs toggle <source>     Toggle a source's visibility
-  lumis obs hotkeys             Install keyboard shortcuts into OBS config`;
+  amplify obs setup               Connect to OBS, create Amplify scenes + profile
+  amplify obs start <slug>        Start recording to stories/{slug}/assets/
+  amplify obs stop                Stop recording, show captured file
+  amplify obs pause               Pause active recording
+  amplify obs resume              Resume paused recording
+  amplify obs status              Show recording state and timecode
+  amplify obs list <slug>         Show captured assets for a story
+  amplify obs scenes              List all OBS scenes and sources
+  amplify obs scene <name>        Switch OBS scene (screen+camera, screen, camera)
+  amplify obs show <source>       Show a source in the active scene
+  amplify obs hide <source>       Hide a source in the active scene
+  amplify obs toggle <source>     Toggle a source's visibility
+  amplify obs hotkeys             Install keyboard shortcuts into OBS config`;
 
 const SCENE_ALIASES: Record<string, string> = {
-  "screen+camera": "Lumis: Screen + Camera",
-  "screen": "Lumis: Screen Only",
-  "camera": "Lumis: Camera Only",
+  "screen+camera": "Amplify: Screen + Camera",
+  "screen": "Amplify: Screen Only",
+  "camera": "Amplify: Camera Only",
 };
 
 export async function obsCommand(
@@ -34,7 +34,7 @@ export async function obsCommand(
     case "start": {
       const slug = args[0];
       if (!slug) {
-        console.error("Usage: lumis obs start <slug>");
+        console.error("Usage: amplify obs start <slug>");
         process.exit(1);
       }
       await runStart(slug);
@@ -55,7 +55,7 @@ export async function obsCommand(
     case "list": {
       const slug = args[0];
       if (!slug) {
-        console.error("Usage: lumis obs list <slug>");
+        console.error("Usage: amplify obs list <slug>");
         process.exit(1);
       }
       await runList(slug);
@@ -67,7 +67,7 @@ export async function obsCommand(
     case "scene": {
       const name = args.join(" ");
       if (!name) {
-        console.error("Usage: lumis obs scene <name>");
+        console.error("Usage: amplify obs scene <name>");
         console.error("  Names: screen+camera, screen, camera");
         process.exit(1);
       }
@@ -79,7 +79,7 @@ export async function obsCommand(
     case "toggle": {
       const sourceName = args.join(" ");
       if (!sourceName) {
-        console.error(`Usage: lumis obs ${subcommand} <source-name>`);
+        console.error(`Usage: amplify obs ${subcommand} <source-name>`);
         process.exit(1);
       }
       await runSourceVisibility(subcommand, sourceName);
@@ -102,7 +102,7 @@ async function runSetup(): Promise<void> {
   console.log("Connecting to OBS...");
   const obs = await connectOBS(config.capture);
 
-  console.log("Creating Lumis scenes...");
+  console.log("Creating Amplify scenes...");
   const created = await setupScenes(obs);
 
   if (created.length > 0) {
@@ -110,7 +110,7 @@ async function runSetup(): Promise<void> {
       console.log(`  + ${name}`);
     }
   } else {
-    console.log("  All Lumis scenes already exist.");
+    console.log("  All Amplify scenes already exist.");
   }
 
   console.log("Configuring output (4K, 60fps, Apple HW encoder, lossless)...");
@@ -124,8 +124,8 @@ async function runSetup(): Promise<void> {
   const bindings = { ...DEFAULT_HOTKEYS, ...config.capture?.hotkeys };
   console.log("\nKeyboard shortcuts (set in OBS Settings > Hotkeys):\n");
   console.log(formatHotkeyTable(bindings));
-  console.log("\nRun 'lumis obs hotkeys' to install these automatically.");
-  console.log("\nSetup complete. Lumis scenes are ready in OBS.");
+  console.log("\nRun 'amplify obs hotkeys' to install these automatically.");
+  console.log("\nSetup complete. Amplify scenes are ready in OBS.");
 }
 
 async function runStart(slug: string): Promise<void> {
@@ -137,7 +137,7 @@ async function runStart(slug: string): Promise<void> {
   const obs = await connectOBS(config.capture);
 
   const defaultScene =
-    config.capture?.defaultScene ?? "Lumis: Screen + Camera";
+    config.capture?.defaultScene ?? "Amplify: Screen + Camera";
   try {
     await switchScene(obs, defaultScene);
     console.log(`Scene: ${defaultScene}`);
@@ -147,7 +147,7 @@ async function runStart(slug: string): Promise<void> {
 
   const assetsDir = await startRecording(obs, config, slug);
   console.log(`Recording to: ${assetsDir}`);
-  console.log("Run 'lumis obs stop' when finished.");
+  console.log("Run 'amplify obs stop' when finished.");
 
   await obs.disconnect();
 }

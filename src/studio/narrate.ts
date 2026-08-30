@@ -138,7 +138,7 @@ export function chunkText(text: string, maxChars: number = MAX_CHARS_PER_CHUNK):
  * Concatenate multiple MP3 files using ffmpeg.
  */
 async function concatenateMp3(inputPaths: string[], outputPath: string): Promise<void> {
-  const listPath = join(tmpdir(), `lumis-concat-${randomUUID()}.txt`);
+  const listPath = join(tmpdir(), `amplify-concat-${randomUUID()}.txt`);
   const listContent = inputPaths.map((p) => `file '${p}'`).join("\n");
   await writeFile(listPath, listContent);
 
@@ -179,7 +179,7 @@ export async function narrateToAudio(
   }
 
   // Generate each chunk to a temp file
-  const tempDir = join(tmpdir(), `lumis-narrate-${randomUUID()}`);
+  const tempDir = join(tmpdir(), `amplify-narrate-${randomUUID()}`);
   await mkdir(tempDir, { recursive: true });
 
   const chunkPaths: string[] = [];

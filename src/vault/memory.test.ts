@@ -4,9 +4,9 @@ import { join } from "node:path";
 import { formatSessionTime, appendSessionEntry, readSession, readRecentSessions, readPreferences, addPreference } from "./memory.js";
 import { toDateKey } from "./dates.js";
 import { createTestConfig, writeTestFile } from "./test-helpers.js";
-import type { LumisConfig } from "../types/config.js";
+import type { AmplifyConfig } from "../types/config.js";
 
-let config: LumisConfig;
+let config: AmplifyConfig;
 
 beforeEach(() => {
   config = createTestConfig();

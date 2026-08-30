@@ -7,7 +7,7 @@ vi.mock("dotenv", () => ({
   config: vi.fn(),
 }));
 
-// Mock fs to prevent readLumisrc from reading real files
+// Mock fs to prevent readAmplifyrc from reading real files
 vi.mock("node:fs", () => ({
   readFileSync: vi.fn(),
   existsSync: vi.fn(() => false),
@@ -42,15 +42,15 @@ describe("loadConfig", () => {
       anthropicApiKey: "sk-override",
       paths: {
         ...DEFAULT_PATHS,
-        moments: "Custom/Moments",
+        stories: "Custom/Stories",
       },
     });
 
     expect(config.vaultPath).toBe("/my/vault");
     expect(config.anthropicApiKey).toBe("sk-override");
-    expect(config.paths.moments).toBe("Custom/Moments");
+    expect(config.paths.stories).toBe("Custom/Stories");
     // Non-overridden paths stay at defaults
-    expect(config.paths.stories).toBe(DEFAULT_PATHS.stories);
+    expect(config.paths.sources).toBe(DEFAULT_PATHS.sources);
   });
 
   it("falls back to env vars when no overrides and no rc", () => {
@@ -127,7 +127,7 @@ describe("loadConfig", () => {
 
     expect(config.paths.sources).toBe("My Sources");
     expect(config.paths.signals).toBe("My Signals");
-    expect(config.paths.moments).toBe(DEFAULT_PATHS.moments);
+    expect(config.paths.stories).toBe(DEFAULT_PATHS.stories);
     expect(config.paths.voice).toBe(DEFAULT_PATHS.voice);
   });
 });

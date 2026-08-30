@@ -1,15 +1,14 @@
 {
-  "name": "lumis",
+  "name": "amplify",
   "version": "0.1.0",
-  "description": "Your AI confidant. Capture moments, find patterns, amplify your stories.",
+  "description": "Turn your Obsidian second brain into published content. Reads your vault, writes nothing of its own.",
   "type": "module",
   "bin": {
-    "lumis": "./dist/cli/index.js"
+    "amplify": "./dist/cli/index.js"
   },
   "scripts": {
     "build": "tsc",
     "dev": "tsx src/cli/index.ts",
-    "moment": "tsx src/cli/index.ts moment",
     "serve": "tsx src/mcp/index.ts",
     "test": "vitest",
     "test:run": "vitest run",
@@ -23,17 +22,20 @@
   "keywords": [
     "obsidian",
     "second-brain",
-    "ai-confidant",
-    "storytelling",
+    "content-flywheel",
+    "llm-wiki",
+    "remotion",
+    "elevenlabs",
+    "heygen",
+    "digital-twin",
     "mcp",
-    "claude",
-    "journaling"
+    "claude"
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/allthriveai/lumis.git"
+    "url": "git+https://github.com/allthriveai/amplify.git"
   },
-  "homepage": "https://github.com/allthriveai/lumis#readme",
+  "homepage": "https://github.com/allthriveai/amplify#readme",
   "author": "Allie Jones (https://github.com/allierays)",
   "license": "MIT",
   "dependencies": {

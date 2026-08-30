@@ -129,7 +129,7 @@ export async function renderTextRevealVideo(
 </html>`;
 
   // Set up temp directory
-  const tmpDir = await mkdtemp(join(tmpdir(), "lumis-text-reveal-"));
+  const tmpDir = await mkdtemp(join(tmpdir(), "amplify-text-reveal-"));
   const htmlPath = join(tmpDir, "reveal.html");
   const framesDir = join(tmpDir, "frames");
   await mkdir(framesDir);

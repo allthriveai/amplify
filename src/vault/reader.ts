@@ -1,12 +1,10 @@
 import { readFileSync, readdirSync, existsSync } from "node:fs";
 import { join } from "node:path";
-import type { LumisConfig } from "../types/config.js";
-import type { Moment, MomentFrontmatter } from "../types/moment.js";
+import type { AmplifyConfig } from "../types/config.js";
 import type { Meeting, MeetingFrontmatter } from "../types/meeting.js";
 import type { Clipping, ClippingFrontmatter } from "../types/source.js";
 import type { Story, StoryFrontmatter, StoryElements } from "../types/story.js";
-import type { CanvasFile } from "../types/canvas.js";
-import { resolveMomentsDir, resolveMeetingsDir, resolveCanvasPath, resolveClippingsDir, resolveStoriesDir } from "./paths.js";
+import { resolveMeetingsDir, resolveClippingsDir, resolveStoriesDir } from "./paths.js";
 import { parseFrontmatter } from "./frontmatter.js";
 
 /** List markdown files in a dir and read each through readOne, dropping failures */
@@ -18,51 +16,14 @@ function readAll<T>(dir: string, readOne: (filename: string) => T | null, exclud
     .filter((x): x is T => x !== null);
 }
 
-/** Read all moment files from the configured moments directory */
-export function readMoments(config: LumisConfig): Moment[] {
-  return readAll(resolveMomentsDir(config), (f) => readMoment(config, f));
-}
-
-/** Read a single moment file by filename */
-export function readMoment(config: LumisConfig, filename: string): Moment | null {
-  const dir = resolveMomentsDir(config);
-  const filepath = join(dir, filename);
-
-  if (!existsSync(filepath)) return null;
-
-  const raw = readFileSync(filepath, "utf-8");
-  const { frontmatter, content } = parseFrontmatter<MomentFrontmatter>(raw);
-
-  // Extract 5-second moment from ## The 5-Second Moment section
-  const fiveSecMatch = content.match(
-    /## The 5-Second Moment\n+([\s\S]*?)(?=\n## |$)/,
-  );
-
-  // Extract connections from wiki-links in ## Connections section
-  const connectionsMatch = content.match(
-    /## Connections\n+([\s\S]*?)(?=\n## |$)/,
-  );
-  const connections = connectionsMatch
-    ? [...connectionsMatch[1].matchAll(/\[\[([^\]]+)\]\]/g)].map((m) => m[1])
-    : [];
-
-  return {
-    filename,
-    path: join(config.paths.moments, filename),
-    frontmatter,
-    content,
-    fiveSecondMoment: fiveSecMatch?.[1]?.trim(),
-    connections,
-  };
-}
 
 /** Read all meeting notes from the configured meetings directory */
-export function readMeetings(config: LumisConfig): Meeting[] {
+export function readMeetings(config: AmplifyConfig): Meeting[] {
   return readAll(resolveMeetingsDir(config), (f) => readMeeting(config, f));
 }
 
 /** Read a single meeting note by filename */
-export function readMeeting(config: LumisConfig, filename: string): Meeting | null {
+export function readMeeting(config: AmplifyConfig, filename: string): Meeting | null {
   const dir = resolveMeetingsDir(config);
   const filepath = join(dir, filename);
 
@@ -86,7 +47,7 @@ export function readMeeting(config: LumisConfig, filename: string): Meeting | nu
  * folders, which left most of them uncategorized at the root anyway; tags in
  * frontmatter and the wiki index do that job now.
  */
-export function readClippings(config: LumisConfig): Clipping[] {
+export function readClippings(config: AmplifyConfig): Clipping[] {
   const dir = resolveClippingsDir(config);
   const relativePath = join(config.paths.sources, "Clippings");
   return readAll(dir, (filename) => {
@@ -97,12 +58,12 @@ export function readClippings(config: LumisConfig): Clipping[] {
 }
 
 /** Read all story files from the configured stories directory */
-export function readStories(config: LumisConfig): Story[] {
+export function readStories(config: AmplifyConfig): Story[] {
   return readAll(resolveStoriesDir(config), (f) => readStory(config, f), ["Practice Log.md"]);
 }
 
 /** Read a single story file by filename */
-export function readStory(config: LumisConfig, filename: string): Story | null {
+export function readStory(config: AmplifyConfig, filename: string): Story | null {
   const dir = resolveStoriesDir(config);
   const filepath = join(dir, filename);
 
@@ -176,16 +137,4 @@ export function readStory(config: LumisConfig, filename: string): Story | null {
     content,
     elements,
   };
-}
-
-/** Read the pattern map canvas file */
-export function readCanvas(config: LumisConfig): CanvasFile | null {
-  const path = resolveCanvasPath(config);
-  if (!existsSync(path)) return null;
-
-  try {
-    return JSON.parse(readFileSync(path, "utf-8")) as CanvasFile;
-  } catch {
-    return null;
-  }
 }

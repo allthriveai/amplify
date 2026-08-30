@@ -1,11 +1,11 @@
 import { existsSync, readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { dirname } from "node:path";
 import { randomBytes } from "node:crypto";
-import type { LumisConfig } from "../types/config.js";
+import type { AmplifyConfig } from "../types/config.js";
 import type {
   Signal,
   SignalsFile,
-  MomentCapturedSignal,
+  SourceIngestedSignal,
   RecommendationRejectedSignal,
   ContentPostedSignal,
   EngagementUpdatedSignal,
@@ -23,7 +23,7 @@ export function signalId(): string {
 }
 
 /** Read all signals from signals.json */
-export function readSignals(config: LumisConfig): Signal[] {
+export function readSignals(config: AmplifyConfig): Signal[] {
   const path = resolveSignalsPath(config);
   if (!existsSync(path)) return [];
 
@@ -44,7 +44,7 @@ export function readSignals(config: LumisConfig): Signal[] {
 }
 
 /** Read signals from the last N days */
-export function readRecentSignals(config: LumisConfig, days: number): Signal[] {
+export function readRecentSignals(config: AmplifyConfig, days: number): Signal[] {
   const all = readSignals(config);
   const cutoff = new Date();
   cutoff.setDate(cutoff.getDate() - days);
@@ -53,7 +53,7 @@ export function readRecentSignals(config: LumisConfig, days: number): Signal[] {
 }
 
 /** Emit a signal: read, append, prune older than 90 days, write */
-export function emitSignal(config: LumisConfig, signal: Signal): void {
+export function emitSignal(config: AmplifyConfig, signal: Signal): void {
   const path = resolveSignalsPath(config);
   const dir = dirname(path);
   if (!existsSync(dir)) {
@@ -74,17 +74,17 @@ export function emitSignal(config: LumisConfig, signal: Signal): void {
 }
 
 export interface SignalSummary {
-  recentMoments: MomentCapturedSignal[];
+  recentIngests: SourceIngestedSignal[];
   rejectedTopics: RecommendationRejectedSignal[];
   postedContent: ContentPostedSignal[];
   topEngagement: EngagementUpdatedSignal[];
 }
 
-/** Summarize signals for the social coach */
-export function summarizeSignals(config: LumisConfig): SignalSummary {
+/** Summarize signals for content suggestions */
+export function summarizeSignals(config: AmplifyConfig): SignalSummary {
   const recent = readRecentSignals(config, 30);
 
-  const recentMoments = recent.filter((s): s is MomentCapturedSignal => s.type === "moment_captured");
+  const recentIngests = recent.filter((s): s is SourceIngestedSignal => s.type === "source_ingested");
   const rejectedTopics = recent.filter((s): s is RecommendationRejectedSignal => s.type === "recommendation_rejected");
   const postedContent = recent.filter((s): s is ContentPostedSignal => s.type === "content_posted");
 
@@ -97,7 +97,7 @@ export function summarizeSignals(config: LumisConfig): SignalSummary {
   });
 
   return {
-    recentMoments,
+    recentIngests,
     rejectedTopics,
     postedContent,
     topEngagement,

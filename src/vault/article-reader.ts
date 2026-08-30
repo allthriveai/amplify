@@ -1,12 +1,12 @@
 import { readFileSync, existsSync, readdirSync } from "node:fs";
 import { join } from "node:path";
-import type { LumisConfig } from "../types/config.js";
+import type { AmplifyConfig } from "../types/config.js";
 import type { Article, ArticleFrontmatter } from "../types/director.js";
 import { resolveStoryDir, resolveStoriesDir } from "./paths.js";
 import { parseFrontmatter } from "./frontmatter.js";
 
 /** Read the most recent article from a story folder by slug */
-export function readArticle(config: LumisConfig, slug: string): Article | null {
+export function readArticle(config: AmplifyConfig, slug: string): Article | null {
   const storyDir = resolveStoryDir(config, slug);
   if (!existsSync(storyDir)) return null;
 
@@ -30,7 +30,7 @@ export function readArticle(config: LumisConfig, slug: string): Article | null {
 }
 
 /** List all story slugs that have an article */
-export function listArticles(config: LumisConfig): string[] {
+export function listArticles(config: AmplifyConfig): string[] {
   const storiesDir = resolveStoriesDir(config);
   if (!existsSync(storiesDir)) return [];
 

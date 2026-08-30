@@ -3,10 +3,10 @@ import { rmSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { signalId, readSignals, readRecentSignals, emitSignal, summarizeSignals } from "./signals.js";
 import { createTestConfig, writeTestFile } from "./test-helpers.js";
-import type { LumisConfig } from "../types/config.js";
-import type { Signal, MomentCapturedSignal, ContentPostedSignal, EngagementUpdatedSignal } from "../types/signal.js";
+import type { AmplifyConfig } from "../types/config.js";
+import type { Signal, SourceIngestedSignal, ContentPostedSignal, EngagementUpdatedSignal } from "../types/signal.js";
 
-let config: LumisConfig;
+let config: AmplifyConfig;
 
 beforeEach(() => {
   config = createTestConfig();
@@ -59,16 +59,15 @@ describe("readSignals", () => {
 
   it("parses valid signals file", () => {
     const signalsDir = join(config.vaultPath, config.paths.signals);
-    const signal: MomentCapturedSignal = {
+    const signal: SourceIngestedSignal = {
       id: "sig-123-abc",
-      type: "moment_captured",
+      type: "source_ingested",
       timestamp: new Date().toISOString(),
       data: {
         filename: "test.md",
-        themes: ["identity"],
-        storyPotential: "high",
-        momentType: "realization",
-        fiveSecondMoment: "The instant I knew.",
+        title: "Test Source",
+        wikiPages: ["Retrieval Augmented Generation"],
+        tags: ["retrieval"],
       },
     };
 
@@ -80,7 +79,7 @@ describe("readSignals", () => {
     const result = readSignals(config);
     expect(result).toHaveLength(1);
     expect(result[0].id).toBe("sig-123-abc");
-    expect(result[0].type).toBe("moment_captured");
+    expect(result[0].type).toBe("source_ingested");
   });
 });
 
@@ -89,16 +88,15 @@ describe("readSignals", () => {
 // ---------------------------------------------------------------------------
 describe("emitSignal", () => {
   it("creates signals dir and file if they do not exist", () => {
-    const signal: MomentCapturedSignal = {
+    const signal: SourceIngestedSignal = {
       id: signalId(),
-      type: "moment_captured",
+      type: "source_ingested",
       timestamp: new Date().toISOString(),
       data: {
         filename: "test.md",
-        themes: ["identity"],
-        storyPotential: "high",
-        momentType: "realization",
-        fiveSecondMoment: "A moment.",
+        title: "Test Source",
+        wikiPages: ["Retrieval Augmented Generation"],
+        tags: ["retrieval"],
       },
     };
 
@@ -109,20 +107,19 @@ describe("emitSignal", () => {
     const file = JSON.parse(raw);
     expect(file.version).toBe(1);
     expect(file.signals).toHaveLength(1);
-    expect(file.signals[0].type).toBe("moment_captured");
+    expect(file.signals[0].type).toBe("source_ingested");
   });
 
   it("appends to existing signals", () => {
-    const signal1: MomentCapturedSignal = {
+    const signal1: SourceIngestedSignal = {
       id: signalId(),
-      type: "moment_captured",
+      type: "source_ingested",
       timestamp: new Date().toISOString(),
       data: {
         filename: "first.md",
-        themes: ["identity"],
-        storyPotential: "high",
-        momentType: "realization",
-        fiveSecondMoment: "First moment.",
+        title: "Test Source",
+        wikiPages: ["Retrieval Augmented Generation"],
+        tags: ["retrieval"],
       },
     };
     emitSignal(config, signal1);
@@ -142,7 +139,7 @@ describe("emitSignal", () => {
 
     const signals = readSignals(config);
     expect(signals).toHaveLength(2);
-    expect(signals[0].type).toBe("moment_captured");
+    expect(signals[0].type).toBe("source_ingested");
     expect(signals[1].type).toBe("content_posted");
   });
 
@@ -150,16 +147,15 @@ describe("emitSignal", () => {
     const oldDate = new Date();
     oldDate.setDate(oldDate.getDate() - 100);
 
-    const oldSignal: MomentCapturedSignal = {
+    const oldSignal: SourceIngestedSignal = {
       id: "sig-old",
-      type: "moment_captured",
+      type: "source_ingested",
       timestamp: oldDate.toISOString(),
       data: {
         filename: "old.md",
-        themes: [],
-        storyPotential: "low",
-        momentType: "joy",
-        fiveSecondMoment: "Old.",
+        title: "Test Source",
+        wikiPages: ["Retrieval Augmented Generation"],
+        tags: ["retrieval"],
       },
     };
 
@@ -171,16 +167,15 @@ describe("emitSignal", () => {
     }));
 
     // Emit a new one, which triggers pruning
-    const newSignal: MomentCapturedSignal = {
+    const newSignal: SourceIngestedSignal = {
       id: signalId(),
-      type: "moment_captured",
+      type: "source_ingested",
       timestamp: new Date().toISOString(),
       data: {
         filename: "new.md",
-        themes: [],
-        storyPotential: "low",
-        momentType: "joy",
-        fiveSecondMoment: "New.",
+        title: "Test Source",
+        wikiPages: ["Retrieval Augmented Generation"],
+        tags: ["retrieval"],
       },
     };
     emitSignal(config, newSignal);
@@ -202,29 +197,27 @@ describe("readRecentSignals", () => {
     const fifteenDaysAgo = new Date(now);
     fifteenDaysAgo.setDate(fifteenDaysAgo.getDate() - 15);
 
-    const recentSignal: MomentCapturedSignal = {
+    const recentSignal: SourceIngestedSignal = {
       id: "sig-recent",
-      type: "moment_captured",
+      type: "source_ingested",
       timestamp: fiveDaysAgo.toISOString(),
       data: {
         filename: "recent.md",
-        themes: [],
-        storyPotential: "low",
-        momentType: "joy",
-        fiveSecondMoment: "Recent.",
+        title: "Test Source",
+        wikiPages: ["Retrieval Augmented Generation"],
+        tags: ["retrieval"],
       },
     };
 
-    const olderSignal: MomentCapturedSignal = {
+    const olderSignal: SourceIngestedSignal = {
       id: "sig-older",
-      type: "moment_captured",
+      type: "source_ingested",
       timestamp: fifteenDaysAgo.toISOString(),
       data: {
         filename: "older.md",
-        themes: [],
-        storyPotential: "low",
-        momentType: "joy",
-        fiveSecondMoment: "Older.",
+        title: "Test Source",
+        wikiPages: ["Retrieval Augmented Generation"],
+        tags: ["retrieval"],
       },
     };
 
@@ -252,16 +245,15 @@ describe("summarizeSignals", () => {
   it("groups signals by type", () => {
     const now = new Date();
 
-    const momentSignal: MomentCapturedSignal = {
+    const ingestSignal: SourceIngestedSignal = {
       id: signalId(),
-      type: "moment_captured",
+      type: "source_ingested",
       timestamp: now.toISOString(),
       data: {
         filename: "moment.md",
-        themes: ["identity"],
-        storyPotential: "high",
-        momentType: "realization",
-        fiveSecondMoment: "A moment.",
+        title: "Test Source",
+        wikiPages: ["Retrieval Augmented Generation"],
+        tags: ["retrieval"],
       },
     };
 
@@ -294,11 +286,11 @@ describe("summarizeSignals", () => {
     const signalsDir = join(config.vaultPath, config.paths.signals);
     writeTestFile(signalsDir, "signals.json", JSON.stringify({
       version: 1,
-      signals: [momentSignal, postedSignal, engagementSignal],
+      signals: [ingestSignal, postedSignal, engagementSignal],
     }));
 
     const summary = summarizeSignals(config);
-    expect(summary.recentMoments).toHaveLength(1);
+    expect(summary.recentIngests).toHaveLength(1);
     expect(summary.postedContent).toHaveLength(1);
     expect(summary.topEngagement).toHaveLength(1);
     expect(summary.rejectedTopics).toHaveLength(0);

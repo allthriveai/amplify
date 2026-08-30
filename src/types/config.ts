@@ -25,7 +25,7 @@ export interface CaptureConfig {
   hotkeys?: CaptureHotkeys;
 }
 
-export interface LumisConfig {
+export interface AmplifyConfig {
   /** Absolute path to the Obsidian vault root */
   vaultPath: string;
 
@@ -34,48 +34,34 @@ export interface LumisConfig {
 
   /** Configurable paths within the vault (relative to vaultPath) */
   paths: {
-    /** Where moment notes are stored. Default: "Life/Moments" */
-    moments: string;
     /** Where developed stories are stored. Default: "Work/Stories" */
     stories: string;
-    /** Path to the pattern map canvas. Default: "Lumis/Pattern Map.canvas" */
-    canvas: string;
-    /** Where daily notes live. Default: "Life/Journal" */
-    dailyNotes: string;
-    /** Date format for daily notes. Default: "YYYY-MM-DD" */
-    dailyNoteFormat: string;
     /** Raw source layer. Immutable: read, never rewritten. Default: "Sources" */
     sources: string;
     /** LLM-maintained wiki layer. Fully agent-owned. Default: "Wiki" */
     wiki: string;
-    /** Where content structures are stored. Default: "Lumis/Amplify/Structures" */
+    /** Where content structures are stored. Default: "Amplify/Structures" */
     amplifyStructures: string;
-    /** Where hook type files are stored. Default: "Lumis/Amplify/Hooks" */
+    /** Where hook type files are stored. Default: "Amplify/Hooks" */
     amplifyHooks: string;
-    /** Where the persuasion glossary lives. Default: "Lumis/Amplify" */
+    /** Where the persuasion glossary lives. Default: "Amplify" */
     amplifyPersuasion: string;
     /** Where strategy docs live. Default: "Work/Strategy" */
     strategyDocs: string;
-    /** Your voice/identity file. Default: "Lumis/Voice.md" */
+    /** Your voice/identity file. Default: "Amplify/Voice.md" */
     voice: string;
-    /** Where signals are stored. Default: "Lumis/Signals" */
+    /** Where signals are stored. Default: "Amplify/Signals" */
     signals: string;
-    /** Where memory (sessions + preferences) lives. Default: "Lumis/Memory" */
+    /** Where memory (sessions + preferences) lives. Default: "Amplify/Memory" */
     memory: string;
     /** Where entity pages (people, orgs, tools) live. Default: "Wiki/Entities" */
     people: string;
-    /** Where challenge logs and promoted challenge notes are stored. Default: "Life/Challenges" */
-    challenges: string;
-    /** Where brand guidelines and inspiration live. Default: "Lumis/Brand" */
+    /** Where brand guidelines and inspiration live. Default: "Amplify/Brand" */
     brand: string;
     /** Where audio narrations are stored. Default: "Sources/Audio" */
     audio: string;
-    /** Your goals/north star file. Default: "Lumis/Goals.md" */
-    goals: string;
     /** Where meeting notes are stored. Default: "Sources/Meetings" */
     meetings: string;
-    /** Where weekly reviews are stored. Default: "Life/Reviews" */
-    reviews: string;
   };
 
   /** Optional brand config for visual identity (active/default brand) */
@@ -91,26 +77,19 @@ export interface LumisConfig {
   capture?: CaptureConfig;
 }
 
-export const DEFAULT_PATHS: LumisConfig["paths"] = {
-  moments: "Life/Moments",
+export const DEFAULT_PATHS: AmplifyConfig["paths"] = {
   stories: "Work/Stories",
-  canvas: "Lumis/Pattern Map.canvas",
-  dailyNotes: "Life/Journal",
-  dailyNoteFormat: "YYYY-MM-DD",
   sources: "Sources",
   wiki: "Wiki",
-  amplifyStructures: "Lumis/Amplify/Structures",
-  amplifyHooks: "Lumis/Amplify/Hooks",
-  amplifyPersuasion: "Lumis/Amplify",
+  amplifyStructures: "Amplify/Structures",
+  amplifyHooks: "Amplify/Hooks",
+  amplifyPersuasion: "Amplify",
   strategyDocs: "Work/Strategy",
-  voice: "Lumis/Voice.md",
-  signals: "Lumis/Signals",
-  memory: "Lumis/Memory",
+  voice: "Amplify/Voice.md",
+  signals: "Amplify/Signals",
+  memory: "Amplify/Memory",
   people: "Wiki/Entities",
-  challenges: "Life/Challenges",
-  brand: "Lumis/Brand",
+  brand: "Amplify/Brand",
   audio: "Sources/Audio",
-  goals: "Lumis/Goals.md",
   meetings: "Sources/Meetings",
-  reviews: "Life/Reviews",
 };

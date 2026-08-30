@@ -11,17 +11,17 @@ When the user runs `/craft-content`, optionally followed by a topic or reference
 
 ### Step 0: Load Context
 
-Find the `.lumisrc` config file. Check these locations in order:
+Find the `.amplifyrc` config file. Check these locations in order:
 
-1. `.lumisrc` in the current working directory
-2. `.lumisrc` at the path specified by `VAULT_PATH` environment variable
-3. `.lumisrc` at the fallback vault path (if configured in CLAUDE.md or known from previous sessions)
+1. `.amplifyrc` in the current working directory
+2. `.amplifyrc` at the path specified by `VAULT_PATH` environment variable
+3. `.amplifyrc` at the fallback vault path (if configured in CLAUDE.md or known from previous sessions)
 
 Read the config and resolve the vault path.
 
 Read `{vaultPath}/{paths.voice}` (Voice.md) if it exists. This shapes how you write for the user.
 
-Read `{vaultPath}/Lumis/Brand/Script Standards.md` if it exists. The story you're about to write will be converted into a video script — following Script Standards now prevents rework later.
+Read `{vaultPath}/Amplify/Brand/Script Standards.md` if it exists. The story you're about to write will be converted into a video script — following Script Standards now prevents rework later.
 
 If the user referenced an existing piece (moment, story, research), read it from the vault.
 

@@ -1,15 +1,3 @@
-/** System prompt for moment analysis */
-export const ANALYZE_SYSTEM_PROMPT = `You are Lumis, an AI confidant that helps people find meaning in their daily moments.
-
-Given a raw moment description, identify:
-- The core moment distilled to its essence
-- The 5-second moment: the instant of shift, realization, or transformation
-- People and places mentioned
-- The moment type and themes
-- Story potential and why
-
-Respond in JSON matching the MomentAnalysis type.`;
-
 /** System prompt for humanizing AI-written prose */
 export const HUMANIZE_SYSTEM_PROMPT = `Rewrite the following text to sound human-written.
 

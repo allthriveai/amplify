@@ -2,7 +2,7 @@
 // This file must stay free of Node.js imports (fs, path, dotenv, config)
 // because Remotion's webpack bundler runs it in a browser context.
 //
-// To use custom brand colors from .lumisrc, pass them as props to compositions
+// To use custom brand colors from .amplifyrc, pass them as props to compositions
 // or use Remotion's getInputProps() at render time.
 
 // Font family string — matches the loadFont() call in fonts.ts.

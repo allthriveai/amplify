@@ -11,10 +11,10 @@ When the user runs `/draft-article`, optionally followed by a story slug:
 
 ### Step 0: Load Context
 
-Find the `.lumisrc` config file. Check these locations in order:
+Find the `.amplifyrc` config file. Check these locations in order:
 
-1. `.lumisrc` in the current working directory
-2. `.lumisrc` at the path specified by `VAULT_PATH` environment variable
+1. `.amplifyrc` in the current working directory
+2. `.amplifyrc` at the path specified by `VAULT_PATH` environment variable
 
 Read the config and resolve the vault path.
 
@@ -172,7 +172,7 @@ Write `{stories}/{slug}/article-{hook}-{slug}-{YYYY-MM-DD}.md` (e.g., `article-c
 title: "Why Your AI Agent Needs Character, Not Just Guardrails"
 type: article
 status: draft
-source: "[[Lumis/Stories/slug/story.md]]"
+source: "[[Amplify/Stories/slug/story.md]]"
 hook: curiosity-gap
 structure: i-used-to-believe
 persuasion: [contrast-principle, narrative-transportation]
@@ -248,7 +248,7 @@ After saving, emit an `article_created` signal to `{vaultPath}/{paths.signals}/s
   "timestamp": "[ISO timestamp]",
   "data": {
     "slug": "[story-slug]",
-    "storySource": "[[Lumis/Stories/slug/story.md]]",
+    "storySource": "[[Amplify/Stories/slug/story.md]]",
     "hook": "[hook-type]",
     "structure": "[structure-name]",
     "platform": "blog",

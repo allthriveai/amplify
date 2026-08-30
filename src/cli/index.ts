@@ -1,31 +1,9 @@
 #!/usr/bin/env node
 
-import { loadConfig } from "../config.js";
-
 const [, , command, ...args] = process.argv;
 
 async function main() {
   switch (command) {
-    case "moment": {
-      const { momentCommand } = await import("./commands/moment.js");
-      await momentCommand(args.join(" "));
-      break;
-    }
-    case "today": {
-      const { todayCommand } = await import("./commands/today.js");
-      await todayCommand(args);
-      break;
-    }
-    case "week": {
-      const { weekCommand } = await import("./commands/week.js");
-      await weekCommand(args);
-      break;
-    }
-    case "patterns": {
-      const { patternsCommand } = await import("./commands/patterns.js");
-      await patternsCommand();
-      break;
-    }
     case "init": {
       const { initCommand } = await import("./commands/init.js");
       await initCommand(args[0]);
@@ -35,7 +13,7 @@ async function main() {
       const fromIndex = args.indexOf("--from");
       const fromPath = fromIndex !== -1 ? args[fromIndex + 1] : null;
       if (!fromPath) {
-        console.error("Usage: lumis import-sparks --from <path>");
+        console.error("Usage: amplify import-sparks --from <path>");
         process.exit(1);
       }
       const { importSparksCommand } = await import("./commands/import-sparks.js");
@@ -62,36 +40,22 @@ async function main() {
       await storyboardCommand(args);
       break;
     }
-    case "story-craft": {
-      const { storyCraftCommand } = await import("./commands/story-craft.js");
-      const mode = args[0] === "develop" ? "develop" : "practice";
-      const subArgs = args[0] === "develop" || args[0] === "practice" ? args.slice(1) : args;
-      await storyCraftCommand(mode, subArgs);
-      break;
-    }
     default:
-      console.log(`lumis — your AI confidant
+      console.log(`amplify — turn your second brain into published content
 
 Commands:
-  lumis today                        Open today's journal (receipt + carried tasks)
-  lumis today --done "task"          Check tasks off and close the day
-  lumis today --touch "target"       Stamp a goal target directly (no checkbox needed)
-  lumis today --touch "t" --date D   Stamp it for a past day (backfilled phone entries)
-  lumis week                         Write this week's review
-  lumis moment "..."                 Capture a moment
-  lumis patterns                     Regenerate the Pattern Map
-  lumis init [path]                  Set up Lumis in a vault
-  lumis import-sparks --from <path>  Import sparks from manifest
-  lumis studio <cmd>                 Video production (list, render, preview)
-  lumis listen <note>                Convert a research note to audio narration
-  lumis listen --voices              List available ElevenLabs voices
-  lumis obs <cmd>                    OBS capture (setup, start, stop, status, scenes, etc.)
-  lumis storyboard <slug>            Visual storyboard editor (edits save to timeline)
-  lumis story-craft                  Practice storytelling (pick a moment, one exercise)
-  lumis story-craft develop [term]   Develop a moment into a full story
+  amplify init [path]                 Connect Amplify to an Obsidian vault
+  amplify studio <cmd>                Video production (list, render, preview)
+  amplify storyboard <slug>           Visual storyboard editor (edits save to timeline)
+  amplify listen <note>               Narrate a wiki page with ElevenLabs
+  amplify listen --voices             List available ElevenLabs voices
+  amplify obs <cmd>                   Screen capture (setup, start, stop, status, scenes)
+  amplify import-sparks --from <path> Import content from a sparks manifest
 
 Options:
-  --help    Show this help`);
+  --help    Show this help
+
+Your notes stay in your vault. Amplify reads and writes there, and stores nothing itself.`);
   }
 }
 

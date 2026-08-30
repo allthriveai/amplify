@@ -11,7 +11,7 @@ material only if the wiki genuinely cannot answer.
 
 ## Step 0: Load configuration
 
-Read `.lumisrc` for `paths.wiki` and `paths.sources`. Read `{vaultPath}/CLAUDE.md`
+Read `.amplifyrc` for `paths.wiki` and `paths.sources`. Read `{vaultPath}/CLAUDE.md`
 for the conventions.
 
 ## Step 1: Read the index first

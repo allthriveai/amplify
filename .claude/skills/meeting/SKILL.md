@@ -11,16 +11,16 @@ When the user runs `/meeting`, optionally followed by a filename, Plaud note tit
 
 ### Step 0: Load Context
 
-Find the `.lumisrc` config file. Check these locations in order:
+Find the `.amplifyrc` config file. Check these locations in order:
 
-1. `.lumisrc` in the current working directory
-2. `.lumisrc` at the path specified by `VAULT_PATH` environment variable
-3. `.lumisrc` at the fallback vault path (if configured in CLAUDE.md or known from previous sessions)
+1. `.amplifyrc` in the current working directory
+2. `.amplifyrc` at the path specified by `VAULT_PATH` environment variable
+3. `.amplifyrc` at the fallback vault path (if configured in CLAUDE.md or known from previous sessions)
 
 Read the config and resolve the vault path.
 
 Read `{vaultPath}/{paths.voice}` (Voice.md) if it exists — shapes how you write summaries.
-Read `{vaultPath}/{paths.goals}` (Goals.md) if it exists — helps flag action items relevant to goals.
+Read `{vaultPath}/{paths.voice}` (Voice.md) if it exists — helps flag which decisions are worth ingesting into the wiki later.
 
 ### Step 1: Find the Source
 

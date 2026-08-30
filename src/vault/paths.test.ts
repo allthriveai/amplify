@@ -1,13 +1,10 @@
 import { describe, it, expect } from "vitest";
 import { join } from "node:path";
-import type { LumisConfig } from "../types/config.js";
+import type { AmplifyConfig } from "../types/config.js";
 import { DEFAULT_PATHS } from "../types/config.js";
 import {
   resolvePath,
-  resolveMomentsDir,
   resolveStoriesDir,
-  resolveCanvasPath,
-  resolveDailyNotePath,
   resolveSourcesDir,
   resolveClippingsDir,
   resolveSourceAssetsDir,
@@ -23,11 +20,10 @@ import {
   resolvePreferencesPath,
   resolveVoicePath,
   resolveStrategyDocsDir,
-  resolvePracticeLogPath,
 } from "./paths.js";
 
-/** Create a LumisConfig with sensible defaults for testing */
-function mockConfig(overrides?: Partial<LumisConfig>): LumisConfig {
+/** Create a AmplifyConfig with sensible defaults for testing */
+function mockConfig(overrides?: Partial<AmplifyConfig>): AmplifyConfig {
   return {
     vaultPath: "/test/vault",
     anthropicApiKey: "test-key",
@@ -50,53 +46,10 @@ describe("resolvePath", () => {
   });
 });
 
-describe("resolveMomentsDir", () => {
-  it("resolves to the default moments path", () => {
-    const config = mockConfig();
-    expect(resolveMomentsDir(config)).toBe("/test/vault/Life/Moments");
-  });
-
-  it("respects custom moments path", () => {
-    const config = mockConfig({
-      paths: { ...DEFAULT_PATHS, moments: "Custom/Moments" },
-    });
-    expect(resolveMomentsDir(config)).toBe("/test/vault/Custom/Moments");
-  });
-});
-
 describe("resolveStoriesDir", () => {
   it("resolves to the default stories path", () => {
     const config = mockConfig();
     expect(resolveStoriesDir(config)).toBe("/test/vault/Work/Stories");
-  });
-});
-
-describe("resolveCanvasPath", () => {
-  it("resolves to the default canvas path", () => {
-    const config = mockConfig();
-    expect(resolveCanvasPath(config)).toBe(
-      "/test/vault/Lumis/Pattern Map.canvas",
-    );
-  });
-});
-
-describe("resolveDailyNotePath", () => {
-  it("resolves with a specific date and default format", () => {
-    const config = mockConfig();
-    // The key is split on "-" rather than passed to new Date(), which would parse
-    // "YYYY-MM-DD" as UTC midnight and land on the previous day west of UTC. So the
-    // day in the filename is exactly the day asked for, in every timezone.
-    const result = resolveDailyNotePath(config, "2024-06-15");
-    expect(result).toBe("/test/vault/Life/Journal/2024-06-15.md");
-  });
-
-  it("resolves with a custom dailyNotes directory", () => {
-    const config = mockConfig({
-      paths: { ...DEFAULT_PATHS, dailyNotes: "Life/Daily" },
-    });
-    const result = resolveDailyNotePath(config, "2024-01-01");
-    expect(result).toContain("/test/vault/Life/Daily/");
-    expect(result).toMatch(/\.md$/);
   });
 });
 
@@ -154,7 +107,7 @@ describe("wiki layer", () => {
 describe("resolveSignalsDir", () => {
   it("resolves to the default signals directory", () => {
     const config = mockConfig();
-    expect(resolveSignalsDir(config)).toBe("/test/vault/Lumis/Signals");
+    expect(resolveSignalsDir(config)).toBe("/test/vault/Amplify/Signals");
   });
 });
 
@@ -162,7 +115,7 @@ describe("resolveSignalsPath", () => {
   it("resolves to signals.json inside the signals directory", () => {
     const config = mockConfig();
     expect(resolveSignalsPath(config)).toBe(
-      "/test/vault/Lumis/Signals/signals.json",
+      "/test/vault/Amplify/Signals/signals.json",
     );
   });
 });
@@ -170,7 +123,7 @@ describe("resolveSignalsPath", () => {
 describe("resolveMemoryDir", () => {
   it("resolves to the default memory directory", () => {
     const config = mockConfig();
-    expect(resolveMemoryDir(config)).toBe("/test/vault/Lumis/Memory");
+    expect(resolveMemoryDir(config)).toBe("/test/vault/Amplify/Memory");
   });
 });
 
@@ -178,7 +131,7 @@ describe("resolveSessionPath", () => {
   it("resolves to sessions subdirectory with date filename", () => {
     const config = mockConfig();
     expect(resolveSessionPath(config, "2024-03-10")).toBe(
-      "/test/vault/Lumis/Memory/sessions/2024-03-10.md",
+      "/test/vault/Amplify/Memory/sessions/2024-03-10.md",
     );
   });
 });
@@ -187,7 +140,7 @@ describe("resolvePreferencesPath", () => {
   it("resolves to preferences.md inside the memory directory", () => {
     const config = mockConfig();
     expect(resolvePreferencesPath(config)).toBe(
-      "/test/vault/Lumis/Memory/preferences.md",
+      "/test/vault/Amplify/Memory/preferences.md",
     );
   });
 });
@@ -195,7 +148,7 @@ describe("resolvePreferencesPath", () => {
 describe("resolveVoicePath", () => {
   it("resolves to the default voice file", () => {
     const config = mockConfig();
-    expect(resolveVoicePath(config)).toBe("/test/vault/Lumis/Voice.md");
+    expect(resolveVoicePath(config)).toBe("/test/vault/Amplify/Voice.md");
   });
 });
 
@@ -208,11 +161,3 @@ describe("resolveStrategyDocsDir", () => {
   });
 });
 
-describe("resolvePracticeLogPath", () => {
-  it("resolves to Practice Log.md inside the stories directory", () => {
-    const config = mockConfig();
-    expect(resolvePracticeLogPath(config)).toBe(
-      "/test/vault/Work/Stories/Practice Log.md",
-    );
-  });
-});

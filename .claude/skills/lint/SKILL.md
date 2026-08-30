@@ -14,7 +14,7 @@ anything large.
 
 ## Step 0: Load configuration
 
-Read `.lumisrc` for `paths.wiki` and `paths.sources`, and `{vaultPath}/CLAUDE.md` for
+Read `.amplifyrc` for `paths.wiki` and `paths.sources`, and `{vaultPath}/CLAUDE.md` for
 the conventions being checked against.
 
 ## Step 1: Build the picture

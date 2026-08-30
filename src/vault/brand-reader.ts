@@ -1,17 +1,17 @@
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
-import type { LumisConfig } from "../types/config.js";
+import type { AmplifyConfig } from "../types/config.js";
 import { resolveBrandPath, resolveBrandInspirationDir } from "./paths.js";
 
 /** Read Brand.md content, or null if it doesn't exist */
-export function readBrand(config: LumisConfig): string | null {
+export function readBrand(config: AmplifyConfig): string | null {
   const brandPath = resolveBrandPath(config);
   if (!existsSync(brandPath)) return null;
   return readFileSync(brandPath, "utf-8");
 }
 
 /** Read all .md files from Brand/Inspiration/, returns array of { filename, content } */
-export function readBrandInspirations(config: LumisConfig): { filename: string; content: string }[] {
+export function readBrandInspirations(config: AmplifyConfig): { filename: string; content: string }[] {
   const dir = resolveBrandInspirationDir(config);
   if (!existsSync(dir)) return [];
 

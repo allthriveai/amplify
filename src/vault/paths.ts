@@ -1,202 +1,157 @@
 import { join } from "node:path";
-import type { LumisConfig } from "../types/config.js";
+import type { AmplifyConfig } from "../types/config.js";
 import { WIKI_SUBDIRS, type WikiPageKind } from "../types/wiki.js";
 
 /** Resolve an absolute path within the vault */
-export function resolvePath(config: LumisConfig, relativePath: string): string {
+export function resolvePath(config: AmplifyConfig, relativePath: string): string {
   return join(config.vaultPath, relativePath);
 }
 
-/** Resolve the moments directory */
-export function resolveMomentsDir(config: LumisConfig): string {
-  return resolvePath(config, config.paths.moments);
-}
 
 /** Resolve the stories directory */
-export function resolveStoriesDir(config: LumisConfig): string {
+export function resolveStoriesDir(config: AmplifyConfig): string {
   return resolvePath(config, config.paths.stories);
 }
 
-/** Resolve the pattern map canvas path */
-export function resolveCanvasPath(config: LumisConfig): string {
-  return resolvePath(config, config.paths.canvas);
-}
 
-/**
- * Resolve a daily note path for a YYYY-MM-DD date key.
- *
- * The key is split manually rather than passed to `new Date()`, which parses
- * date-only strings as UTC midnight and lands on the previous calendar day for
- * any timezone west of UTC.
- */
-export function resolveDailyNotePath(config: LumisConfig, date: string): string {
-  const format = config.paths.dailyNoteFormat || "YYYY-MM-DD";
-  const [yyyy, mm, dd] = date.split("-");
-  const filename = format.replace("YYYY", yyyy).replace("MM", mm).replace("DD", dd);
-  return resolvePath(config, join(config.paths.dailyNotes, `${filename}.md`));
-}
 
 /** Resolve the source layer root. Everything under here is immutable. */
-export function resolveSourcesDir(config: LumisConfig): string {
+export function resolveSourcesDir(config: AmplifyConfig): string {
   return resolvePath(config, config.paths.sources);
 }
 
 /** Resolve the clippings directory: {sources}/Clippings */
-export function resolveClippingsDir(config: LumisConfig): string {
+export function resolveClippingsDir(config: AmplifyConfig): string {
   return join(resolveSourcesDir(config), "Clippings");
 }
 
 /** Resolve the source-layer assets directory: {sources}/assets */
-export function resolveSourceAssetsDir(config: LumisConfig): string {
+export function resolveSourceAssetsDir(config: AmplifyConfig): string {
   return join(resolveSourcesDir(config), "assets");
 }
 
 /** Resolve the wiki root. Everything under here is agent-owned. */
-export function resolveWikiDir(config: LumisConfig): string {
+export function resolveWikiDir(config: AmplifyConfig): string {
   return resolvePath(config, config.paths.wiki);
 }
 
 /** Resolve the wiki subfolder for a page kind: {wiki}/{Summaries|Concepts|Entities|Synthesis} */
-export function resolveWikiSubdir(config: LumisConfig, kind: WikiPageKind): string {
+export function resolveWikiSubdir(config: AmplifyConfig, kind: WikiPageKind): string {
   return join(resolveWikiDir(config), WIKI_SUBDIRS[kind]);
 }
 
 /** Resolve a wiki page path: {wiki}/{subdir}/{filename} */
-export function resolveWikiPagePath(config: LumisConfig, kind: WikiPageKind, filename: string): string {
+export function resolveWikiPagePath(config: AmplifyConfig, kind: WikiPageKind, filename: string): string {
   return join(resolveWikiSubdir(config, kind), filename);
 }
 
 /** Resolve the wiki catalog: {wiki}/index.md */
-export function resolveWikiIndexPath(config: LumisConfig): string {
+export function resolveWikiIndexPath(config: AmplifyConfig): string {
   return join(resolveWikiDir(config), "index.md");
 }
 
 /** Resolve the append-only wiki log: {wiki}/log.md */
-export function resolveWikiLogPath(config: LumisConfig): string {
+export function resolveWikiLogPath(config: AmplifyConfig): string {
   return join(resolveWikiDir(config), "log.md");
 }
 
 /** Resolve the amplify structures directory */
-export function resolveAmplifyStructuresDir(config: LumisConfig): string {
+export function resolveAmplifyStructuresDir(config: AmplifyConfig): string {
   return resolvePath(config, config.paths.amplifyStructures);
 }
 
 /** Resolve the amplify hooks directory */
-export function resolveAmplifyHooksDir(config: LumisConfig): string {
+export function resolveAmplifyHooksDir(config: AmplifyConfig): string {
   return resolvePath(config, config.paths.amplifyHooks);
 }
 
 /** Resolve the persuasion glossary file path */
-export function resolveAmplifyPersuasionPath(config: LumisConfig): string {
+export function resolveAmplifyPersuasionPath(config: AmplifyConfig): string {
   return resolvePath(config, join(config.paths.amplifyPersuasion, "Persuasion-Glossary.md"));
 }
 
 /** Resolve the assets directory within a story folder: {stories}/{slug}/assets/ */
-export function resolveStoryAssetsDir(config: LumisConfig, slug: string): string {
+export function resolveStoryAssetsDir(config: AmplifyConfig, slug: string): string {
   return join(resolveStoryDir(config, slug), "assets");
 }
 
 /** Resolve the strategy docs directory */
-export function resolveStrategyDocsDir(config: LumisConfig): string {
+export function resolveStrategyDocsDir(config: AmplifyConfig): string {
   return resolvePath(config, config.paths.strategyDocs);
 }
 
 /** Resolve the voice/identity file */
-export function resolveVoicePath(config: LumisConfig): string {
+export function resolveVoicePath(config: AmplifyConfig): string {
   return resolvePath(config, config.paths.voice);
 }
 
-/** Resolve the goals/north star file */
-export function resolveGoalsPath(config: LumisConfig): string {
-  return resolvePath(config, config.paths.goals);
-}
 
 /** Resolve the signals directory */
-export function resolveSignalsDir(config: LumisConfig): string {
+export function resolveSignalsDir(config: AmplifyConfig): string {
   return resolvePath(config, config.paths.signals);
 }
 
 /** Resolve the signals.json file path */
-export function resolveSignalsPath(config: LumisConfig): string {
+export function resolveSignalsPath(config: AmplifyConfig): string {
   return join(resolvePath(config, config.paths.signals), "signals.json");
 }
 
 /** Resolve the memory directory */
-export function resolveMemoryDir(config: LumisConfig): string {
+export function resolveMemoryDir(config: AmplifyConfig): string {
   return resolvePath(config, config.paths.memory);
 }
 
 /** Resolve a session log file path for a given date */
-export function resolveSessionPath(config: LumisConfig, date: string): string {
+export function resolveSessionPath(config: AmplifyConfig, date: string): string {
   return join(resolvePath(config, config.paths.memory), "sessions", `${date}.md`);
 }
 
 /** Resolve the preferences file path */
-export function resolvePreferencesPath(config: LumisConfig): string {
+export function resolvePreferencesPath(config: AmplifyConfig): string {
   return join(resolvePath(config, config.paths.memory), "preferences.md");
 }
 
-/** Resolve the practice log file path */
-export function resolvePracticeLogPath(config: LumisConfig): string {
-  return join(resolvePath(config, config.paths.stories), "Practice Log.md");
-}
 
 /** Resolve the people/inspiration directory */
-export function resolvePeopleDir(config: LumisConfig): string {
+export function resolvePeopleDir(config: AmplifyConfig): string {
   return resolvePath(config, config.paths.people);
 }
 
-/** Resolve the challenges directory */
-export function resolveChallengesDir(config: LumisConfig): string {
-  return resolvePath(config, config.paths.challenges);
-}
 
-/** Resolve the challenge log file path */
-export function resolveChallengeLogPath(config: LumisConfig): string {
-  return join(resolveChallengesDir(config), "Challenge Log.md");
-}
 
 /** Resolve a story folder by slug: {stories}/{slug}/ */
-export function resolveStoryDir(config: LumisConfig, slug: string): string {
+export function resolveStoryDir(config: AmplifyConfig, slug: string): string {
   return join(resolveStoriesDir(config), slug);
 }
 
 /** Resolve a director cut file: {stories}/{slug}/{filename} */
-export function resolveDirectorCutPath(config: LumisConfig, slug: string, filename: string): string {
+export function resolveDirectorCutPath(config: AmplifyConfig, slug: string, filename: string): string {
   return join(resolveStoryDir(config, slug), filename);
 }
 
 /** Resolve the audio narrations directory */
-export function resolveAudioDir(config: LumisConfig): string {
+export function resolveAudioDir(config: AmplifyConfig): string {
   return resolvePath(config, config.paths.audio);
 }
 
 /** Resolve the brand directory */
-export function resolveBrandDir(config: LumisConfig): string {
+export function resolveBrandDir(config: AmplifyConfig): string {
   return resolvePath(config, config.paths.brand);
 }
 
-/** Resolve the weekly reviews directory */
-export function resolveReviewsDir(config: LumisConfig): string {
-  return resolvePath(config, config.paths.reviews);
-}
 
-/** Resolve a weekly review path, keyed by the Monday that starts the week */
-export function resolveReviewPath(config: LumisConfig, weekOf: string): string {
-  return join(resolveReviewsDir(config), `Week of ${weekOf}.md`);
-}
 
 /** Resolve the meetings directory */
-export function resolveMeetingsDir(config: LumisConfig): string {
+export function resolveMeetingsDir(config: AmplifyConfig): string {
   return resolvePath(config, config.paths.meetings);
 }
 
 /** Resolve the Brand.md file */
-export function resolveBrandPath(config: LumisConfig): string {
+export function resolveBrandPath(config: AmplifyConfig): string {
   return resolvePath(config, join(config.paths.brand, "Brand.md"));
 }
 
 /** Resolve the brand inspiration directory */
-export function resolveBrandInspirationDir(config: LumisConfig): string {
+export function resolveBrandInspirationDir(config: AmplifyConfig): string {
   return resolvePath(config, join(config.paths.brand, "Inspiration"));
 }

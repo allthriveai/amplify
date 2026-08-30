@@ -4,11 +4,11 @@ import { exec } from "node:child_process";
 import matter from "gray-matter";
 import { loadConfig } from "../../config.js";
 
-const USAGE = `lumis storyboard — visual pre-production editor
+const USAGE = `amplify storyboard — visual pre-production editor
 
 Usage:
-  lumis storyboard <slug>            Open storyboard for a story's timeline
-  lumis storyboard <timeline.md>     Open storyboard for a specific timeline file`;
+  amplify storyboard <slug>            Open storyboard for a story's timeline
+  amplify storyboard <timeline.md>     Open storyboard for a specific timeline file`;
 
 const PORT = 4800;
 

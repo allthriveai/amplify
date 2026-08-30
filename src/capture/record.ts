@@ -3,14 +3,14 @@ import { mkdir } from "node:fs/promises";
 import { join } from "node:path";
 import OBSWebSocket from "obs-websocket-js";
 
-import type { LumisConfig } from "../types/config.js";
+import type { AmplifyConfig } from "../types/config.js";
 import { resolveStoryAssetsDir } from "../vault/paths.js";
 import { setOutputPath } from "./setup.js";
 
 /** Start recording to a story's assets folder */
 export async function startRecording(
   obs: OBSWebSocket,
-  config: LumisConfig,
+  config: AmplifyConfig,
   slug: string,
 ): Promise<string> {
   const assetsDir = resolveStoryAssetsDir(config, slug);
@@ -78,7 +78,7 @@ export async function getRecordingStatus(
 
 /** List captured video/image assets for a story */
 export function listCapturedAssets(
-  config: LumisConfig,
+  config: AmplifyConfig,
   slug: string,
 ): { name: string; size: string; modified: Date }[] {
   const assetsDir = resolveStoryAssetsDir(config, slug);

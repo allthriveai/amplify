@@ -1,27 +1,15 @@
 /**
- * Lumis MCP Server
+ * Amplify MCP Server
  *
- * Exposes Lumis tools to Claude Desktop and other MCP clients via stdio transport.
+ * Exposes Amplify tools to Claude Desktop and other MCP clients via stdio transport.
  * Claude Desktop launches this as a subprocess: `node dist/mcp/index.js`
  *
  * Tools:
- *   capture_moment         — Capture a daily moment
- *   get_moments            — Read moments from the vault
- *   get_patterns           — Get the Pattern Map
- *   ingest_source          — Save a raw source into the immutable source layer
- *   social_coach           — Recommend what to post and where
- *   record_signal          — Record user feedback signals
- *   remember               — Save a user preference
- *   recall                 — Read preferences and session history
- *   story_craft_practice   — Practice storytelling with one exercise
- *   story_craft_develop    — Develop a moment into a full story
- *   journal_today          — Open or close today's journal
- *   week_review            — The weekly reckoning
- *
- * Prompts (carry the coaching behavior to clients that cannot read skills):
- *   journal                — Run the daily loop
- *   weekly-review          — Run the weekly reckoning
- *   coach                  — Read the vault and say the one thing that matters
+ *   ingest_source    — Save a raw source into the immutable source layer
+ *   suggest_content  — Rank wiki pages by how publishable they are
+ *   record_signal    — Record feedback: rejections, posts, engagement
+ *   remember         — Save a preference
+ *   recall           — Read preferences, sessions, and the signal summary
  */
 
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
@@ -31,38 +19,34 @@ import { readdirSync, readFileSync, existsSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
 import { loadConfig } from "../config.js";
-import { captureMoment } from "../pipeline/capture.js";
-import { readMoments, readCanvas, readStories } from "../vault/reader.js";
-import { writeClipping, writeStory, appendPracticeLog } from "../vault/writer.js";
+import { readStories } from "../vault/reader.js";
+import { writeClipping } from "../vault/writer.js";
 import { parseFrontmatter } from "../vault/frontmatter.js";
-import { resolveVoicePath, resolveStoriesDir, resolvePracticeLogPath, resolveMomentsDir, resolveClippingsDir } from "../vault/paths.js";
+import { resolveVoicePath, resolveStoriesDir, resolveClippingsDir, resolveWikiDir } from "../vault/paths.js";
 import { emitSignal, signalId, summarizeSignals } from "../vault/signals.js";
 import { appendSessionEntry, formatSessionTime, readRecentSessions, readPreferences, addPreference } from "../vault/memory.js";
-import { openDay, previewDay, closeDay, setPriorities, touchTarget, runWeekReview, renderDay, renderWeek } from "../journal/index.js";
-import { JOURNAL_PROMPT, WEEK_PROMPT, COACH_PROMPT } from "./prompts.js";
-import { todayKey, daysBetween, formatTask } from "../vault/daily-notes.js";
 import { slugify } from "../vault/slug.js";
-import type { LumisConfig } from "../types/config.js";
+import { todayKey } from "../vault/dates.js";
+import type { AmplifyConfig } from "../types/config.js";
 import type { ClippingFrontmatter } from "../types/source.js";
-import type { CanvasFile, CanvasNode, CanvasEdge } from "../types/canvas.js";
-import type { Signal, StoryDevelopedSignal, StoryPracticeSignal } from "../types/signal.js";
-import type { StoryFrontmatter } from "../types/story.js";
+import { WIKI_SUBDIRS, type WikiFrontmatter } from "../types/wiki.js";
+import type { Signal } from "../types/signal.js";
 
 // ---------------------------------------------------------------------------
 // Server setup
 // ---------------------------------------------------------------------------
 
 const server = new McpServer({
-  name: "lumis",
+  name: "amplify",
   version: "0.1.0",
 });
 
 // Load config once at startup. Tool handlers reference this.
-let config: LumisConfig;
+let config: AmplifyConfig;
 try {
   config = loadConfig();
 } catch (err) {
-  console.error("Failed to load Lumis config:", err);
+  console.error("Failed to load Amplify config:", err);
   process.exit(1);
 }
 
@@ -74,202 +58,6 @@ function readVoice(): string | null {
   }
   return null;
 }
-
-/** Check how many days since the last story craft practice */
-function daysSinceLastPractice(): number | null {
-  const logPath = resolvePracticeLogPath(config);
-  if (!existsSync(logPath)) return null;
-
-  const content = readFileSync(logPath, "utf-8");
-  const dateMatches = [...content.matchAll(/## (\d{4}-\d{2}-\d{2}) —/g)];
-  if (dateMatches.length === 0) return null;
-
-  const lastDate = dateMatches.map((m) => m[1]).sort().pop()!;
-  // daysBetween splits the keys itself — new Date("YYYY-MM-DD") parses as UTC
-  // midnight and lands a day off west of UTC.
-  return daysBetween(lastDate, todayKey());
-}
-
-// ---------------------------------------------------------------------------
-// Tool 1: capture_moment
-// ---------------------------------------------------------------------------
-
-server.registerTool("capture_moment", {
-  description:
-    "Capture a daily moment. Analyzes the input, finds the 5-second moment, connects to past moments, writes to the vault, and updates the Pattern Map.",
-  inputSchema: {
-    rawInput: z.string().describe("What happened today — the raw moment to capture"),
-  },
-}, async ({ rawInput }) => {
-  try {
-    const { moment, analysis } = await captureMoment(rawInput, config);
-
-    const result = {
-      filename: moment.filename,
-      path: moment.path,
-      title: analysis.title,
-      fiveSecondMoment: analysis.fiveSecondMoment,
-      momentType: analysis.momentType,
-      themes: analysis.themes,
-      storyPotential: analysis.storyPotential,
-      connections: analysis.connections.map((c) => ({
-        momentPath: c.momentPath,
-        reason: c.reason,
-      })),
-      people: analysis.people,
-      places: analysis.places,
-    };
-
-    return {
-      content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }],
-    };
-  } catch (err) {
-    const message = err instanceof Error ? err.message : String(err);
-    return {
-      content: [{ type: "text" as const, text: `Error capturing moment: ${message}` }],
-      isError: true,
-    };
-  }
-});
-
-// ---------------------------------------------------------------------------
-// Tool 2: get_moments
-// ---------------------------------------------------------------------------
-
-server.registerTool("get_moments", {
-  description:
-    "Read moments from the vault. Returns all moments or filter by theme. Each moment includes its date, title, themes, story-potential, 5-second moment, and connection count.",
-  inputSchema: {
-    theme: z.string().optional().describe("Filter moments to those containing this theme"),
-    limit: z.number().optional().describe("Maximum number of moments to return"),
-  },
-}, async ({ theme, limit }) => {
-  try {
-    let moments = readMoments(config);
-
-    // Exclude private moments from content pipeline
-    moments = moments.filter((m) => !m.frontmatter.private);
-
-    // Filter by theme if provided
-    if (theme) {
-      const lowerTheme = theme.toLowerCase();
-      moments = moments.filter((m) =>
-        m.frontmatter.themes.some((t) => t.toLowerCase().includes(lowerTheme)),
-      );
-    }
-
-    // Sort by date descending (newest first)
-    moments.sort((a, b) => b.frontmatter.date.localeCompare(a.frontmatter.date));
-
-    // Apply limit
-    if (limit && limit > 0) {
-      moments = moments.slice(0, limit);
-    }
-
-    const result = moments.map((m) => {
-      // Extract title from first heading
-      const titleMatch = m.content.match(/^#\s+(.+)$/m);
-      return {
-        filename: m.filename,
-        date: m.frontmatter.date,
-        title: titleMatch?.[1] ?? m.filename.replace(/\.md$/, ""),
-        themes: m.frontmatter.themes,
-        storyPotential: m.frontmatter["story-potential"],
-        storyStatus: m.frontmatter["story-status"],
-        momentType: m.frontmatter["moment-type"],
-        fiveSecondMoment: m.fiveSecondMoment ?? null,
-        connectionCount: m.connections.length,
-      };
-    });
-
-    return {
-      content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }],
-    };
-  } catch (err) {
-    const message = err instanceof Error ? err.message : String(err);
-    return {
-      content: [{ type: "text" as const, text: `Error reading moments: ${message}` }],
-      isError: true,
-    };
-  }
-});
-
-// ---------------------------------------------------------------------------
-// Tool 3: get_patterns
-// ---------------------------------------------------------------------------
-
-server.registerTool("get_patterns", {
-  description:
-    "Get the Pattern Map showing how moments connect by theme. Returns theme clusters, moment count, connection count, and a text summary.",
-}, async () => {
-  try {
-    const canvas = readCanvas(config);
-    const allMoments = readMoments(config);
-    // Exclude private moments from pattern display
-    const moments = allMoments.filter((m) => !m.frontmatter.private);
-
-    // Build theme clusters from moments
-    const themeClusters: Record<string, string[]> = {};
-    for (const m of moments) {
-      for (const theme of m.frontmatter.themes) {
-        if (!themeClusters[theme]) {
-          themeClusters[theme] = [];
-        }
-        themeClusters[theme].push(m.filename);
-      }
-    }
-
-    // Count connections from the canvas
-    let connectionCount = 0;
-    let nodeCount = 0;
-    const themeGroups: string[] = [];
-
-    if (canvas) {
-      connectionCount = canvas.edges.length;
-      nodeCount = canvas.nodes.length;
-      // Extract theme group labels from group nodes
-      for (const node of canvas.nodes) {
-        if (node.type === "group" && node.label) {
-          themeGroups.push(node.label);
-        }
-      }
-    }
-
-    // Build a text summary
-    const summaryLines: string[] = [];
-    summaryLines.push(`Pattern Map: ${moments.length} moments across ${Object.keys(themeClusters).length} themes`);
-    if (canvas) {
-      summaryLines.push(`Canvas: ${nodeCount} nodes, ${connectionCount} connections`);
-    } else {
-      summaryLines.push("Canvas: not yet generated");
-    }
-    summaryLines.push("");
-    summaryLines.push("Theme clusters:");
-    for (const [theme, files] of Object.entries(themeClusters).sort((a, b) => b[1].length - a[1].length)) {
-      summaryLines.push(`  ${theme} (${files.length}): ${files.slice(0, 3).join(", ")}${files.length > 3 ? ` +${files.length - 3} more` : ""}`);
-    }
-
-    const result = {
-      themes: Object.keys(themeClusters),
-      themeClusters,
-      momentCount: moments.length,
-      connectionCount,
-      canvasNodeCount: nodeCount,
-      themeGroups,
-      summary: summaryLines.join("\n"),
-    };
-
-    return {
-      content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }],
-    };
-  } catch (err) {
-    const message = err instanceof Error ? err.message : String(err);
-    return {
-      content: [{ type: "text" as const, text: `Error reading patterns: ${message}` }],
-      isError: true,
-    };
-  }
-});
 
 // ---------------------------------------------------------------------------
 // Tool 4: ingest_source
@@ -348,157 +136,153 @@ server.registerTool("ingest_source", {
     };
   }
 });
-
-// Tool 5: social_coach
+// ---------------------------------------------------------------------------
+// Tool: suggest_content — the flywheel's first turn
 // ---------------------------------------------------------------------------
 
-server.registerTool("social_coach", {
+server.registerTool("suggest_content", {
   description:
-    "Recommend what to post and where, based on your moments and content strategy. Returns high-potential moments, suggested platforms, and pillar balance status.",
+    "Recommend what to publish next, sourced from the wiki. Returns candidate pages ranked by how well-supported and how fresh they are, suggested platforms, story coverage, and signal history.",
   inputSchema: {
-    focus: z.string().optional().describe("Optional: focus on a specific moment or topic (filename or keyword)"),
+    focus: z.string().optional().describe("Optional: narrow to a topic, tag, or page title"),
   },
 }, async ({ focus }) => {
   try {
-    // Read signals and memory for context
     const signalSummary = summarizeSignals(config);
     const preferences = readPreferences(config);
 
-    const moments = readMoments(config);
+    // Candidates come from the wiki. Concepts and synthesis carry an argument,
+    // summaries carry a source. All three are publishable raw material, and all
+    // three are already distilled — which is the whole point of reading from the
+    // wiki instead of from raw sources.
+    type Candidate = {
+      filename: string;
+      kind: string;
+      title: string;
+      tags: string[];
+      sourceCount: number;
+      updated: string;
+      excerpt: string;
+      suggestedPlatforms: string[];
+      alreadyDrafted: boolean;
+    };
 
-    // Filter to high story-potential moments, excluding private
-    let candidates = moments.filter(
-      (m) => !m.frontmatter.private && (m.frontmatter["story-potential"] === "high" || m.frontmatter["story-potential"] === "medium"),
-    );
-
-    // If a focus is provided, narrow further
-    if (focus) {
-      const lowerFocus = focus.toLowerCase();
-      const focused = candidates.filter(
-        (m) =>
-          m.filename.toLowerCase().includes(lowerFocus) ||
-          m.content.toLowerCase().includes(lowerFocus) ||
-          m.frontmatter.themes.some((t) => t.toLowerCase().includes(lowerFocus)),
-      );
-      if (focused.length > 0) {
-        candidates = focused;
-      }
-    }
-
-    // Sort: high potential first, then by date descending
-    candidates.sort((a, b) => {
-      const potentialOrder = { high: 0, medium: 1, low: 2 };
-      const potA = potentialOrder[a.frontmatter["story-potential"]] ?? 2;
-      const potB = potentialOrder[b.frontmatter["story-potential"]] ?? 2;
-      if (potA !== potB) return potA - potB;
-      return b.frontmatter.date.localeCompare(a.frontmatter.date);
-    });
-
-    // Read existing stories for content balance
     const storiesDir = resolveStoriesDir(config);
     const stories = readStories(config);
+    const storySlugs = new Set(
+      existsSync(storiesDir)
+        ? readdirSync(storiesDir, { withFileTypes: true }).filter((d) => d.isDirectory()).map((d) => d.name)
+        : [],
+    );
 
-    // Count director cuts across story folders
-    let directorCutCount = 0;
-    if (existsSync(storiesDir)) {
-      const storyFolders = readdirSync(storiesDir, { withFileTypes: true })
-        .filter((d) => d.isDirectory());
-      for (const folder of storyFolders) {
-        const storyFolder = join(storiesDir, folder.name);
-        const files = readdirSync(storyFolder).filter((f) => f.endsWith(".md") && f !== "story.md" && f !== "raw.md" && f !== "README.md");
-        directorCutCount += files.length;
+    const candidates: Candidate[] = [];
+    for (const [kind, sub] of Object.entries(WIKI_SUBDIRS)) {
+      if (kind === "entity") continue; // entities are reference, not an argument
+      const dir = join(resolveWikiDir(config), sub);
+      if (!existsSync(dir)) continue;
+
+      for (const file of readdirSync(dir).filter((f) => f.endsWith(".md") && f !== "README.md")) {
+        const raw = readFileSync(join(dir, file), "utf-8");
+        const { frontmatter, content } = parseFrontmatter<Partial<WikiFrontmatter>>(raw);
+        const title = content.match(/^#\s+(.+)$/m)?.[1] ?? file.replace(/\.md$/, "");
+        const sourceCount = frontmatter.sources?.length ?? 0;
+
+        // A page with no sources is unsupported opinion, not publishable material.
+        if (sourceCount === 0) continue;
+
+        const body = content.replace(/^#\s+.+$/m, "").trim();
+        const platforms = kind === "synthesis"
+          ? ["linkedin", "youtube", "article"]
+          : sourceCount >= 3
+            ? ["linkedin", "article"]
+            : ["linkedin"];
+
+        candidates.push({
+          filename: file,
+          kind,
+          title,
+          tags: frontmatter.tags ?? [],
+          sourceCount,
+          updated: frontmatter.updated ?? frontmatter.created ?? "",
+          excerpt: body.slice(0, 280),
+          suggestedPlatforms: platforms,
+          alreadyDrafted: storySlugs.has(slugify(title)),
+        });
       }
     }
 
-    // Build recommendations (top 5 candidates)
-    const recommendations = candidates.slice(0, 5).map((m) => {
-      const titleMatch = m.content.match(/^#\s+(.+)$/m);
-      // Suggest platform based on moment type and themes
-      const platforms: string[] = [];
-      if (m.frontmatter["story-potential"] === "high") {
-        platforms.push("youtube", "linkedin", "x");
-      } else {
-        platforms.push("linkedin", "x");
-      }
+    let ranked = candidates;
+    if (focus) {
+      const needle = focus.toLowerCase();
+      const narrowed = ranked.filter(
+        (c) =>
+          c.title.toLowerCase().includes(needle) ||
+          c.filename.toLowerCase().includes(needle) ||
+          c.excerpt.toLowerCase().includes(needle) ||
+          c.tags.some((t) => t.toLowerCase().includes(needle)),
+      );
+      if (narrowed.length > 0) ranked = narrowed;
+    }
 
-      return {
-        filename: m.filename,
-        title: titleMatch?.[1] ?? m.filename.replace(/\.md$/, ""),
-        date: m.frontmatter.date,
-        themes: m.frontmatter.themes,
-        storyPotential: m.frontmatter["story-potential"],
-        fiveSecondMoment: m.fiveSecondMoment ?? null,
-        suggestedPlatforms: platforms,
-        hasDirectorCuts: (() => {
-          // Check if any story folder has director cuts related to this moment
-          const momentSlug = m.filename.toLowerCase().replace(/\.md$/, "").slice(11); // remove date prefix
-          const storyFolder = join(storiesDir, momentSlug);
-          return existsSync(storyFolder) && readdirSync(storyFolder).some((f) =>
-            f.endsWith(".md") && f !== "story.md" && f !== "raw.md" && f !== "README.md"
-          );
-        })(),
-      };
+    // Undrafted first, then the best-supported, then the most recently touched.
+    ranked.sort((a, b) => {
+      if (a.alreadyDrafted !== b.alreadyDrafted) return a.alreadyDrafted ? 1 : -1;
+      if (a.sourceCount !== b.sourceCount) return b.sourceCount - a.sourceCount;
+      return b.updated.localeCompare(a.updated);
     });
 
-    // Include voice context so Claude can align recommendations with the mission
+    let directorCutCount = 0;
+    if (existsSync(storiesDir)) {
+      for (const folder of readdirSync(storiesDir, { withFileTypes: true }).filter((d) => d.isDirectory())) {
+        directorCutCount += readdirSync(join(storiesDir, folder.name))
+          .filter((f) => f.endsWith(".md") && !["story.md", "raw.md", "README.md"].includes(f)).length;
+      }
+    }
+
     const voice = readVoice();
 
-    // Build signal context for the response
-    const rejectedPillars = signalSummary.rejectedTopics.map((s) => s.data.pillar);
-
-    const postedPlatforms = signalSummary.postedContent.map((s) => ({
-      platform: s.data.platform,
-      scriptFilename: s.data.scriptFilename,
-    }));
-
-    const topEngagementData = signalSummary.topEngagement.slice(0, 3).map((s) => ({
-      platform: s.data.platform,
-      url: s.data.url,
-      views: s.data.views,
-      likes: s.data.likes,
-    }));
-
-    // Log to session memory
-    const now = new Date();
-    const timeStr = formatSessionTime(now);
     appendSessionEntry(config, {
-      time: timeStr,
-      action: "coaching_done",
-      detail: `Created ${recommendations.length} recommendations for ${[...new Set(recommendations.flatMap((r) => r.suggestedPlatforms))].join(", ")}`,
+      time: formatSessionTime(new Date()),
+      action: "content_suggested",
+      detail: `${Math.min(ranked.length, 5)} candidates from ${candidates.length} wiki pages`,
     });
 
     const result = {
       voice: voice ? voice.slice(0, 500) : null,
-      recommendations,
-      totalMoments: moments.length,
-      highPotentialCount: moments.filter((m) => m.frontmatter["story-potential"] === "high").length,
+      recommendations: ranked.slice(0, 5),
+      totalWikiPages: candidates.length,
+      undraftedCount: candidates.filter((c) => !c.alreadyDrafted).length,
       existingStoryCount: stories.length,
       directorCutCount,
       signals: {
-        rejectedPillars,
-        postedPlatforms,
-        topEngagement: topEngagementData,
+        rejectedPillars: signalSummary.rejectedTopics.map((s) => s.data.pillar),
+        postedPlatforms: signalSummary.postedContent.map((s) => ({
+          platform: s.data.platform,
+          scriptFilename: s.data.scriptFilename,
+        })),
+        topEngagement: signalSummary.topEngagement.slice(0, 3).map((s) => ({
+          platform: s.data.platform,
+          url: s.data.url,
+          views: s.data.views,
+          likes: s.data.likes,
+        })),
       },
       preferences: preferences ? preferences.slice(0, 500) : null,
-      storyCraftNudge: (() => {
-        const days = daysSinceLastPractice();
-        if (days === null) return "You haven't tried /story-craft yet. Developing moments into stories makes them stronger content.";
-        if (days >= 7) return `It's been ${days} days since your last story craft practice. Developing your high-potential moments with /story-craft makes them ready for content.`;
-        return null;
-      })(),
+      nudge: candidates.length === 0
+        ? "The wiki has no sourced pages yet. Run /ingest on something you have read — the flywheel needs input before it can turn."
+        : null,
     };
 
-    return {
-      content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }],
-    };
+    return { content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }] };
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
     return {
-      content: [{ type: "text" as const, text: `Error running social coach: ${message}` }],
+      content: [{ type: "text" as const, text: `Error suggesting content: ${message}` }],
       isError: true,
     };
   }
 });
+
 
 // ---------------------------------------------------------------------------
 // Tool 6: record_signal
@@ -647,7 +431,7 @@ server.registerTool("remember", {
 
 server.registerTool("recall", {
   description:
-    "Recall preferences, recent session history, and signal summary. Use when the user asks what Lumis remembers or what their preferences are.",
+    "Recall preferences, recent session history, and signal summary. Use when the user asks what Amplify remembers or what their preferences are.",
 }, async () => {
   try {
     const preferences = readPreferences(config);
@@ -658,11 +442,12 @@ server.registerTool("recall", {
       preferences: preferences ?? "No preferences saved yet.",
       recentSessions: sessions.length > 0 ? sessions : ["No session history yet."],
       signalSummary: {
-        recentMomentCount: signals.recentMoments.length,
-        recentMoments: signals.recentMoments.map((s) => ({
+        recentIngestCount: signals.recentIngests.length,
+        recentIngests: signals.recentIngests.map((s) => ({
           filename: s.data.filename,
-          themes: s.data.themes,
-          storyPotential: s.data.storyPotential,
+          title: s.data.title,
+          wikiPages: s.data.wikiPages,
+          tags: s.data.tags,
           timestamp: s.timestamp,
         })),
         rejectedCount: signals.rejectedTopics.length,
@@ -685,12 +470,6 @@ server.registerTool("recall", {
           timestamp: s.timestamp,
         })),
       },
-      storyCraft: (() => {
-        const days = daysSinceLastPractice();
-        if (days === null) return { lastPractice: null, suggestion: "You haven't tried /story-craft yet. It's a quick way to develop storytelling skill from your moments." };
-        if (days >= 7) return { lastPractice: `${days} days ago`, suggestion: `It's been ${days} days since your last story craft practice. A quick /story-craft session keeps the skill sharp.` };
-        return { lastPractice: `${days} days ago`, suggestion: null };
-      })(),
     };
 
     return {
@@ -706,537 +485,6 @@ server.registerTool("recall", {
 });
 
 // ---------------------------------------------------------------------------
-// Tool 10: story_craft_practice
-// ---------------------------------------------------------------------------
-
-server.registerTool("story_craft_practice", {
-  description:
-    "Practice storytelling craft. Surfaces a high-potential undeveloped moment and gives one focused exercise from the six storytelling elements (Transformation, 5-Second Moment, The Question, The Stakes, The Turns, Opening Scene).",
-}, async () => {
-  try {
-    const moments = readMoments(config);
-
-    // Pick a moment: high potential + captured first, then medium, most recent first
-    // Exclude private moments from content practice
-    const candidates = moments
-      .filter((m) =>
-        !m.frontmatter.private &&
-        (m.frontmatter["story-potential"] === "high" || m.frontmatter["story-potential"] === "medium") &&
-        (m.frontmatter["story-status"] === "captured" || m.frontmatter["story-status"] === "exploring"),
-      )
-      .sort((a, b) => {
-        const potentialOrder = { high: 0, medium: 1, low: 2 };
-        const potA = potentialOrder[a.frontmatter["story-potential"]] ?? 2;
-        const potB = potentialOrder[b.frontmatter["story-potential"]] ?? 2;
-        if (potA !== potB) return potA - potB;
-        return b.frontmatter.date.localeCompare(a.frontmatter.date);
-      });
-
-    if (candidates.length === 0) {
-      return {
-        content: [{ type: "text" as const, text: JSON.stringify({ error: "No eligible moments found. Capture more moments with /moment first." }, null, 2) }],
-      };
-    }
-
-    const chosen = candidates[0];
-    const titleMatch = chosen.content.match(/^#\s+(.+)$/m);
-    const title = titleMatch?.[1] ?? chosen.filename.replace(/\.md$/, "");
-
-    // Determine which element to practice (check practice log for least-practiced)
-    const elements = ["Transformation", "5-Second Moment", "The Question", "The Stakes", "The Turns", "Opening Scene"];
-    const elementCounts: Record<string, number> = {};
-    for (const el of elements) elementCounts[el] = 0;
-
-    const logPath = resolvePracticeLogPath(config);
-    if (existsSync(logPath)) {
-      const logContent = readFileSync(logPath, "utf-8");
-      for (const el of elements) {
-        const regex = new RegExp(`## \\d{4}-\\d{2}-\\d{2} — ${el.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}`, "g");
-        const matches = logContent.match(regex);
-        elementCounts[el] = matches?.length ?? 0;
-      }
-    }
-
-    // Pick least-practiced element
-    const sortedElements = elements.sort((a, b) => elementCounts[a] - elementCounts[b]);
-    const chosenElement = sortedElements[0];
-
-    // Build the exercise prompt
-    const exercisePrompts: Record<string, string> = {
-      "Transformation": "What were you before this moment? What were you after? Not what you did. Who you were.",
-      "5-Second Moment": `Is "${chosen.fiveSecondMoment ?? "[the 5-second moment]"}" the precise instant? Or is there a smaller moment inside it? Can you narrow it to a single breath, a single sentence, a single look?`,
-      "The Question": "If you told this story on stage, what question would you plant in the audience's mind in the first 10 seconds? What would make them need to know what happens next?",
-      "The Stakes": "What does the audience need to know early to care about what happens? What could go wrong? What's at risk?",
-      "The Turns": "Walk through what happened and find every 'but then...' turn. Where did the story change direction? List them.",
-      "Opening Scene": "Where does this story actually start? Skip the setup, skip the context. What's the first thing happening right before everything changes?",
-    };
-
-    const result = {
-      moment: {
-        filename: chosen.filename,
-        path: chosen.path,
-        title,
-        date: chosen.frontmatter.date,
-        themes: chosen.frontmatter.themes,
-        storyPotential: chosen.frontmatter["story-potential"],
-        fiveSecondMoment: chosen.fiveSecondMoment ?? null,
-        content: chosen.content,
-      },
-      exercise: {
-        element: chosenElement,
-        prompt: exercisePrompts[chosenElement],
-        practiceCount: elementCounts[chosenElement],
-      },
-      elementHistory: elementCounts,
-    };
-
-    return {
-      content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }],
-    };
-  } catch (err) {
-    const message = err instanceof Error ? err.message : String(err);
-    return {
-      content: [{ type: "text" as const, text: `Error in story craft practice: ${message}` }],
-      isError: true,
-    };
-  }
-});
-
-// ---------------------------------------------------------------------------
-// Tool 11: story_craft_develop
-// ---------------------------------------------------------------------------
-
-server.registerTool("story_craft_develop", {
-  description:
-    "Develop a moment into a full story. Returns the moment context for a guided multi-turn conversation through the six storytelling elements. Optionally search for a specific moment by keyword.",
-  inputSchema: {
-    search: z.string().optional().describe("Search term to find a specific moment (filename or content keyword)"),
-    momentFilename: z.string().optional().describe("Exact filename of the moment to develop"),
-    title: z.string().optional().describe("Story title (used when saving the final story)"),
-    transformation: z.object({
-      before: z.string(),
-      after: z.string(),
-      change: z.string(),
-    }).optional().describe("Transformation element: before, after, change"),
-    fiveSecondMoment: z.string().optional().describe("The refined 5-second moment"),
-    theQuestion: z.string().optional().describe("The question that hooks the audience"),
-    openingScene: z.string().optional().describe("Where the story starts"),
-    theStakes: z.string().optional().describe("What the audience needs to know to care"),
-    theTurns: z.array(z.string()).optional().describe("List of story turns"),
-    theStory: z.string().optional().describe("Full narrative draft"),
-    save: z.boolean().optional().describe("Set to true to save the story file with all provided elements"),
-  },
-}, async (args) => {
-  try {
-    const moments = readMoments(config);
-
-    // Find the moment
-    let chosen = null;
-
-    if (args.momentFilename) {
-      chosen = moments.find((m) => m.filename === args.momentFilename) ?? null;
-    } else if (args.search) {
-      const lowerSearch = args.search.toLowerCase();
-      const matches = moments.filter(
-        (m) =>
-          m.filename.toLowerCase().includes(lowerSearch) ||
-          m.content.toLowerCase().includes(lowerSearch) ||
-          m.frontmatter.themes.some((t) => t.toLowerCase().includes(lowerSearch)),
-      );
-
-      if (matches.length === 0) {
-        return {
-          content: [{ type: "text" as const, text: JSON.stringify({ error: `No moments found matching "${args.search}"`, availableMoments: moments.slice(0, 10).map((m) => m.filename) }, null, 2) }],
-        };
-      }
-
-      if (matches.length === 1) {
-        chosen = matches[0];
-      } else {
-        // Return candidates for the user to choose
-        return {
-          content: [{ type: "text" as const, text: JSON.stringify({
-            multipleMatches: true,
-            matches: matches.map((m) => {
-              const t = m.content.match(/^#\s+(.+)$/m);
-              return {
-                filename: m.filename,
-                title: t?.[1] ?? m.filename.replace(/\.md$/, ""),
-                date: m.frontmatter.date,
-                storyPotential: m.frontmatter["story-potential"],
-                themes: m.frontmatter.themes,
-              };
-            }),
-          }, null, 2) }],
-        };
-      }
-    } else {
-      // Pick highest-potential undeveloped moment, excluding private
-      const candidates = moments
-        .filter((m) =>
-          !m.frontmatter.private &&
-          (m.frontmatter["story-potential"] === "high" || m.frontmatter["story-potential"] === "medium") &&
-          (m.frontmatter["story-status"] === "captured" || m.frontmatter["story-status"] === "exploring"),
-        )
-        .sort((a, b) => {
-          const potentialOrder = { high: 0, medium: 1, low: 2 };
-          const potA = potentialOrder[a.frontmatter["story-potential"]] ?? 2;
-          const potB = potentialOrder[b.frontmatter["story-potential"]] ?? 2;
-          if (potA !== potB) return potA - potB;
-          return b.frontmatter.date.localeCompare(a.frontmatter.date);
-        });
-
-      if (candidates.length === 0) {
-        return {
-          content: [{ type: "text" as const, text: JSON.stringify({ error: "No eligible moments found. Capture more moments with /moment first." }, null, 2) }],
-        };
-      }
-      chosen = candidates[0];
-    }
-
-    if (!chosen) {
-      return {
-        content: [{ type: "text" as const, text: JSON.stringify({ error: "Moment not found" }, null, 2) }],
-      };
-    }
-
-    const titleMatch = chosen.content.match(/^#\s+(.+)$/m);
-    const momentTitle = titleMatch?.[1] ?? chosen.filename.replace(/\.md$/, "");
-
-    // If save is true, write the story file
-    if (args.save) {
-      const today = todayKey();
-      const storyTitle = args.title ?? momentTitle;
-      const safeTitle = storyTitle
-        .replace(/[^\w\s-]/g, "")
-        .replace(/\s+/g, " ")
-        .trim()
-        .slice(0, 80);
-      const storyFilename = `${today} - ${safeTitle}.md`;
-
-      const frontmatter: StoryFrontmatter = {
-        title: storyTitle,
-        type: "story",
-        source: `[[${chosen.path}]]`,
-        created: today,
-        "craft-status": "drafting",
-        themes: chosen.frontmatter.themes,
-        tags: ["story", "craft/drafting"],
-      };
-
-      // Build content sections
-      const sections: string[] = [`# ${storyTitle}`];
-
-      if (args.transformation) {
-        sections.push(`\n## Transformation\n**Before**: ${args.transformation.before}\n**After**: ${args.transformation.after}\n**The change**: ${args.transformation.change}`);
-      }
-
-      if (args.fiveSecondMoment) {
-        sections.push(`\n## The 5-Second Moment\n${args.fiveSecondMoment}`);
-      }
-
-      if (args.theQuestion) {
-        sections.push(`\n## The Question\n${args.theQuestion}`);
-      }
-
-      if (args.openingScene) {
-        sections.push(`\n## Opening Scene\n${args.openingScene}`);
-      }
-
-      if (args.theStakes) {
-        sections.push(`\n## The Stakes\n${args.theStakes}`);
-      }
-
-      if (args.theTurns && args.theTurns.length > 0) {
-        sections.push(`\n## The Turns\n${args.theTurns.map((t) => `- ${t}`).join("\n")}`);
-      }
-
-      if (args.theStory) {
-        sections.push(`\n## The Story\n${args.theStory}`);
-      }
-
-      const content = sections.join("\n");
-      const filepath = writeStory(config, storyFilename, frontmatter, content);
-
-      // Update source moment's story-status to developing
-      const momentPath = join(resolveMomentsDir(config), chosen.filename);
-      if (existsSync(momentPath)) {
-        const momentRaw = readFileSync(momentPath, "utf-8");
-        const updated = momentRaw.replace(/story-status:\s*captured/, "story-status: developing")
-          .replace(/story-status:\s*exploring/, "story-status: developing");
-        if (updated !== momentRaw) {
-          writeFileSync(momentPath, updated, "utf-8");
-        }
-      }
-
-      // Emit story_developed signal
-      const storySignal: StoryDevelopedSignal = {
-        id: signalId(),
-        type: "story_developed",
-        timestamp: new Date().toISOString(),
-        data: {
-          storyFilename,
-          sourceMoment: `[[${chosen.path}]]`,
-          craftStatus: "drafting",
-        },
-      };
-      emitSignal(config, storySignal);
-
-      // Log to session memory
-      const now = new Date();
-      const timeStr = formatSessionTime(now);
-      appendSessionEntry(config, {
-        time: timeStr,
-        action: "story_developed",
-        detail: `Developed "${storyTitle}" from [[${chosen.path}]] (craft-status: drafting)`,
-      });
-
-      return {
-        content: [{ type: "text" as const, text: JSON.stringify({
-          saved: true,
-          filepath,
-          storyFilename,
-          title: storyTitle,
-          source: chosen.path,
-          craftStatus: "drafting",
-          themes: chosen.frontmatter.themes,
-        }, null, 2) }],
-      };
-    }
-
-    // Return moment context for the guided conversation
-    const result = {
-      moment: {
-        filename: chosen.filename,
-        path: chosen.path,
-        title: momentTitle,
-        date: chosen.frontmatter.date,
-        themes: chosen.frontmatter.themes,
-        storyPotential: chosen.frontmatter["story-potential"],
-        storyStatus: chosen.frontmatter["story-status"],
-        momentType: chosen.frontmatter["moment-type"],
-        fiveSecondMoment: chosen.fiveSecondMoment ?? null,
-        content: chosen.content,
-        connections: chosen.connections,
-      },
-      elements: ["Transformation", "5-Second Moment", "The Question", "Opening Scene", "The Stakes", "The Turns"],
-      existingStories: readStories(config)
-        .filter((s) => s.frontmatter.source.includes(chosen!.filename.replace(/\.md$/, "")))
-        .map((s) => ({ filename: s.filename, craftStatus: s.frontmatter["craft-status"] })),
-    };
-
-    return {
-      content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }],
-    };
-  } catch (err) {
-    const message = err instanceof Error ? err.message : String(err);
-    return {
-      content: [{ type: "text" as const, text: `Error in story craft develop: ${message}` }],
-      isError: true,
-    };
-  }
-});
-
-// ---------------------------------------------------------------------------
-// Tool 11: journal_today
-// ---------------------------------------------------------------------------
-
-server.registerTool("journal_today", {
-  description:
-    "Open or close today's journal. Action 'open' returns the receipt WITHOUT creating a note — an empty scaffold is not a journal entry. It carries unfinished tasks forward and reports: days since the last entry, streak, carried tasks, and goal targets that have gone quiet. Action 'priorities' writes the day's top tasks. Action 'close' checks off completed tasks and stamps any goal targets they served. Use when the user wants to journal, start their day, set priorities, or close out the day.",
-  inputSchema: {
-    action: z
-      .enum(["open", "priorities", "close", "touch"])
-      .describe("open = receipt (creates nothing), priorities = write today's tasks, close = evening pass, touch = stamp one target directly"),
-    target: z
-      .string()
-      .optional()
-      .describe("For 'touch': target name or #goal/* tag. For work with no checkbox — journaling itself is the canonical case."),
-    tasks: z
-      .array(z.string())
-      .optional()
-      .describe("For 'priorities', the tasks to write. For 'close', the task texts that got done."),
-    date: z.string().optional().describe("YYYY-MM-DD. Defaults to today."),
-  },
-}, async ({ action, tasks, target, date }) => {
-  try {
-    const day = date ?? todayKey();
-
-    if (action === "touch") {
-      if (!target) throw new Error("'touch' needs a target name or #goal/* tag");
-      const result = touchTarget(config, target, day);
-      return {
-        content: [{ type: "text" as const, text: JSON.stringify({ date: day, ...result }, null, 2) }],
-      };
-    }
-
-    if (action === "priorities") {
-      // Priorities are content, so this is where the note earns its file.
-      openDay(config, day);
-      const note = setPriorities(config, day, tasks ?? []);
-      return {
-        content: [{
-          type: "text" as const,
-          text: JSON.stringify({
-            date: day,
-            priorities: note.tasks.filter((t) => !t.done).map((t) => t.text),
-          }, null, 2),
-        }],
-      };
-    }
-
-    if (action === "close") {
-      const result = closeDay(config, day, tasks ?? []);
-      return {
-        content: [{
-          type: "text" as const,
-          text: JSON.stringify({
-            date: day,
-            closed: true,
-            completed: result.note.tasks.filter((t) => t.done).map((t) => t.text),
-            stillOpen: result.open.map((t) => formatTask(t)),
-            unmatched: result.unmatched,
-            targetsStamped: result.touchedTargets,
-            ambiguousTags: result.ambiguousTags,
-          }, null, 2),
-        }],
-      };
-    }
-
-    // Preview only — the CLI stopped writing empty scaffolds on open, and the MCP
-    // path must agree or the two report contradictory streaks.
-    const result = previewDay(config, day);
-    return {
-      content: [{
-        type: "text" as const,
-        text: JSON.stringify({
-          // Show this block to the user verbatim before saying anything else
-          display: renderDay(result),
-          date: day,
-          exists: result.exists,
-          path: result.note?.path ?? null,
-          receipt: result.receipt,
-          daysSinceLastEntry: result.stats.daysSinceLastEntry,
-          currentStreak: result.stats.currentStreak,
-          longestStreak: result.stats.longestStreak,
-          carried: result.carried.map((t) => formatTask(t)),
-          targetsGoingQuiet: result.targets
-            .filter((t) => t.overdue)
-            .map((t) => ({ target: t.text, cadence: t.cadence, daysSince: t.daysSince })),
-        }, null, 2),
-      }],
-    };
-  } catch (err) {
-    const message = err instanceof Error ? err.message : String(err);
-    return {
-      content: [{ type: "text" as const, text: `Error in journal_today: ${message}` }],
-      isError: true,
-    };
-  }
-});
-
-// ---------------------------------------------------------------------------
-// Tool 12: week_review
-// ---------------------------------------------------------------------------
-
-server.registerTool("week_review", {
-  description:
-    "The weekly reckoning. Reads the week's daily notes, tasks kept and missed, moments captured, and goal target movement, then writes Reviews/Week of {Monday}.md and returns the numbers plus drift (stale tasks, abandoned targets, recurring moment themes, silent days). Idempotent — an existing review is returned rather than overwritten. Use when the user wants a weekly review or asks how the week went.",
-  inputSchema: {
-    date: z.string().optional().describe("Any YYYY-MM-DD in the week to review. Defaults to today."),
-  },
-}, async ({ date }) => {
-  try {
-    const { path, created, data } = runWeekReview(config, date);
-
-    return {
-      content: [{
-        type: "text" as const,
-        text: JSON.stringify({
-          // Show this block to the user verbatim before saying anything else
-          display: renderWeek(data),
-          weekOf: data.weekOf,
-          weekEnd: data.weekEnd,
-          path,
-          created,
-          numbers: {
-            daysJournaled: data.daysJournaled,
-            daysElapsed: data.daysElapsed,
-            tasksCompleted: data.completed.length,
-            tasksOpen: data.stillOpen.length,
-            momentsCaptured: data.moments.length,
-            targetsMoved: data.targetsTouched.length,
-            targetsTotal: data.targets.length,
-          },
-          completed: data.completed.map((t) => t.text),
-          stillOpen: data.stillOpen.map((t) => ({ text: t.text, age: t.age })),
-          oldestOpen: data.oldestOpen
-            ? { text: data.oldestOpen.text, age: data.oldestOpen.age }
-            : null,
-          targetsTouched: data.targetsTouched,
-          moments: data.moments,
-          drift: {
-            staleTasks: data.drift.staleTasks.map((t) => ({ text: t.text, age: t.age })),
-            abandonedTargets: data.drift.quietTargets.map((t) => ({
-              target: t.text,
-              cadence: t.cadence,
-              daysSince: t.daysSince,
-            })),
-            recurringThemes: data.drift.repeatedThemes,
-            daysSinceLastMoment: data.drift.daysSinceLastMoment,
-            silentDays: data.drift.silentDays,
-            windowDays: data.drift.windowDays,
-          },
-        }, null, 2),
-      }],
-    };
-  } catch (err) {
-    const message = err instanceof Error ? err.message : String(err);
-    return {
-      content: [{ type: "text" as const, text: `Error in week_review: ${message}` }],
-      isError: true,
-    };
-  }
-});
-
-// ---------------------------------------------------------------------------
-// Prompts — the coaching behavior, for clients that cannot read skills
-// ---------------------------------------------------------------------------
-
-const PROMPTS = [
-  {
-    name: "journal",
-    title: "Journal today",
-    description:
-      "Run the daily loop. Opens today's note, reads back the receipt (days since last entry, streak, carried tasks, targets gone quiet), then asks for today's priorities. Run it again in the evening to check tasks off and reflect.",
-    text: JOURNAL_PROMPT,
-  },
-  {
-    name: "weekly-review",
-    title: "Weekly review",
-    description:
-      "The weekly reckoning. States the week's numbers, names the one thing that matters, walks through three questions, works the drift, and sets next week's commitments.",
-    text: WEEK_PROMPT,
-  },
-  {
-    name: "coach",
-    title: "Coach me",
-    description:
-      "Read the vault — today, this week, recent moments, history — and say the single thing most worth attention, then have the conversation that follows.",
-    text: COACH_PROMPT,
-  },
-] as const;
-
-for (const prompt of PROMPTS) {
-  server.registerPrompt(prompt.name, {
-    title: prompt.title,
-    description: prompt.description,
-  }, () => ({
-    messages: [{ role: "user" as const, content: { type: "text" as const, text: prompt.text } }],
-  }));
-}
-
-// ---------------------------------------------------------------------------
 // Start the server
 // ---------------------------------------------------------------------------
 
@@ -1244,10 +492,10 @@ async function main() {
   const transport = new StdioServerTransport();
   await server.connect(transport);
   // Log to stderr so it doesn't interfere with the MCP protocol on stdout
-  console.error("Lumis MCP server running on stdio");
+  console.error("Amplify MCP server running on stdio");
 }
 
 main().catch((err) => {
-  console.error("Lumis MCP server failed to start:", err);
+  console.error("Amplify MCP server failed to start:", err);
   process.exit(1);
 });

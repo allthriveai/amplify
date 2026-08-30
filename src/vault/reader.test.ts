@@ -1,11 +1,11 @@
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import { rmSync } from "node:fs";
 import { join } from "node:path";
-import { readMoments, readMoment, readClippings, readStory, readStories, readCanvas } from "./reader.js";
+import { readClippings, readStory, readStories } from "./reader.js";
 import { createTestConfig, writeTestFile } from "./test-helpers.js";
-import type { LumisConfig } from "../types/config.js";
+import type { AmplifyConfig } from "../types/config.js";
 
-let config: LumisConfig;
+let config: AmplifyConfig;
 
 beforeEach(() => {
   config = createTestConfig();
@@ -15,181 +15,6 @@ afterEach(() => {
   rmSync(config.vaultPath, { recursive: true, force: true });
 });
 
-// ---------------------------------------------------------------------------
-// readMoments
-// ---------------------------------------------------------------------------
-describe("readMoments", () => {
-  it("returns empty array when moments dir does not exist", () => {
-    expect(readMoments(config)).toEqual([]);
-  });
-
-  it("reads .md files from the moments directory", () => {
-    const momentsDir = join(config.vaultPath, config.paths.moments);
-
-    writeTestFile(momentsDir, "first-moment.md", [
-      "---",
-      'date: "2024-01-15"',
-      "moment-type: realization",
-      "people: [Alice]",
-      "places: [Coffee shop]",
-      "story-status: captured",
-      "story-potential: high",
-      "themes: [identity]",
-      "tags: [morning]",
-      "---",
-      "",
-      "Something happened today.",
-    ].join("\n"));
-
-    writeTestFile(momentsDir, "second-moment.md", [
-      "---",
-      'date: "2024-01-16"',
-      "moment-type: joy",
-      "people: []",
-      "places: []",
-      "story-status: captured",
-      "story-potential: low",
-      "themes: [joy]",
-      "tags: []",
-      "---",
-      "",
-      "A happy day.",
-    ].join("\n"));
-
-    const moments = readMoments(config);
-    expect(moments).toHaveLength(2);
-    expect(moments.map((m) => m.filename).sort()).toEqual([
-      "first-moment.md",
-      "second-moment.md",
-    ]);
-  });
-
-  it("skips README.md", () => {
-    const momentsDir = join(config.vaultPath, config.paths.moments);
-
-    writeTestFile(momentsDir, "README.md", "# Readme");
-    writeTestFile(momentsDir, "real-moment.md", [
-      "---",
-      'date: "2024-01-15"',
-      "moment-type: realization",
-      "people: []",
-      "places: []",
-      "story-status: captured",
-      "story-potential: low",
-      "themes: []",
-      "tags: []",
-      "---",
-      "",
-      "Content.",
-    ].join("\n"));
-
-    const moments = readMoments(config);
-    expect(moments).toHaveLength(1);
-    expect(moments[0].filename).toBe("real-moment.md");
-  });
-});
-
-// ---------------------------------------------------------------------------
-// readMoment
-// ---------------------------------------------------------------------------
-describe("readMoment", () => {
-  it("parses frontmatter correctly", () => {
-    const momentsDir = join(config.vaultPath, config.paths.moments);
-    writeTestFile(momentsDir, "test.md", [
-      "---",
-      'date: "2024-01-15"',
-      "moment-type: realization",
-      "people: [Alice, Bob]",
-      "places: [Coffee shop]",
-      "story-status: captured",
-      "story-potential: high",
-      "themes: [identity, growth]",
-      "tags: [morning]",
-      "---",
-      "",
-      "Body text.",
-    ].join("\n"));
-
-    const moment = readMoment(config, "test.md");
-    expect(moment).not.toBeNull();
-    expect(moment!.frontmatter.date).toBe("2024-01-15");
-    expect(moment!.frontmatter["moment-type"]).toBe("realization");
-    expect(moment!.frontmatter.people).toEqual(["Alice", "Bob"]);
-    expect(moment!.frontmatter.places).toEqual(["Coffee shop"]);
-    expect(moment!.frontmatter["story-status"]).toBe("captured");
-    expect(moment!.frontmatter["story-potential"]).toBe("high");
-    expect(moment!.frontmatter.themes).toEqual(["identity", "growth"]);
-    expect(moment!.frontmatter.tags).toEqual(["morning"]);
-  });
-
-  it("extracts fiveSecondMoment from the 5-Second Moment section", () => {
-    const momentsDir = join(config.vaultPath, config.paths.moments);
-    writeTestFile(momentsDir, "test.md", [
-      "---",
-      'date: "2024-01-15"',
-      "moment-type: realization",
-      "people: []",
-      "places: []",
-      "story-status: captured",
-      "story-potential: high",
-      "themes: []",
-      "tags: []",
-      "---",
-      "",
-      "Something happened today.",
-      "",
-      "## The 5-Second Moment",
-      "",
-      "I realized everything changed.",
-      "",
-      "## Connections",
-      "",
-      "- None yet.",
-    ].join("\n"));
-
-    const moment = readMoment(config, "test.md");
-    expect(moment).not.toBeNull();
-    expect(moment!.fiveSecondMoment).toBe("I realized everything changed.");
-  });
-
-  it("extracts connections from wiki-links in the Connections section", () => {
-    const momentsDir = join(config.vaultPath, config.paths.moments);
-    writeTestFile(momentsDir, "test.md", [
-      "---",
-      'date: "2024-01-15"',
-      "moment-type: realization",
-      "people: []",
-      "places: []",
-      "story-status: captured",
-      "story-potential: high",
-      "themes: []",
-      "tags: []",
-      "---",
-      "",
-      "Body content.",
-      "",
-      "## Connections",
-      "",
-      "- [[Lumis/Moments/other-moment.md|Other Moment]]",
-      "- [[Lumis/Moments/another.md|Another One]]",
-    ].join("\n"));
-
-    const moment = readMoment(config, "test.md");
-    expect(moment).not.toBeNull();
-    expect(moment!.connections).toEqual([
-      "Lumis/Moments/other-moment.md|Other Moment",
-      "Lumis/Moments/another.md|Another One",
-    ]);
-  });
-
-  it("returns null for non-existent file", () => {
-    expect(readMoment(config, "does-not-exist.md")).toBeNull();
-  });
-});
-
-// ---------------------------------------------------------------------------
-// readClippings
-// ---------------------------------------------------------------------------
 describe("readClippings", () => {
   it("returns empty array when the clippings dir does not exist", () => {
     expect(readClippings(config)).toEqual([]);
@@ -246,7 +71,7 @@ describe("readStory", () => {
       "---",
       "title: My Story",
       "type: story",
-      "source: Lumis/Moments/test.md",
+      "source: Sources/Clippings/test.md",
       "created: '2024-03-01'",
       "craft-status: drafting",
       "themes: [identity]",
@@ -347,42 +172,3 @@ describe("readStories", () => {
 // ---------------------------------------------------------------------------
 // readCanvas
 // ---------------------------------------------------------------------------
-describe("readCanvas", () => {
-  it("returns null when canvas file does not exist", () => {
-    expect(readCanvas(config)).toBeNull();
-  });
-
-  it("parses valid JSON canvas", () => {
-    const canvasPath = join(config.vaultPath, config.paths.canvas);
-    const canvasDir = join(canvasPath, "..");
-    const filename = config.paths.canvas.split("/").pop()!;
-
-    const canvasData = {
-      nodes: [
-        { id: "n1", type: "group", x: 0, y: 0, width: 200, height: 100, color: "1", label: "Identity" },
-      ],
-      edges: [
-        { id: "e1", fromNode: "n1", toNode: "n2", fromSide: "right", toSide: "left" },
-      ],
-    };
-
-    writeTestFile(canvasDir, filename, JSON.stringify(canvasData));
-
-    const canvas = readCanvas(config);
-    expect(canvas).not.toBeNull();
-    expect(canvas!.nodes).toHaveLength(1);
-    expect(canvas!.nodes[0].id).toBe("n1");
-    expect(canvas!.edges).toHaveLength(1);
-    expect(canvas!.edges[0].fromNode).toBe("n1");
-  });
-
-  it("returns null for invalid JSON", () => {
-    const canvasPath = join(config.vaultPath, config.paths.canvas);
-    const canvasDir = join(canvasPath, "..");
-    const filename = config.paths.canvas.split("/").pop()!;
-
-    writeTestFile(canvasDir, filename, "not valid json {{");
-
-    expect(readCanvas(config)).toBeNull();
-  });
-});

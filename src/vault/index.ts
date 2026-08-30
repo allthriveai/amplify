@@ -1,11 +1,8 @@
-export { readMoments, readMoment, readMeetings, readMeeting, readClippings, readStories, readStory } from "./reader.js";
-export { writeMoment, writeMeeting, writeCanvas, writeClipping, writeWikiPage, writeStory, appendPracticeLog } from "./writer.js";
-export { appendToEntry, hasEntry, hasMoment, ENTRY_HEADING, MOMENT_HEADING } from "./daily-notes.js";
+export { readMeetings, readMeeting, readClippings, readStories, readStory } from "./reader.js";
+export { writeMeeting, writeClipping, writeWikiPage, writeStory } from "./writer.js";
 export { parseFrontmatter, serializeFrontmatter } from "./frontmatter.js";
 export {
   resolvePath,
-  resolveCanvasPath,
-  resolveMomentsDir,
   resolveSourcesDir,
   resolveClippingsDir,
   resolveSourceAssetsDir,
@@ -20,24 +17,17 @@ export {
   resolveStoryAssetsDir,
   resolveStrategyDocsDir,
   resolveVoicePath,
-  resolveGoalsPath,
   resolveSignalsDir,
   resolveSignalsPath,
   resolveMemoryDir,
   resolveSessionPath,
   resolvePreferencesPath,
   resolveStoriesDir,
-  resolvePracticeLogPath,
   resolvePeopleDir,
-  resolveChallengesDir,
-  resolveChallengeLogPath,
   resolveStoryDir,
   resolveDirectorCutPath,
   resolveAudioDir,
 } from "./paths.js";
-
-// Re-export readCanvas for convenience
-export { readCanvas } from "./reader.js";
 
 // Amplify reader/writer
 export { readStructures, readHooks, readPersuasionGlossary } from "./amplify-reader.js";

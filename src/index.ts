@@ -1,24 +1,5 @@
 // Types
-export type {
-  Moment,
-  MomentFrontmatter,
-  MomentAnalysis,
-  MomentConnection,
-  MomentType,
-  StoryPotential,
-  StoryStatus,
-} from "./types/moment.js";
-
-export type {
-  CanvasFile,
-  CanvasNode,
-  GroupNode,
-  FileNode,
-  CanvasEdge,
-  CanvasColor,
-} from "./types/canvas.js";
-
-export type { LumisConfig, CaptureConfig, CaptureHotkeys } from "./types/config.js";
+export type { AmplifyConfig, CaptureConfig, CaptureHotkeys } from "./types/config.js";
 
 export type {
   Meeting,
@@ -27,24 +8,21 @@ export type {
 export { DEFAULT_PATHS } from "./types/config.js";
 
 export type { BrandConfig, BrandColors, BrandFonts } from "./types/brand.js";
-export { THEME_COLORS } from "./types/canvas.js";
 
 export type {
   SignalType,
   Signal,
   SignalsFile,
-  MomentCapturedSignal,
+  SourceIngestedSignal,
   RecommendationRejectedSignal,
   ContentPostedSignal,
   EngagementUpdatedSignal,
   StoryDevelopedSignal,
-  StoryPracticeSignal,
   TimelineCreatedSignal,
   VideoRenderedSignal,
   CarouselCreatedSignal,
   ArticleCreatedSignal,
   InspirationAddedSignal,
-  ChallengeCompletedSignal,
   ImagesGeneratedSignal,
   DiagramCreatedSignal,
   DiagramVideoRenderedSignal,
@@ -123,15 +101,11 @@ export type {
 
 // Modules
 export { loadConfig } from "./config.js";
-export { analyzeMoment, humanize } from "./ai/index.js";
+export { humanize } from "./ai/index.js";
 export {
-  readMoments,
-  writeMoment,
   readMeetings,
   readMeeting,
   writeMeeting,
-  readCanvas,
-  writeCanvas,
   readClippings,
   writeClipping,
   writeWikiPage,
@@ -143,7 +117,6 @@ export {
   readStories,
   readStory,
   writeStory,
-  appendPracticeLog,
   readTimeline,
   listTimelines,
   writeTimeline,
@@ -154,8 +127,6 @@ export {
   readDiagram,
   listDiagrams,
 } from "./vault/index.js";
-export { generatePatternMap } from "./canvas/index.js";
-export { captureMoment } from "./pipeline/capture.js";
 export { buildAmplifyContext, serializeAmplifyContext } from "./amplify/index.js";
 export type { AmplifyContext } from "./amplify/index.js";
 
@@ -184,14 +155,12 @@ export {
   resolveStoryAssetsDir,
   resolveStrategyDocsDir,
   resolveVoicePath,
-  resolveGoalsPath,
   resolveSignalsDir,
   resolveSignalsPath,
   resolveMemoryDir,
   resolveSessionPath,
   resolvePreferencesPath,
   resolveStoriesDir,
-  resolvePracticeLogPath,
   resolveStoryDir,
   resolveDirectorCutPath,
   resolveAudioDir,
@@ -232,9 +201,3 @@ export {
   DEFAULT_HOTKEYS,
 } from "./capture/index.js";
 export type { HotkeyBindings } from "./capture/index.js";
-
-// Journal — daily notes, tasks, targets
-export * from "./types/journal.js";
-export * from "./vault/daily-notes.js";
-export * from "./vault/targets.js";
-export * from "./journal/index.js";

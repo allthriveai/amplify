@@ -1,12 +1,12 @@
 import { readFileSync, existsSync, readdirSync } from "node:fs";
 import { join } from "node:path";
-import type { LumisConfig } from "../types/config.js";
+import type { AmplifyConfig } from "../types/config.js";
 import type { Timeline, TimelineFrontmatter } from "../types/director.js";
 import { resolveStoryDir, resolveStoriesDir } from "./paths.js";
 import { parseFrontmatter } from "./frontmatter.js";
 
 /** Read the most recent video timeline from a story folder by slug */
-export function readTimeline(config: LumisConfig, slug: string): Timeline | null {
+export function readTimeline(config: AmplifyConfig, slug: string): Timeline | null {
   const storyDir = resolveStoryDir(config, slug);
   if (!existsSync(storyDir)) return null;
 
@@ -33,7 +33,7 @@ export function readTimeline(config: LumisConfig, slug: string): Timeline | null
 }
 
 /** List all story slugs that have a video timeline */
-export function listTimelines(config: LumisConfig): string[] {
+export function listTimelines(config: AmplifyConfig): string[] {
   const storiesDir = resolveStoriesDir(config);
   if (!existsSync(storiesDir)) return [];
 

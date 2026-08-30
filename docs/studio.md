@@ -1,6 +1,6 @@
 # Studio
 
-Lumis includes a video production pipeline powered by HeyGen (avatar video), ElevenLabs (voice), Google Imagen (AI image generation), and Remotion (branded rendering).
+Amplify includes a video production pipeline powered by HeyGen (avatar video), ElevenLabs (voice), Google Imagen (AI image generation), and Remotion (branded rendering).
 
 ## Architecture
 
@@ -11,15 +11,15 @@ Lumis includes a video production pipeline powered by HeyGen (avatar video), Ele
 - **Asset management** in `src/studio/assets.ts` (validate, resolve, copy screen-capture media)
 - **Animations** in `src/studio/compositions/animations.ts` (springs, entrance/exit, transition constants)
 - **Brand constants** in `src/studio/compositions/brand.ts` (colors, timing, resolution, text card sizing)
-- **Studio config** is optional in `.lumisrc` under `studio` key, or via env vars
+- **Studio config** is optional in `.amplifyrc` under `studio` key, or via env vars
 - **Public assets**: `public/raw/` (HeyGen downloads, voiceover mp3s), `public/captions/` (SRT files)
 - **Story assets**: `{stories}/{slug}/assets/` (screen captures, images for screen-capture shots)
 
 ## Setup
 
-Studio is configured during `/init` (optional step) or by editing `.lumisrc` directly.
+Studio is configured during `/init` (optional step) or by editing `.amplifyrc` directly.
 
-Add API keys to `.lumisrc` or set environment variables:
+Add API keys to `.amplifyrc` or set environment variables:
 
 ```json
 {
@@ -36,14 +36,14 @@ Add API keys to `.lumisrc` or set environment variables:
 
 Or: `HEYGEN_API_KEY`, `HEYGEN_AVATAR_ID`, `HEYGEN_VOICE_ID`, `ELEVENLABS_API_KEY`, `ELEVENLABS_VOICE_ID`, `GOOGLE_API_KEY`.
 
-Lumis works fine without studio config. The capture, storytelling, and content creation layers are fully functional on their own.
+Amplify works fine without studio config. The capture, storytelling, and content creation layers are fully functional on their own.
 
 ## Commands
 
 ```bash
-lumis studio list        # List director cuts across stories
-lumis studio render      # Render a story's timeline to video
-lumis studio preview     # Open Remotion preview
+amplify studio list        # List director cuts across stories
+amplify studio render      # Render a story's timeline to video
+amplify studio preview     # Open Remotion preview
 ```
 
 ## Draft Pipeline
@@ -91,7 +91,7 @@ Lives at `{stories}/{slug}/timeline.md`. Shots are stored in YAML frontmatter:
 title: "Story Title"
 type: timeline
 status: draft                        # draft | approved | producing | rendered
-source: "[[Lumis/Stories/slug/story.md]]"
+source: "[[Amplify/Stories/slug/story.md]]"
 hook: curiosity-gap
 structure: point-of-high-drama
 persuasion: [contrast-principle, sensory-specificity]
@@ -175,13 +175,13 @@ The `/draft-images` skill generates AI images for any director format using Goog
 
 1. Pick a story and detect which director formats exist (video, carousel, article)
 2. Extract image slots: b-roll placeholders and unassigned screen-capture shots in timelines, cards with `imageDirection` but no `asset` in carousels, user-selected sections in articles
-3. Build brand-aware prompts combining brand colors/style from `.lumisrc` + content direction from the source file
+3. Build brand-aware prompts combining brand colors/style from `.amplifyrc` + content direction from the source file
 4. Generate images one at a time via Imagen API, with keep/regenerate/skip for each
 5. Save to `{stories}/{slug}/assets/` and update the source file's frontmatter
 
 ### Integration with rendering
 
-For video timelines, `/draft-images` sets the `asset` field on shots and changes `b-roll-placeholder` to `screen-capture`. The `ScreenCapture` composition already renders images with Ken Burns zoom, so generated images flow into `lumis studio render` with no extra steps.
+For video timelines, `/draft-images` sets the `asset` field on shots and changes `b-roll-placeholder` to `screen-capture`. The `ScreenCapture` composition already renders images with Ken Burns zoom, so generated images flow into `amplify studio render` with no extra steps.
 
 ### API client
 

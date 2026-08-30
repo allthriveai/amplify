@@ -1,4 +1,4 @@
-import type { LumisConfig } from "../types/config.js";
+import type { AmplifyConfig } from "../types/config.js";
 import type { Structure, Hook } from "../types/amplify.js";
 import { readStructures, readHooks } from "../vault/amplify-reader.js";
 
@@ -12,7 +12,7 @@ export interface AmplifyContext {
  * Optionally filters by a content goal to surface relevant items.
  */
 export function buildAmplifyContext(
-  config: LumisConfig,
+  config: AmplifyConfig,
   contentGoal?: string,
 ): AmplifyContext {
   const allStructures = readStructures(config);

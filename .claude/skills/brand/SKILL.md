@@ -1,6 +1,6 @@
 ---
 name: brand
-description: Sets up your visual brand identity. Writes brand colors, fonts, and visual style to .lumisrc and Brand.md. Also saves visual inspiration references. Use when the user runs /brand or /brand add.
+description: Sets up your visual brand identity. Writes brand colors, fonts, and visual style to .amplifyrc and Brand.md. Also saves visual inspiration references. Use when the user runs /brand or /brand add.
 ---
 
 # Brand
@@ -17,10 +17,10 @@ If the argument starts with `add`, go to **Add Mode**. Otherwise, go to **Setup 
 
 #### Step 0: Load Context
 
-Find the `.lumisrc` config file. Check these locations in order:
+Find the `.amplifyrc` config file. Check these locations in order:
 
-1. `.lumisrc` in the current working directory
-2. `.lumisrc` at the path specified by `VAULT_PATH` environment variable
+1. `.amplifyrc` in the current working directory
+2. `.amplifyrc` at the path specified by `VAULT_PATH` environment variable
 
 Read the config and resolve the vault path.
 
@@ -87,9 +87,9 @@ Options:
 **Question 11: Visual inspiration** (optional)
 "Any brands, designers, or creators whose visual style you admire? This helps inform design direction. Skip if nothing comes to mind."
 
-#### Step 2: Write .lumisrc brand section
+#### Step 2: Write .amplifyrc brand section
 
-Read the existing `.lumisrc` file. Add or update the `brand` section:
+Read the existing `.amplifyrc` file. Add or update the `brand` section:
 
 ```json
 {
@@ -123,7 +123,7 @@ If `paths.brand` is set to something other than "Brand", use that path instead.
 
 #### Step 4: Write Brand.md
 
-Copy the template from `{lumisRepoRoot}/templates/brand/Brand.md` and personalize it with the user's answers.
+Copy the template from `{amplifyRepoRoot}/templates/brand/Brand.md` and personalize it with the user's answers.
 
 Replace all `{bracket}` placeholders:
 
@@ -157,7 +157,7 @@ Brand set up.
   Font: {font}
   Style: {visual_style}
 
-  Config: .lumisrc brand section written
+  Config: .amplifyrc brand section written
   Brand doc: {paths.brand}/Brand.md
 
 Draft skills (/draft-video, /draft-carousel, /draft-article) will use this for visual decisions.

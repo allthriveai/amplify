@@ -11,16 +11,16 @@ When the user runs `/draft-images`, optionally followed by a story slug:
 
 ### Step 0: Load Context
 
-Find the `.lumisrc` config file. Check these locations in order:
+Find the `.amplifyrc` config file. Check these locations in order:
 
-1. `.lumisrc` in the current working directory
-2. `.lumisrc` at the path specified by `VAULT_PATH` environment variable
+1. `.amplifyrc` in the current working directory
+2. `.amplifyrc` at the path specified by `VAULT_PATH` environment variable
 
 Read the config and resolve the vault path.
 
-Verify `GOOGLE_API_KEY` is available (via `.lumisrc` studio.googleApiKey or `GOOGLE_API_KEY` env var). If missing, tell the user: "Google API key not found. Add `googleApiKey` to the `studio` section of `.lumisrc` or set `GOOGLE_API_KEY` in your environment."
+Verify `GOOGLE_API_KEY` is available (via `.amplifyrc` studio.googleApiKey or `GOOGLE_API_KEY` env var). If missing, tell the user: "Google API key not found. Add `googleApiKey` to the `studio` section of `.amplifyrc` or set `GOOGLE_API_KEY` in your environment."
 
-Read `{vaultPath}/{paths.brand}/Brand.md` if it exists. Read the brand config from `.lumisrc` (brand section). Build a brand context string:
+Read `{vaultPath}/{paths.brand}/Brand.md` if it exists. Read the brand config from `.amplifyrc` (brand section). Build a brand context string:
 
 ```
 Brand: {name}. Colors: {primary} (primary), {secondary} (secondary), {accent} (accent), {background} (background). Font feel: {body}. {visual style notes from Brand.md if available}
@@ -199,7 +199,7 @@ Images generated for "{title}" ({format}):
     - Shot 9: screen-capture (assets/shot-09-transformation.png)
 
 Next steps:
-  - Video: run `lumis studio render {slug}` — generated images render via ScreenCapture
+  - Video: run `amplify studio render {slug}` — generated images render via ScreenCapture
   - Carousel: take to Canva/Figma with the asset files
   - Article: embed images at the marked sections when publishing
 ```

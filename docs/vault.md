@@ -1,9 +1,9 @@
 # The Vault
 
-Lumis writes to an Obsidian vault configured in `.lumisrc`. The vault is NOT this repo. The vault path is resolved from:
-1. `.lumisrc` in cwd
+Amplify writes to an Obsidian vault configured in `.amplifyrc`. The vault is NOT this repo. The vault path is resolved from:
+1. `.amplifyrc` in cwd
 2. `VAULT_PATH` env var
-3. If neither is set, Lumis asks rather than guessing
+3. If neither is set, Amplify asks rather than guessing
 
 ## The three layers
 
@@ -17,7 +17,7 @@ agent rewrite this?**
 | The schema | `CLAUDE.md` | The contract both layers follow. |
 
 Everything else belongs to the person: `Life/` is first-person and never ingested,
-`Work/` holds projects and pipeline output, `Lumis/` holds system files.
+`Work/` holds projects and pipeline output, `Amplify/` holds system files.
 
 The split matters because knowledge gets compiled once and kept current, rather than
 re-derived from raw material on every question. The bookkeeping that makes that work —
@@ -26,7 +26,7 @@ agent does without getting bored.
 
 ## Structure
 
-All paths configurable in `.lumisrc`:
+All paths configurable in `.amplifyrc`:
 
 ```
 CLAUDE.md              ← the schema. page shapes, workflows, the orphan rule.
@@ -46,12 +46,6 @@ Wiki/                   ← AGENT-OWNED. rewritten and kept current.
   Entities/             ← people, organizations, products, tools
   Synthesis/            ← comparisons and cross-cutting analysis
 
-Life/                  ← YOURS. never ingested into the wiki.
-  Moments/              ← daily moment notes
-  Daily Notes/
-  Reviews/              ← weekly reviews
-  Challenges/           ← /challenge logs and promoted notes
-
 Work/                   ← projects and pipeline output
   Stories/              ← developed stories, each in its own folder
     {slug}/
@@ -60,17 +54,13 @@ Work/                   ← projects and pipeline output
       timeline.md       ← shot-by-shot timeline (from /draft-video)
       carousel.md       ← carousel cards (from /draft-carousel)
       article.md        ← long-form post (from /draft-article)
-    Practice Log.md     ← storytelling practice history
   Strategy/             ← content pillars, messaging, social plan
 
-Lumis/                  ← system files
+Amplify/                ← system files
   Voice.md              ← who you are and how you sound
-  Goals.md              ← what you're building toward
-  Pattern Map.canvas    ← visual connections between moments
-  Amplify/              ← personalized content toolkit
-    Hooks/              ← 8 hook types
-    Structures/         ← 18 content frameworks
-    Persuasion-Glossary.md
+  Hooks/                ← 8 hook types
+  Structures/           ← 18 content frameworks
+  Persuasion-Glossary.md
   Brand/                ← visual identity
     Brand.md
     Inspiration/
@@ -118,37 +108,36 @@ the categorizing.
 
 ## Config drift
 
-`npm run check:vault` loads the real `.lumisrc` and asserts every resolved path exists.
+`npm run check:vault` loads the real `.amplifyrc` and asserts every resolved path exists.
 Drift is otherwise silent — a renamed folder leaves a resolver pointing at nothing, and
 the skill that uses it quietly creates an empty directory rather than failing.
 
-## Private Moments
+## Anything else in the vault
 
-Moments can be marked private by adding `private: true` to their frontmatter (or using `/moment private ...`). Private moments:
+Amplify creates and reads `Sources/`, `Wiki/`, `Work/`, and `Amplify/`. Any other folder
+is private by default: not ingested, not read into a draft, not written to. The vault
+schema at `{vaultPath}/CLAUDE.md` states this as a rule, so an agent working in the vault
+follows it whether or not Amplify is running.
 
-- Still get full analysis: 5-second moment, themes, connections, story potential
-- Still appear on the Pattern Map canvas and connect to other moments
-- Are excluded from all content pipelines: `get_moments`, `get_patterns`, `social_coach`, `story_craft_practice`, `story_craft_develop`, `/craft-content`, and all `/draft-*` skills
-- Stay in the vault and can always be found directly in Obsidian
-
-This lets you journal deeply personal things with full pattern recognition without them ever surfacing as content candidates.
+If you keep a journal, a client folder, or anything you would not want quoted in a
+LinkedIn post, put it outside those four folders and it stays out of the pipeline.
 
 ## Voice
 
-`Lumis/Voice.md` is the identity file. It captures who you are, what you're trying to accomplish, who you're talking to, what you believe, and how you talk. The coaching and content layers read it:
+`Amplify/Voice.md` is the identity file. It captures who you are, what you're trying to accomplish, who you're talking to, what you believe, and how you talk. Everything that writes reads it first:
 
 - **Director video** uses Voice to shape script lines and match your speaking style.
 - **Director carousel** uses Voice to match card copy to your tone.
 - **Director article** uses Voice to write the full article in your style.
 - **Craft content** uses Voice to shape how stories are written.
 - **Amplify toolkit** is personalized with Voice during `/init`, replacing generic placeholders with your audience, mission, and niche.
-- **Moments are never influenced by Voice.** Moments are pure life reflection, unfiltered by goals or strategy. Voice only matters when you decide to turn a moment into content.
+- **Sources are never influenced by Voice.** The raw layer records what a source actually said. Voice shapes what Amplify writes on top of it, never the record itself.
 
 `/init` scaffolds a Voice.md template and interviews you to fill it in. Run `/voice` anytime to redo it.
 
 ## Amplify Toolkit
 
-`/init` copies generic templates from `templates/amplify/` in this repo into your vault at `Lumis/Amplify/`, then personalizes them using your Voice.md. The toolkit includes:
+`/init` copies generic templates from `templates/amplify/` in this repo into your vault at `Amplify/`, then personalizes them using your Voice.md. The toolkit includes:
 
 - **8 hook types**: contrarian, curiosity-gap, story-entry, credibility, empathy, shock-data, question, pattern-interrupt. Each has a principle, good/bad examples, and anti-patterns.
 - **18 content structures**: frameworks with persuasion principles embedded (e.g., "I Used to Believe," "The Great Paradox," "The Vulnerable Admission").
@@ -158,4 +147,4 @@ This lets you journal deeply personal things with full pattern recognition witho
 
 ## IP Separation
 
-Code goes in this repo. Content goes in the vault. No purchased content, no personal moment data, no vault files in git. The `.gitignore` blocks `.lumisrc`, `.env`, PDFs, and the `creator-blueprint/` directory.
+Code goes in this repo. Everything you write goes in the vault. No purchased content, no personal notes, no vault files in git. The `.gitignore` blocks `.amplifyrc`, `.env`, PDFs, and the `creator-blueprint/` directory.

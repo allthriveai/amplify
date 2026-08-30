@@ -1,6 +1,6 @@
 import { writeFileSync, mkdirSync } from "node:fs";
 import { join } from "node:path";
-import type { LumisConfig } from "../types/config.js";
+import type { AmplifyConfig } from "../types/config.js";
 import type {
   StructureFrontmatter,
   HookFrontmatter,
@@ -13,7 +13,7 @@ import { serializeFrontmatter } from "./frontmatter.js";
 
 /** Write a content structure to the vault */
 export function writeStructure(
-  config: LumisConfig,
+  config: AmplifyConfig,
   filename: string,
   frontmatter: StructureFrontmatter,
   content: string,
@@ -30,7 +30,7 @@ export function writeStructure(
 
 /** Write a hook type file to the Hooks directory */
 export function writeHook(
-  config: LumisConfig,
+  config: AmplifyConfig,
   filename: string,
   frontmatter: HookFrontmatter,
   content: string,

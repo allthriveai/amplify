@@ -1,6 +1,6 @@
 import { existsSync, readFileSync, writeFileSync, mkdirSync, appendFileSync } from "node:fs";
 import { dirname } from "node:path";
-import type { LumisConfig } from "../types/config.js";
+import type { AmplifyConfig } from "../types/config.js";
 import type { SessionEntry } from "../types/memory.js";
 import { resolveSessionPath, resolvePreferencesPath } from "./paths.js";
 import { todayKey, shiftDateKey } from "./dates.js";
@@ -11,7 +11,7 @@ export function formatSessionTime(date: Date = new Date()): string {
 }
 
 /** Append a session entry to today's session log */
-export function appendSessionEntry(config: LumisConfig, entry: SessionEntry): void {
+export function appendSessionEntry(config: AmplifyConfig, entry: SessionEntry): void {
   const today = todayKey();
   const path = resolveSessionPath(config, today);
   const dir = dirname(path);
@@ -30,7 +30,7 @@ export function appendSessionEntry(config: LumisConfig, entry: SessionEntry): vo
 }
 
 /** Read a session log for a given date (defaults to today) */
-export function readSession(config: LumisConfig, date?: string): string | null {
+export function readSession(config: AmplifyConfig, date?: string): string | null {
   const d = date ?? todayKey();
   const path = resolveSessionPath(config, d);
   if (!existsSync(path)) return null;
@@ -38,7 +38,7 @@ export function readSession(config: LumisConfig, date?: string): string | null {
 }
 
 /** Read session logs for the last N days */
-export function readRecentSessions(config: LumisConfig, days: number): string[] {
+export function readRecentSessions(config: AmplifyConfig, days: number): string[] {
   const sessions: string[] = [];
   const today = todayKey();
 
@@ -54,14 +54,14 @@ export function readRecentSessions(config: LumisConfig, days: number): string[] 
 }
 
 /** Read the preferences file */
-export function readPreferences(config: LumisConfig): string | null {
+export function readPreferences(config: AmplifyConfig): string | null {
   const path = resolvePreferencesPath(config);
   if (!existsSync(path)) return null;
   return readFileSync(path, "utf-8");
 }
 
 /** Add or update a preference under a section heading */
-export function addPreference(config: LumisConfig, section: string, key: string, value: string): void {
+export function addPreference(config: AmplifyConfig, section: string, key: string, value: string): void {
   const path = resolvePreferencesPath(config);
   const dir = dirname(path);
 

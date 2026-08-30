@@ -10,10 +10,10 @@ Config.setPublicDir(path.resolve("public"));
 // Remotion keeps its own default; nothing personal is written here either way.
 try {
   const vaultRoot = process.env.VAULT_PATH ?? process.cwd();
-  const rc = JSON.parse(readFileSync(path.resolve(vaultRoot, ".lumisrc"), "utf-8"));
+  const rc = JSON.parse(readFileSync(path.resolve(vaultRoot, ".amplifyrc"), "utf-8"));
   const vaultPath = rc.vaultPath ?? vaultRoot;
   const storiesDir = path.resolve(vaultPath, rc.paths?.stories ?? "Stories");
   Config.setOutputLocation(path.join(storiesDir, "renders"));
 } catch {
-  // No .lumisrc reachable — leave Remotion's default output location alone
+  // No .amplifyrc reachable — leave Remotion's default output location alone
 }

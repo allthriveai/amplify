@@ -1,6 +1,6 @@
 import { readFileSync, readdirSync, existsSync } from "node:fs";
 import { join } from "node:path";
-import type { LumisConfig } from "../types/config.js";
+import type { AmplifyConfig } from "../types/config.js";
 import type {
   Structure,
   StructureFrontmatter,
@@ -15,7 +15,7 @@ import {
 import { parseFrontmatter } from "./frontmatter.js";
 
 /** Read all content structures from the vault */
-export function readStructures(config: LumisConfig): Structure[] {
+export function readStructures(config: AmplifyConfig): Structure[] {
   const dir = resolveAmplifyStructuresDir(config);
   if (!existsSync(dir)) return [];
 
@@ -39,7 +39,7 @@ export function readStructures(config: LumisConfig): Structure[] {
 }
 
 /** Read all hook type files from the Hooks directory */
-export function readHooks(config: LumisConfig): Hook[] {
+export function readHooks(config: AmplifyConfig): Hook[] {
   const dir = resolveAmplifyHooksDir(config);
   if (!existsSync(dir)) return [];
 
@@ -60,7 +60,7 @@ export function readHooks(config: LumisConfig): Hook[] {
 }
 
 /** Read the persuasion glossary file */
-export function readPersuasionGlossary(config: LumisConfig): string | null {
+export function readPersuasionGlossary(config: AmplifyConfig): string | null {
   const filepath = resolveAmplifyPersuasionPath(config);
   if (!existsSync(filepath)) return null;
   return readFileSync(filepath, "utf-8");

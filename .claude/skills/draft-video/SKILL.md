@@ -11,24 +11,24 @@ When the user runs `/draft-video`, optionally followed by a story slug:
 
 ### Step 0: Load Context
 
-Find the `.lumisrc` config file. Check these locations in order:
+Find the `.amplifyrc` config file. Check these locations in order:
 
-1. `.lumisrc` in the current working directory
-2. `.lumisrc` at the path specified by `VAULT_PATH` environment variable
+1. `.amplifyrc` in the current working directory
+2. `.amplifyrc` at the path specified by `VAULT_PATH` environment variable
 
 Read the config and resolve the vault path.
 
 **READ ALL FOUR STANDARDS DOCS BEFORE PROCEEDING.** These contain the locked decisions — timeline output must conform to them:
 
-1. `{vaultPath}/Lumis/Video SOP.md` — the master workflow and gates
-2. `{vaultPath}/Lumis/Brand/Video Standards.md` — dimensions, colors, fonts, components, layout
-3. `{vaultPath}/Lumis/Brand/Voice Standards.md` — ElevenLabs model, speed, SSML, duration formulas
-4. `{vaultPath}/Lumis/Brand/Avatar Standards.md` — HeyGen avatar ID, TTS + lipsync pipeline
-5. `{vaultPath}/Lumis/Brand/Script Standards.md` — word count formulas, pronunciation landmines, read-aloud gate
+1. `{vaultPath}/Amplify/Video SOP.md` — the master workflow and gates
+2. `{vaultPath}/Amplify/Brand/Video Standards.md` — dimensions, colors, fonts, components, layout
+3. `{vaultPath}/Amplify/Brand/Voice Standards.md` — ElevenLabs model, speed, SSML, duration formulas
+4. `{vaultPath}/Amplify/Brand/Avatar Standards.md` — HeyGen avatar ID, TTS + lipsync pipeline
+5. `{vaultPath}/Amplify/Brand/Script Standards.md` — word count formulas, pronunciation landmines, read-aloud gate
 
 Also read:
 - `{vaultPath}/{paths.voice}` (Voice.md) — shapes tone and phrasing
-- `{vaultPath}/{paths.goals}` (Goals.md) — what the user is building toward (shapes content direction)
+- `{vaultPath}/{paths.strategyDocs}` — content pillars and messaging (shapes content direction)
 - `{vaultPath}/{paths.brand}/Brand.md` — visual identity source of truth
 
 If any standard is missing, STOP and tell the user to run `/init` or create the standard. Don't produce a timeline that ignores the standards.
@@ -43,7 +43,7 @@ Check the command for mode flags:
   - Build a video timeline that PROMOTES the article (CTA drives traffic to it)
   - The video should tease the article, not re-explain it — leave something for the reader
 
-- **`--sop` / `--fast`**: enforce all SOP gates strictly. Pick defaults from Voice.md + Goals.md + Amplify hooks automatically. Skip the 6-turn creative brief. Output a timeline with reasonable defaults for user review in storyboard.
+- **`--sop` / `--fast`**: enforce all SOP gates strictly. Pick defaults from Voice.md + Brand.md + Amplify hooks automatically. Skip the 6-turn creative brief. Output a timeline with reasonable defaults for user review in storyboard.
 
 - No flag: interactive creative brief mode (the existing 6-turn Q&A).
 
@@ -244,7 +244,7 @@ Keyboard shortcuts:
 
 #### Approval gate
 
-The timeline's frontmatter includes `storyboard-approved: false` by default. `lumis studio render` will refuse to run until that flag is `true`.
+The timeline's frontmatter includes `storyboard-approved: false` by default. `amplify studio render` will refuse to run until that flag is `true`.
 
 When the user clicks "Approve" in the storyboard, the generated YAML export includes:
 
@@ -255,7 +255,7 @@ storyboard-approved-at: 2026-04-16T14:23:00Z
 
 Paste this YAML back into the timeline .md file frontmatter.
 
-`lumis studio render {slug}` checks for this flag and REFUSES to run if:
+`amplify studio render {slug}` checks for this flag and REFUSES to run if:
 - `storyboard-approved` is missing or `false`
 - `storyboard-approved-at` is older than the timeline file's last modification time (indicates the timeline was edited AFTER approval, so approval is stale)
 
@@ -275,7 +275,7 @@ Every Remotion composition must follow these rules. They come from Brand.md and 
 
 | Element | Value | Source |
 |---------|-------|--------|
-| Page background | `#fafaf7` (warm cream) | `.lumisrc` → `brand.background` |
+| Page background | `#fafaf7` (warm cream) | `.amplifyrc` → `brand.background` |
 | Card background | `#ffffff` | `brand.card` |
 | Card border | `1px solid #e8e5dd` | `brand.marble` |
 | Card border radius | `16px` for video, `8px` for print | Brand.md |
@@ -283,7 +283,7 @@ Every Remotion composition must follow these rules. They come from Brand.md and 
 
 #### Colors
 
-Read colors from `.lumisrc` → `brand` object. The primary palette:
+Read colors from `.amplifyrc` → `brand` object. The primary palette:
 
 | Token | Hex | Use in video |
 |-------|-----|-------------|
@@ -413,7 +413,7 @@ Write `{stories}/{slug}/video-{hook}-{slug}-{YYYY-MM-DD}.md` (e.g., `video-curio
 title: "Story Title"
 type: timeline
 status: draft
-source: "[[Lumis/Stories/slug/story.md]]"
+source: "[[Amplify/Stories/slug/story.md]]"
 hook: curiosity-gap
 structure: point-of-high-drama
 persuasion: [contrast-principle, sensory-specificity]
@@ -454,7 +454,7 @@ After saving, emit a `timeline_created` signal to `{vaultPath}/{paths.signals}/s
   "timestamp": "[ISO timestamp]",
   "data": {
     "slug": "[story-slug]",
-    "storySource": "[[Lumis/Stories/slug/story.md]]",
+    "storySource": "[[Amplify/Stories/slug/story.md]]",
     "hook": "[hook-type]",
     "structure": "[structure-name]",
     "platform": "[platform]",

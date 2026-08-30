@@ -1,6 +1,6 @@
 ---
 name: voice
-description: Sets up your Voice.md through a guided conversation. Asks five questions about who you are, your mission, audience, beliefs, and communication style, then writes a populated Voice.md to the vault. Use when the user runs /voice or after running lumis init.
+description: Sets up your Voice.md through a guided conversation. Asks five questions about who you are, your mission, audience, beliefs, and communication style, then writes a populated Voice.md to the vault. Use when the user runs /voice or after running amplify init.
 ---
 
 # Voice Interview
@@ -11,17 +11,17 @@ When the user runs `/voice`:
 
 ### Step 0: Load Configuration
 
-Find the `.lumisrc` config file to resolve the vault path and voice file location. Check these locations in order:
+Find the `.amplifyrc` config file to resolve the vault path and voice file location. Check these locations in order:
 
-1. `.lumisrc` in the current working directory
-2. `.lumisrc` at the path specified by `VAULT_PATH` environment variable
-3. `.lumisrc` at the fallback vault path (if configured in CLAUDE.md or known from previous sessions)
+1. `.amplifyrc` in the current working directory
+2. `.amplifyrc` at the path specified by `VAULT_PATH` environment variable
+3. `.amplifyrc` at the fallback vault path (if configured in CLAUDE.md or known from previous sessions)
 
 Read the config and extract:
 
 ```
 vaultPath    → absolute path to the Obsidian vault
-paths.voice  → voice file relative to vault root (default: "Lumis/Voice.md")
+paths.voice  → voice file relative to vault root (default: "Amplify/Voice.md")
 ```
 
 ### Step 1: Check for Existing Voice.md

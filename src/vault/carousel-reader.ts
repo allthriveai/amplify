@@ -1,12 +1,12 @@
 import { readFileSync, existsSync, readdirSync } from "node:fs";
 import { join } from "node:path";
-import type { LumisConfig } from "../types/config.js";
+import type { AmplifyConfig } from "../types/config.js";
 import type { Carousel, CarouselFrontmatter } from "../types/director.js";
 import { resolveStoryDir, resolveStoriesDir } from "./paths.js";
 import { parseFrontmatter } from "./frontmatter.js";
 
 /** Read the most recent carousel from a story folder by slug */
-export function readCarousel(config: LumisConfig, slug: string): Carousel | null {
+export function readCarousel(config: AmplifyConfig, slug: string): Carousel | null {
   const storyDir = resolveStoryDir(config, slug);
   if (!existsSync(storyDir)) return null;
 
@@ -30,7 +30,7 @@ export function readCarousel(config: LumisConfig, slug: string): Carousel | null
 }
 
 /** List all story slugs that have a carousel */
-export function listCarousels(config: LumisConfig): string[] {
+export function listCarousels(config: AmplifyConfig): string[] {
   const storiesDir = resolveStoriesDir(config);
   if (!existsSync(storiesDir)) return [];
 

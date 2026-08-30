@@ -5,18 +5,18 @@ const DEFAULT_URL = "ws://localhost:4455";
 
 const SCENES = [
   {
-    name: "Lumis: Screen + Camera",
+    name: "Amplify: Screen + Camera",
     sources: [
       { name: "Display Capture", kind: "screen_capture" },
       { name: "Webcam PIP", kind: "av_capture_v2" },
     ],
   },
   {
-    name: "Lumis: Screen Only",
+    name: "Amplify: Screen Only",
     sources: [{ name: "Display Capture", kind: "screen_capture" }],
   },
   {
-    name: "Lumis: Camera Only",
+    name: "Amplify: Camera Only",
     sources: [{ name: "Webcam", kind: "av_capture_v2" }],
   },
 ] as const;
@@ -41,7 +41,7 @@ export async function connectOBS(
   return obs;
 }
 
-/** Create Lumis scenes and sources in OBS */
+/** Create Amplify scenes and sources in OBS */
 export async function setupScenes(obs: OBSWebSocket): Promise<string[]> {
   const { scenes: existing } = await obs.call("GetSceneList");
   const existingNames = new Set(
@@ -113,7 +113,7 @@ export async function setOutputPath(
   });
 }
 
-/** Switch to a specific Lumis scene */
+/** Switch to a specific Amplify scene */
 export async function switchScene(
   obs: OBSWebSocket,
   sceneName: string,
@@ -121,8 +121,8 @@ export async function switchScene(
   await obs.call("SetCurrentProgramScene", { sceneName });
 }
 
-/** Get the list of available Lumis scene names */
-export function getLumisSceneNames(): string[] {
+/** Get the list of available Amplify scene names */
+export function getAmplifySceneNames(): string[] {
   return SCENES.map((s) => s.name);
 }
 

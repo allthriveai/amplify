@@ -3,7 +3,7 @@ import { join } from "node:path";
 import { mkdir } from "node:fs/promises";
 import { execSync } from "node:child_process";
 
-import type { LumisConfig } from "../types/config.js";
+import type { AmplifyConfig } from "../types/config.js";
 import type { Timeline, ResolvedShot, TextCardType, TransitionConfig } from "../types/director.js";
 import { readTimeline } from "../vault/timeline-reader.js";
 import { writeTimeline } from "../vault/timeline-writer.js";
@@ -111,7 +111,7 @@ interface ProduceProgress {
  * 7. Update timeline status, output to {stories}/{slug}/{slug}.mp4
  */
 export async function produceTimeline(
-  config: LumisConfig,
+  config: AmplifyConfig,
   slug: string,
   onProgress?: (progress: ProduceProgress) => void,
 ): Promise<string> {
@@ -138,7 +138,7 @@ export async function produceTimeline(
 }
 
 async function produceFromTimeline(
-  config: LumisConfig,
+  config: AmplifyConfig,
   slug: string,
   timeline: Timeline,
   report: (phase: string, detail: string) => void,
@@ -150,7 +150,7 @@ async function produceFromTimeline(
   const studio = config.studio;
 
   // 3. Generate avatar clips via HeyGen in parallel (max 3 concurrent)
-  // Stage intermediate files in the vault's story folder, not in the lumis repo
+  // Stage intermediate files in the vault's story folder, not in the amplify repo
   const rawDir = join(resolveStoryDir(config, slug), "raw");
   await mkdir(rawDir, { recursive: true });
 
@@ -182,10 +182,10 @@ async function produceFromTimeline(
 
   if (pendingAvatarShots.length > 0) {
     if (!studio?.heygenApiKey) {
-      throw new Error("Studio config missing heygenApiKey. Add it to .lumisrc under studio.");
+      throw new Error("Studio config missing heygenApiKey. Add it to .amplifyrc under studio.");
     }
     if (!studio?.heygenAvatarId) {
-      throw new Error("Studio config missing heygenAvatarId. Add it to .lumisrc under studio.");
+      throw new Error("Studio config missing heygenAvatarId. Add it to .amplifyrc under studio.");
     }
 
     const heygen = createHeyGenClient(
@@ -270,10 +270,10 @@ async function produceFromTimeline(
 
   if (pendingVoiceovers.length > 0) {
     if (!studio?.elevenlabsApiKey) {
-      throw new Error("Studio config missing elevenlabsApiKey. Add it to .lumisrc under studio.");
+      throw new Error("Studio config missing elevenlabsApiKey. Add it to .amplifyrc under studio.");
     }
     if (!studio?.elevenlabsVoiceId) {
-      throw new Error("Studio config missing elevenlabsVoiceId. Add it to .lumisrc under studio.");
+      throw new Error("Studio config missing elevenlabsVoiceId. Add it to .amplifyrc under studio.");
     }
 
     const elevenlabs = createElevenLabsClient(studio.elevenlabsApiKey, studio.elevenlabsVoiceId);

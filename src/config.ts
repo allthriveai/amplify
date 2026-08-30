@@ -2,31 +2,31 @@ import { readFileSync, existsSync } from "node:fs";
 import { resolve, join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { config as loadDotenv } from "dotenv";
-import { LumisConfig, DEFAULT_PATHS } from "./types/config.js";
+import { AmplifyConfig, DEFAULT_PATHS } from "./types/config.js";
 import type { StudioConfig } from "./types/studio.js";
 import type { CaptureConfig } from "./types/config.js";
 
-/** The lumis repo root, resolved from this module rather than the cwd */
+/** The amplify repo root, resolved from this module rather than the cwd */
 function packageRoot(): string {
   // src/config.ts and dist/config.js are both one level below the root
   return resolve(dirname(fileURLToPath(import.meta.url)), "..");
 }
 
 /**
- * Load Lumis configuration from (in priority order):
- * 1. .lumisrc in the vault root (JSON)
- * 2. .env file in the lumis repo
+ * Load Amplify configuration from (in priority order):
+ * 1. .amplifyrc in the vault root (JSON)
+ * 2. .env file in the amplify repo
  * 3. Environment variables (VAULT_PATH, ANTHROPIC_API_KEY)
  */
-export function loadConfig(overrides?: Partial<LumisConfig>): LumisConfig {
+export function loadConfig(overrides?: Partial<AmplifyConfig>): AmplifyConfig {
   // dotenv defaults to the cwd, which is wrong whenever something other than a
-  // terminal in this repo starts Lumis — Claude Desktop launches the MCP server
+  // terminal in this repo starts Amplify — Claude Desktop launches the MCP server
   // from an arbitrary directory. Load the repo's own .env too, without letting
   // it override variables the host already set.
   loadDotenv();
   loadDotenv({ path: join(packageRoot(), ".env") });
 
-  const rc = readLumisrc();
+  const rc = readAmplifyrc();
   const rcPaths = rc?.paths;
 
   const vaultPath = overrides?.vaultPath
@@ -46,11 +46,7 @@ export function loadConfig(overrides?: Partial<LumisConfig>): LumisConfig {
     vaultPath: resolve(vaultPath.replace(/^~/, process.env.HOME ?? "")),
     anthropicApiKey,
     paths: {
-      moments: overrides?.paths?.moments ?? rcPaths?.moments ?? DEFAULT_PATHS.moments,
       stories: overrides?.paths?.stories ?? rcPaths?.stories ?? DEFAULT_PATHS.stories,
-      canvas: overrides?.paths?.canvas ?? rcPaths?.canvas ?? DEFAULT_PATHS.canvas,
-      dailyNotes: overrides?.paths?.dailyNotes ?? rcPaths?.dailyNotes ?? DEFAULT_PATHS.dailyNotes,
-      dailyNoteFormat: overrides?.paths?.dailyNoteFormat ?? rcPaths?.dailyNoteFormat ?? DEFAULT_PATHS.dailyNoteFormat,
       sources: overrides?.paths?.sources ?? rcPaths?.sources ?? DEFAULT_PATHS.sources,
       wiki: overrides?.paths?.wiki ?? rcPaths?.wiki ?? DEFAULT_PATHS.wiki,
       amplifyStructures: overrides?.paths?.amplifyStructures ?? rcPaths?.amplifyStructures ?? DEFAULT_PATHS.amplifyStructures,
@@ -61,12 +57,9 @@ export function loadConfig(overrides?: Partial<LumisConfig>): LumisConfig {
       signals: overrides?.paths?.signals ?? rcPaths?.signals ?? DEFAULT_PATHS.signals,
       memory: overrides?.paths?.memory ?? rcPaths?.memory ?? DEFAULT_PATHS.memory,
       people: overrides?.paths?.people ?? rcPaths?.people ?? DEFAULT_PATHS.people,
-      challenges: overrides?.paths?.challenges ?? rcPaths?.challenges ?? DEFAULT_PATHS.challenges,
       brand: overrides?.paths?.brand ?? rcPaths?.brand ?? DEFAULT_PATHS.brand,
       audio: overrides?.paths?.audio ?? rcPaths?.audio ?? DEFAULT_PATHS.audio,
-      goals: overrides?.paths?.goals ?? rcPaths?.goals ?? DEFAULT_PATHS.goals,
       meetings: overrides?.paths?.meetings ?? rcPaths?.meetings ?? DEFAULT_PATHS.meetings,
-      reviews: overrides?.paths?.reviews ?? rcPaths?.reviews ?? DEFAULT_PATHS.reviews,
     },
     ...(overrides?.brand ?? rc?.brand ? { brand: overrides?.brand ?? rc?.brand } : {}),
     ...(overrides?.brandProfiles ?? rc?.brandProfiles ? { brandProfiles: overrides?.brandProfiles ?? rc?.brandProfiles } : {}),
@@ -113,26 +106,26 @@ function loadCaptureConfig(
  * Returns undefined if neither the named profile nor default brand exists.
  */
 export function getBrandProfile(
-  config: LumisConfig,
+  config: AmplifyConfig,
   profileName?: string,
-): LumisConfig["brand"] | undefined {
+): AmplifyConfig["brand"] | undefined {
   if (profileName && config.brandProfiles?.[profileName]) {
     return config.brandProfiles[profileName];
   }
   return config.brand;
 }
 
-function readLumisrc(): Partial<LumisConfig> | null {
+function readAmplifyrc(): Partial<AmplifyConfig> | null {
   // Check current working directory first, then VAULT_PATH
   const candidates = [
-    join(process.cwd(), ".lumisrc"),
-    process.env.VAULT_PATH ? join(process.env.VAULT_PATH, ".lumisrc") : null,
+    join(process.cwd(), ".amplifyrc"),
+    process.env.VAULT_PATH ? join(process.env.VAULT_PATH, ".amplifyrc") : null,
   ].filter(Boolean) as string[];
 
   for (const path of candidates) {
     if (existsSync(path)) {
       try {
-        return JSON.parse(readFileSync(path, "utf-8")) as Partial<LumisConfig>;
+        return JSON.parse(readFileSync(path, "utf-8")) as Partial<AmplifyConfig>;
       } catch {
         // Invalid JSON — skip
       }

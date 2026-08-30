@@ -1,13 +1,13 @@
 import { writeFileSync, mkdirSync } from "node:fs";
 import { join } from "node:path";
-import type { LumisConfig } from "../types/config.js";
+import type { AmplifyConfig } from "../types/config.js";
 import type { TimelineFrontmatter } from "../types/director.js";
 import { resolveStoryDir } from "./paths.js";
 import { serializeFrontmatter } from "./frontmatter.js";
 
 /** Write a director cut file to a story folder */
 export function writeTimeline(
-  config: LumisConfig,
+  config: AmplifyConfig,
   slug: string,
   frontmatter: TimelineFrontmatter,
   content: string,

@@ -17,7 +17,7 @@ const WIKI_LOG_TEMPLATE = `# Log
 Append-only. Newest entries at the bottom. Never edit an entry already written.
 `;
 
-/** The lumis repo root, resolved from this module rather than the cwd */
+/** The amplify repo root, resolved from this module rather than the cwd */
 function packageRoot(): string {
   // src/cli/commands/init.ts and dist/cli/commands/init.js are both three levels down
   return resolve(dirname(fileURLToPath(import.meta.url)), "..", "..", "..");
@@ -33,7 +33,7 @@ const PREFERENCES_TEMPLATE = `# Preferences
 `;
 
 
-/** `lumis init [path]` — set up Lumis in a vault */
+/** `amplify init [path]` — set up Amplify in a vault */
 export async function initCommand(targetPath?: string): Promise<void> {
   const vaultPath = resolve(targetPath ?? process.cwd());
   const isExistingVault = existsSync(join(vaultPath, ".obsidian"));
@@ -54,10 +54,6 @@ export async function initCommand(targetPath?: string): Promise<void> {
     join(DEFAULT_PATHS.sources, "assets"),
     DEFAULT_PATHS.meetings,
     DEFAULT_PATHS.audio,
-    DEFAULT_PATHS.moments,
-    DEFAULT_PATHS.dailyNotes,
-    DEFAULT_PATHS.reviews,
-    DEFAULT_PATHS.challenges,
     DEFAULT_PATHS.stories,
     DEFAULT_PATHS.strategyDocs,
     DEFAULT_PATHS.amplifyStructures,
@@ -95,17 +91,13 @@ export async function initCommand(targetPath?: string): Promise<void> {
     console.log(`Created CLAUDE.md (the wiki schema)`);
   }
 
-  // Write .lumisrc
-  const lumisrcPath = join(vaultPath, ".lumisrc");
-  if (!existsSync(lumisrcPath)) {
+  // Write .amplifyrc
+  const amplifyrcPath = join(vaultPath, ".amplifyrc");
+  if (!existsSync(amplifyrcPath)) {
     const config = {
       vaultPath,
       paths: {
-        moments: DEFAULT_PATHS.moments,
         stories: DEFAULT_PATHS.stories,
-        canvas: DEFAULT_PATHS.canvas,
-        dailyNotes: DEFAULT_PATHS.dailyNotes,
-        dailyNoteFormat: DEFAULT_PATHS.dailyNoteFormat,
         sources: DEFAULT_PATHS.sources,
         wiki: DEFAULT_PATHS.wiki,
         amplifyStructures: DEFAULT_PATHS.amplifyStructures,
@@ -117,18 +109,15 @@ export async function initCommand(targetPath?: string): Promise<void> {
         memory: DEFAULT_PATHS.memory,
         brand: DEFAULT_PATHS.brand,
         people: DEFAULT_PATHS.people,
-        challenges: DEFAULT_PATHS.challenges,
         audio: DEFAULT_PATHS.audio,
-        goals: DEFAULT_PATHS.goals,
         meetings: DEFAULT_PATHS.meetings,
-        reviews: DEFAULT_PATHS.reviews,
       },
     };
-    writeFileSync(lumisrcPath, JSON.stringify(config, null, 2), "utf-8");
-    console.log(`Created .lumisrc`);
+    writeFileSync(amplifyrcPath, JSON.stringify(config, null, 2), "utf-8");
+    console.log(`Created .amplifyrc`);
   }
 
-  console.log(`Scaffolded Lumis in ${vaultPath}`);
+  console.log(`Scaffolded Amplify in ${vaultPath}`);
   console.log(`  Sources: ${DEFAULT_PATHS.sources}  (raw, immutable)`);
   console.log(`    Clippings: ${join(DEFAULT_PATHS.sources, "Clippings")}`);
   console.log(`    Meetings:  ${DEFAULT_PATHS.meetings}`);
@@ -136,7 +125,6 @@ export async function initCommand(targetPath?: string): Promise<void> {
   for (const sub of Object.values(WIKI_SUBDIRS)) {
     console.log(`    ${sub}`);
   }
-  console.log(`  Journal: ${DEFAULT_PATHS.moments}, ${DEFAULT_PATHS.dailyNotes}, ${DEFAULT_PATHS.reviews}`);
   console.log(`  Work:    ${DEFAULT_PATHS.stories}, ${DEFAULT_PATHS.strategyDocs}`);
   console.log(`  Amplify:`);
   console.log(`    Structures: ${DEFAULT_PATHS.amplifyStructures}`);
@@ -163,7 +151,7 @@ export async function initCommand(targetPath?: string): Promise<void> {
 [Your voice: direct? warm? technical? casual? Funny? Serious? What words do you use? What do you never say?]
 `;
     writeFileSync(voicePath, voiceTemplate, "utf-8");
-    console.log(`  Voice:   ${DEFAULT_PATHS.voice} (fill this in — it shapes everything Lumis does)`);
+    console.log(`  Voice:   ${DEFAULT_PATHS.voice} (fill this in — it shapes everything Amplify does)`);
   }
 
   // Write preferences.md template

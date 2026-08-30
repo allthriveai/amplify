@@ -21,7 +21,7 @@ export async function renderVideo(
   props: RenderProps,
   outputPath: string,
 ): Promise<string> {
-  const propsFile = join(tmpdir(), `lumis-render-props-${Date.now()}.json`);
+  const propsFile = join(tmpdir(), `amplify-render-props-${Date.now()}.json`);
   writeFileSync(propsFile, JSON.stringify(props), "utf-8");
 
   try {
@@ -54,7 +54,7 @@ export async function renderDirectorCut(
   props: DirectorCutRenderProps,
   outputPath: string,
 ): Promise<string> {
-  const propsFile = join(tmpdir(), `lumis-director-props-${Date.now()}.json`);
+  const propsFile = join(tmpdir(), `amplify-director-props-${Date.now()}.json`);
   writeFileSync(propsFile, JSON.stringify(props), "utf-8");
 
   try {

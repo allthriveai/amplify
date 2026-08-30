@@ -1,19 +1,17 @@
 # Signals
 
-Lumis uses a structured event log (`Lumis/Signals/signals.json`) to connect pipeline stages. When a moment is captured, a learning extracted, a timeline created, or a video rendered, a signal is emitted. This lets downstream stages make informed decisions without re-scanning the vault.
+Amplify uses a structured event log (`Amplify/Signals/signals.json`) to connect pipeline stages. When a source is ingested, a timeline created, or a video rendered, a signal is emitted. This is what closes the flywheel: downstream stages read signals instead of re-scanning the vault, and `suggest_content` uses them to avoid recommending what you just published.
 
 ## Signal Types
 
 | Type | Emitted By | Key Data |
 |------|-----------|----------|
-| `moment_captured` | capture pipeline, /moment | filename, themes, storyPotential, momentType, fiveSecondMoment |
+| `source_ingested` | /ingest, MCP `ingest_source` | filename, title, wikiPages, tags |
 | `recommendation_rejected` | MCP `record_signal` (user feedback) | reason, pillar, sourceContent |
 | `content_posted` | MCP `record_signal` (user feedback) | platform, url, scriptFilename, pillar |
 | `engagement_updated` | MCP `record_signal` (user feedback) | platform, url, views, likes, comments, shares |
-| `story_developed` | /craft-storytelling develop | storyFilename, sourceMoment, craftStatus |
-| `story_practice` | /craft-storytelling practice | momentTitle, element |
+| `story_developed` | /craft-content | storyFilename, sourceMoment, craftStatus |
 | `inspiration_added` | /add-inspiration | person, tags, backLinks, path |
-| `challenge_completed` | /challenge | idea, prompts, promoted, path |
 | `timeline_created` | /draft-video | slug, storySource, hook, structure, platform, shotCount, targetDuration |
 | `video_rendered` | /draft-video produce | slug, outputPath, platform, duration |
 | `carousel_created` | /draft-carousel | slug, storySource, hook, structure, platform, cardCount |
@@ -22,7 +20,7 @@ Lumis uses a structured event log (`Lumis/Signals/signals.json`) to connect pipe
 ## Behavior
 
 - Signals auto-prune after 90 days on every write
-- `summarizeSignals()` returns a typed digest: recent moments, rejections, posted content, top engagement
+- `summarizeSignals()` returns a typed digest: recent ingests, rejections, posted content, top engagement
 - User feedback signals come through the `record_signal` MCP tool
 
 ## How Director Skills Use Signals

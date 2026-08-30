@@ -5,13 +5,13 @@ import { resolveStoriesDir } from "../../vault/paths.js";
 import { parseFrontmatter } from "../../vault/frontmatter.js";
 import type { TimelineFrontmatter } from "../../types/director.js";
 
-const USAGE = `lumis studio — video production
+const USAGE = `amplify studio — video production
 
 Commands:
-  lumis studio list                    List director cuts across stories
-  lumis studio render <slug>           Render a story's timeline to branded video
-  lumis studio preview                 Preview in Remotion Studio
-  lumis studio upload <file> [options] Upload a video to YouTube
+  amplify studio list                    List director cuts across stories
+  amplify studio render <slug>           Render a story's timeline to branded video
+  amplify studio preview                 Preview in Remotion Studio
+  amplify studio upload <file> [options] Upload a video to YouTube
     --title "Title"                    Video title (required)
     --description "Desc"              Video description
     --tags tag1,tag2                   Comma-separated tags
@@ -19,7 +19,7 @@ Commands:
     --short                           Mark as YouTube Short
     --thumbnail path.png              Custom thumbnail`;
 
-/** `lumis studio <subcommand> [args]` — video production */
+/** `amplify studio <subcommand> [args]` — video production */
 export async function studioCommand(subcommand: string, args: string[]): Promise<void> {
   switch (subcommand) {
     case "list": {
@@ -29,7 +29,7 @@ export async function studioCommand(subcommand: string, args: string[]): Promise
     case "render": {
       const slug = args[0];
       if (!slug) {
-        console.error("Usage: lumis studio render <slug>");
+        console.error("Usage: amplify studio render <slug>");
         process.exit(1);
       }
       await renderStory(slug);
@@ -143,7 +143,7 @@ function parseArg(args: string[], flag: string): string | undefined {
 async function uploadVideo(args: string[]): Promise<void> {
   const filePath = args.find(a => !a.startsWith("--"));
   if (!filePath) {
-    console.error("Usage: lumis studio upload <file> --title \"Title\" [options]");
+    console.error("Usage: amplify studio upload <file> --title \"Title\" [options]");
     process.exit(1);
   }
 

@@ -3,7 +3,7 @@ import { join, resolve, extname } from "node:path";
 import { tmpdir } from "node:os";
 import { existsSync } from "node:fs";
 import type { CarouselCard } from "../types/director.js";
-import type { LumisConfig } from "../types/config.js";
+import type { AmplifyConfig } from "../types/config.js";
 import { renderCarouselHtml } from "./render-html.js";
 import type { CarouselBrand } from "./render-html.js";
 import { resolveStoryAssetsDir } from "../vault/paths.js";
@@ -18,7 +18,7 @@ export interface RenderCarouselPdfOptions {
   /** Story slug, used to resolve relative asset paths */
   slug?: string;
   /** Config, used to resolve relative asset paths */
-  config?: LumisConfig;
+  config?: AmplifyConfig;
 }
 
 const MIME_TYPES: Record<string, string> = {
@@ -68,7 +68,7 @@ export async function renderCarouselPdf(
   const html = renderCarouselHtml({ cards, brand, width, height, assets });
 
   // 3. Write to temp file
-  const tmpDir = await mkdtemp(join(tmpdir(), "lumis-carousel-pdf-"));
+  const tmpDir = await mkdtemp(join(tmpdir(), "amplify-carousel-pdf-"));
   const htmlPath = join(tmpDir, "carousel.html");
   await writeFile(htmlPath, html);
 
