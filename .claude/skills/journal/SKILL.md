@@ -175,6 +175,13 @@ checkboxes for `--done` to match:
 lumis today --touch "#goal/journal"
 ```
 
+When analyzing an entry captured on an earlier day (Step 1.5), stamp **that day**,
+not today — otherwise the wrong day gets the credit:
+
+```bash
+lumis today --touch "#goal/journal" --date 2026-08-29
+```
+
 `--touch` stamps by target name or tag, needs no checkbox and no existing task,
 and is idempotent per day, so running it twice cannot inflate an Nx-weekly count.
 

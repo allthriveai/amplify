@@ -76,6 +76,7 @@ Commands:
   lumis today                        Open today's journal (receipt + carried tasks)
   lumis today --done "task"          Check tasks off and close the day
   lumis today --touch "target"       Stamp a goal target directly (no checkbox needed)
+  lumis today --touch "t" --date D   Stamp it for a past day (backfilled phone entries)
   lumis week                         Write this week's review
   lumis moment "..."                 Capture a moment
   lumis patterns                     Regenerate the Pattern Map

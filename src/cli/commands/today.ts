@@ -24,12 +24,21 @@ export async function todayCommand(args: string[]): Promise<void> {
   if (touchIndex !== -1) {
     const names = args.slice(touchIndex + 1).filter((a) => !a.startsWith("--"));
     if (names.length === 0) {
-      console.error('Usage: lumis today --touch "target name or #goal/tag"');
+      console.error('Usage: lumis today --touch "target name or #goal/tag" [--date YYYY-MM-DD]');
+      process.exit(1);
+    }
+    // An entry captured on a phone is analyzed at the desk the next day, so the
+    // stamp usually belongs to a past date. Defaulting to today silently credits
+    // the wrong day and inflates Nx-cadence counts.
+    const dateIndex = args.indexOf("--date");
+    const stampDate = dateIndex !== -1 ? args[dateIndex + 1] : date;
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(stampDate)) {
+      console.error(`--date must be YYYY-MM-DD, got "${stampDate}"`);
       process.exit(1);
     }
     for (const name of names) {
-      const result = touchTarget(config, name, date);
-      if (result.stamped) console.log(`Stamped: ${result.target}`);
+      const result = touchTarget(config, name, stampDate);
+      if (result.stamped) console.log(`Stamped: ${result.target} (${stampDate})`);
       else console.log(`Not stamped — ${name}: ${result.reason}`);
     }
     return;
