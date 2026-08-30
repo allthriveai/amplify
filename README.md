@@ -273,6 +273,7 @@ npm install          # also installs the pre-commit hook
 npm run check:personal
 npm run lint && npm test
 npm run check:vault  # asserts every configured vault path exists
+npm run lint:wiki    # wiki structure: broken links, orphans, index drift
 ```
 
 The pre-commit hook blocks home paths, emails, API keys, and hardcoded vault

@@ -16,6 +16,7 @@
     "lint": "tsc --noEmit",
     "check:personal": "node tools/check-personal.mjs",
     "check:vault": "npm run build && node tools/check-vault.mjs",
+    "lint:wiki": "npm run build && node tools/lint-wiki.mjs",
     "prepublishOnly": "npm run check:personal && npm run lint && npm run test:run",
     "prepare": "git config core.hooksPath .githooks || true"
   },

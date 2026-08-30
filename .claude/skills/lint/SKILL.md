@@ -26,6 +26,19 @@ is bookkeeping, not judgment.
 
 ## Step 2: The mechanical checks
 
+Run the script rather than doing these by hand:
+
+```bash
+npm run lint:wiki          # counts, plus every structural failure
+npm run lint:wiki -- -v    # also lists orphans and empty-source pages
+```
+
+It covers broken links, index drift in both directions, missing aliases, dangling
+sources, and orphans. It exits non-zero on structural breakage and treats orphans
+and empty sources as reportable rather than failing, since a page written a minute
+ago is legitimately both. What follows is what it checks, for when you need to
+reason about a finding rather than just see it.
+
 **Orphans.** Pages with zero inbound links from any other page. The index does not
 count — being listed is not being connected.
 

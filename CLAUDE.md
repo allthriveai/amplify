@@ -142,6 +142,7 @@ npm run dev          # Run CLI with tsx
 npm run lint         # Type check without emit
 npm test             # Run vitest
 npm run check:vault  # Assert every configured vault path exists
+npm run lint:wiki    # Wiki structure: broken links, orphans, index drift, aliases
 lumis init [path]    # Scaffold vault structure
 lumis today          # Open today's journal (receipt + carried tasks)
 lumis today --done "task"   # Check tasks off and close the day
