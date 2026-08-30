@@ -41,9 +41,14 @@ your disk. Delete this repo tomorrow and you still have everything.
                               feed the next suggestion
 ```
 
-The loop closes. What you publish emits a signal, signals shape what `suggest_content`
-recommends next, and the wiki gets thicker every time you ingest. That is the flywheel:
-each turn is cheaper than the last because the synthesis is already done.
+The loop closes. Ingesting and publishing both emit signals, `suggest_content` returns
+those signals alongside its ranking so the agent can see what you already shipped, and
+the wiki gets thicker every time you ingest. That is the flywheel: each turn is cheaper
+than the last because the synthesis is already done.
+
+Ranking itself is mechanical and does not read signals — undrafted first, then source
+count, then most recently updated. A page counts as drafted when some file in a story
+folder links to it as `[[Page Title]]`.
 
 ## The second brain
 

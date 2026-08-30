@@ -70,10 +70,9 @@ If the user says "skip" or gives no answer to question 3, move on.
 
 Search the vault for mentions of this person. Check:
 
-1. **Moments** at `{paths.moments}`: search both `people` frontmatter fields and body content for the person's name (and aliases)
-2. **Sources** at `{paths.sources}`: search clipping content and titles
-3. **Wiki concepts** at `{paths.wiki}`: scan index.md for related concept pages
-4. **Stories** at `{paths.stories}`: search note content
+1. **Sources** at `{paths.sources}`: search clipping content and titles
+2. **Wiki** at `{paths.wiki}`: scan index.md for related pages, then the pages it names
+3. **Stories** at `{paths.stories}`: search note content
 
 Use Grep with the person's name (and aliases if they have one) across these directories.
 

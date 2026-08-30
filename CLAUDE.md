@@ -17,7 +17,7 @@ asset lives in the user's Obsidian vault. The repo holds code, templates, and sk
 - **TypeScript + Node.js**, ES modules (`"type": "module"`)
 - **Build**: `npm run build` (tsc). Output goes to `dist/`.
 - **Dev**: `tsx` for running without build
-- **Tests**: `vitest` — 110 tests across config, vault, signals, memory, and diagram
+- **Tests**: `vitest` — 117 tests across config, vault, dates, signals, memory, and diagram
 - **No frontend.** CLI plus MCP server. Remotion compositions are React, rendered headless.
 
 ## Key directories

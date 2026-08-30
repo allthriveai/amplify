@@ -29,7 +29,7 @@ If the user referenced an existing piece (moment, story, research), read it from
 
 - **`--quick`**: skip the full 6-turn interview. Go directly to: one 5-second moment, one transformation, one turn. Used for quick-turn LinkedIn videos that don't need a full story arc. Minimum viable story for `/draft-video` downstream.
 
-- **`--from-moment {slug}`**: instead of free-writing, read an existing moment from the vault and use it as the free-write input. Fast path when the story seed is already captured.
+- **`--from-wiki {page}`**: instead of free-writing, read a wiki page and use it as the free-write input. Fast path when the material is already distilled — cite the page as `[[Page Title]]` in `story.md` so `suggest_content` can tell it has been drafted.
 
 - No flag: full interview mode (the existing 6-turn process).
 

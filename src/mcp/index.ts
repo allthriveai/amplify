@@ -26,7 +26,7 @@ import { resolveVoicePath, resolveStoriesDir, resolveClippingsDir, resolveWikiDi
 import { emitSignal, signalId, summarizeSignals } from "../vault/signals.js";
 import { appendSessionEntry, formatSessionTime, readRecentSessions, readPreferences, addPreference } from "../vault/memory.js";
 import { slugify } from "../vault/slug.js";
-import { todayKey } from "../vault/dates.js";
+import { todayKey, normalizeDateKey } from "../vault/dates.js";
 import type { AmplifyConfig } from "../types/config.js";
 import type { ClippingFrontmatter } from "../types/source.js";
 import { WIKI_SUBDIRS, type WikiFrontmatter } from "../types/wiki.js";
@@ -112,6 +112,20 @@ server.registerTool("ingest_source", {
 
     const filepath = writeClipping(config, filename, frontmatter, content);
 
+    emitSignal(config, {
+      id: signalId(),
+      type: "source_ingested",
+      timestamp: new Date().toISOString(),
+      data: {
+        filename,
+        title,
+        // The wiki pages this source touches are written by the agent after this
+        // call returns, so they are not known yet. /ingest appends them.
+        wikiPages: [],
+        tags: frontmatter.tags,
+      },
+    });
+
     appendSessionEntry(config, {
       time: formatSessionTime(new Date()),
       action: "source_ingested",
@@ -169,11 +183,20 @@ server.registerTool("suggest_content", {
 
     const storiesDir = resolveStoriesDir(config);
     const stories = readStories(config);
-    const storySlugs = new Set(
-      existsSync(storiesDir)
-        ? readdirSync(storiesDir, { withFileTypes: true }).filter((d) => d.isDirectory()).map((d) => d.name)
-        : [],
-    );
+    // A story folder is named after the story's own title, not the wiki page it
+    // came from, so slug matching never matches. Read the drafts and look for a
+    // real [[wikilink]] back to the page instead.
+    const draftedTitles = new Set<string>();
+    if (existsSync(storiesDir)) {
+      for (const folder of readdirSync(storiesDir, { withFileTypes: true }).filter((d) => d.isDirectory())) {
+        for (const file of readdirSync(join(storiesDir, folder.name)).filter((f) => f.endsWith(".md"))) {
+          const text = readFileSync(join(storiesDir, folder.name, file), "utf-8");
+          for (const [, target] of text.matchAll(/\[\[([^\]|]+)/g)) {
+            draftedTitles.add(target.trim().toLowerCase());
+          }
+        }
+      }
+    }
 
     const candidates: Candidate[] = [];
     for (const [kind, sub] of Object.entries(WIKI_SUBDIRS)) {
@@ -203,10 +226,12 @@ server.registerTool("suggest_content", {
           title,
           tags: frontmatter.tags ?? [],
           sourceCount,
-          updated: frontmatter.updated ?? frontmatter.created ?? "",
+          // YAML turns an unquoted `updated:` into a Date, not the string the
+          // type claims. Sorting on it raw throws on the second comparison.
+          updated: normalizeDateKey(frontmatter.updated) ?? normalizeDateKey(frontmatter.created) ?? "",
           excerpt: body.slice(0, 280),
           suggestedPlatforms: platforms,
-          alreadyDrafted: storySlugs.has(slugify(title)),
+          alreadyDrafted: draftedTitles.has(title.toLowerCase()),
         });
       }
     }
